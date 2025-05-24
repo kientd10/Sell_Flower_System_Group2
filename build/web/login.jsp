@@ -151,7 +151,7 @@
                     <div class="col-sm-4 col-sm-offset-1">
                         <div class="login-form"><!--login form-->
                             <h2>Login to your account</h2>
-                            <form action="Customer?action=signin">
+                            <form action="Customer?action=signin" method="post">
                                 <p>
                                     ${requestScope.error}
                                 </p>
