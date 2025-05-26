@@ -166,18 +166,13 @@
                                     ${requestScope.errorpass}
                                 </p>
 
-
-
-
-
                                 <input type="text" name="name" value="${username}" placeholder="Name"/>
                                 <input type="email" name="Email" value="${email}" placeholder="Email Address"/>
                                 <input type="password" name="Password" placeholder="Password"/>
                                 <input type="password" name="CfPassword" placeholder="Confirm Password" />
                                 <input type="text" name="fullname" value="${fullname}" placeholder="Full Name" />
-                                <!-- 
-                                <input type="password"  name="CFPassword" placeholder="Confirm Password" />
-                                -->
+                                <input type="text" name="phone" value="${phone}" placeholder="Phone" />
+                                <input type="text" name="address" value="${address}" placeholder="Address" />
 
                                 <button type="submit"  class="btn btn-default">Signup</button>
                             </form>
