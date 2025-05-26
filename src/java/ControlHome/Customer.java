@@ -1,4 +1,4 @@
-/*
+/*customer
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
@@ -49,7 +49,7 @@ public class Customer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+         doPost(request, response);
     }
 
     /**
@@ -71,8 +71,9 @@ public class Customer extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
             String action = request.getParameter("action");
             CustomerDAO dao = new CustomerDAO();
-            
+
             //Log in
+            
             if (action.equals("signin")) {
                 String email = request.getParameter("email");
                 String pass = request.getParameter("password");
@@ -83,7 +84,7 @@ public class Customer extends HttpServlet {
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                 } else {
                     HttpSession session = request.getSession();
-                    request.setAttribute("user", a);
+                    session.setAttribute("user", a);
                     Cookie Email = new Cookie("email", email);
                     Cookie Pass = new Cookie("password", pass);
                     Cookie Remember = new Cookie("remember", remember);
@@ -103,15 +104,15 @@ public class Customer extends HttpServlet {
                 }
 
             }
-            
+
             //Log out
-            if(action.equals("logout")){
+            if (action.equals("logout")) {
                 HttpSession session = request.getSession();
                 session.removeAttribute("user");
                 session.invalidate();
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-            
+
             //Sign up
             if (action.equals("signup")) {
                 String name = request.getParameter("name");
@@ -119,24 +120,30 @@ public class Customer extends HttpServlet {
                 String pass = request.getParameter("Password");
                 String cfPass = request.getParameter("CfPassword");
                 String fullname = request.getParameter("fullname");
+                String phone = request.getParameter("phone");
+                String address = request.getParameter("address");
                 String checkemail = dao.checkEmail(email.trim());
                 String checkusername = dao.checkName(name);
                 if (checkusername == null) {
                     if (checkemail == null) {
                         if (pass.equals(cfPass)) {
                             request.setAttribute("done", "Register successfull!");
-                            dao.signup(name, email, pass, fullname);
+                            dao.signup(name, email, pass, fullname, phone, address);
                             request.getRequestDispatcher("login.jsp").forward(request, response);
                         } else {
                             request.setAttribute("errorpass", "Confirm pass is not true!");
                             request.setAttribute("username", name);
                             request.setAttribute("fullname", fullname);
                             request.setAttribute("email", email);
+                            request.setAttribute("phone", phone);
+                            request.setAttribute("address", address);
                             request.getRequestDispatcher("login.jsp").forward(request, response);
                         }
                     } else {
                         request.setAttribute("username", name);
                         request.setAttribute("fullname", fullname);
+                        request.setAttribute("phone", phone);
+                        request.setAttribute("address", address);
                         request.setAttribute("emailavailable", "Email is existed!");
                         request.getRequestDispatcher("login.jsp").forward(request, response);
                     }
@@ -144,6 +151,8 @@ public class Customer extends HttpServlet {
                     request.setAttribute("errorname", "Username is existed!");
                     request.setAttribute("fullname", fullname);
                     request.setAttribute("email", email);
+                    request.setAttribute("phone", phone);
+                    request.setAttribute("address", address);
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                 }
 

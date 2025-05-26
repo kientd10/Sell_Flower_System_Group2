@@ -13,17 +13,33 @@ public class Customer {
     String Customer_Name ;
     String Customer_Email;
     String Customer_Password;
-    String IsAdmin;
+    String Role;
+    String Phone;
+    String Address;
 
+    
+    
     public Customer() {
     }
 
-    public Customer(int CustomerID, String Customer_Name, String Customer_Email, String Customer_Password, String IsAdmin) {
+    public Customer(int CustomerID, String Customer_Name, String Customer_Email, String Customer_Password, String Role, String Phone, String Address) {
         this.CustomerID = CustomerID;
         this.Customer_Name = Customer_Name;
         this.Customer_Email = Customer_Email;
         this.Customer_Password = Customer_Password;
-        this.IsAdmin = IsAdmin;
+        this.Role = Role;
+        this.Phone = Phone;
+        this.Address = Address;
+    }
+
+    
+     
+    public Customer(int CustomerID, String Customer_Name, String Customer_Email, String Customer_Password, String Role) {
+        this.CustomerID = CustomerID;
+        this.Customer_Name = Customer_Name;
+        this.Customer_Email = Customer_Email;
+        this.Customer_Password = Customer_Password;
+        this.Role = Role;
     }
 
     public Customer( String Customer_Email, String Customer_Password) {
@@ -74,13 +90,31 @@ public class Customer {
         this.Customer_Password = Customer_Password;
     }
 
-    public String getIsAdmin() {
-        return IsAdmin;
+    public String getRole() {
+        return Role;
     }
 
-    public void setIsAdmin(String IsAdmin) {
-        this.IsAdmin = IsAdmin;
+    public void setRole(String Role) {
+        this.Role = Role;
     }
+
+    public String getPhone() {
+        return Phone;
+    }
+
+    public void setPhone(String Phone) {
+        this.Phone = Phone;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String Address) {
+        this.Address = Address;
+    }
+
+    
 
     @Override
     public String toString() {

@@ -1,4 +1,4 @@
-/*
+/*customerDAO
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class CustomerDAO extends DBcontext {
 
-    public void signup(String name, String Email, String password,String fullname) {
-        String query = "INSERT INTO flower_shop_db.users (username, email,password_hash,full_name,role_id) VALUES (?,?, ?, ?,?)";
+    public void signup(String name, String Email, String password,String fullname ,String phone,String address) {
+        String query = "INSERT INTO flower_shop_db.users (username, email,password_hash,full_name,role_id) VALUES (?,?, ?, ?,?,?,?)";
         try {
             PreparedStatement ps = getJDBCConnextion().prepareStatement(query);
             ps.setString(1, name);
@@ -25,6 +25,8 @@ public class CustomerDAO extends DBcontext {
             ps.setString(3, password);
             ps.setString(4, fullname);
             ps.setString(5, "1");
+            ps.setString(6, phone);
+            ps.setString(7, address);
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +70,7 @@ public class CustomerDAO extends DBcontext {
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Customer user = new Customer( rs.getInt(1),rs.getString(2),  rs.getString(3),rs.getString(4),rs.getString(5));
+                Customer user = new Customer( rs.getInt(1),rs.getString(2),  rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7));
                 return user;
             }
         } catch (Exception e) {
@@ -89,6 +91,10 @@ public class CustomerDAO extends DBcontext {
         }
         return list;
     }
+    
+    
+        
+    
 
     public static void main(String[] args) {
         CustomerDAO dao = new CustomerDAO();
@@ -100,8 +106,10 @@ public class CustomerDAO extends DBcontext {
         Customer b = new Customer();
         b = dao.Signin("thangbdhe187283@fpt.edu.vn", "123");
         System.out.println(b);
-        String  c = dao.checkName("bui duy thang");
-        System.out.println(c);
+//        String  c = dao.checkName("bui duy thang");
+//        System.out.println(c);
+        
+        
       
     }
 }
