@@ -5,13 +5,16 @@
 package Controller;
 
 import Model.BouquetTemplate;
+import Model.Category;
 import dal.BouquetDAO;
+import dal.CategoryDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,15 +60,34 @@ public class BouquetServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String categoryId = request.getParameter("categoryId");
-        if (categoryId != null && !categoryId.isEmpty()) {
-            BouquetDAO bouquetDAO = new BouquetDAO();
-            List<BouquetTemplate> bouquets = bouquetDAO.getBouquetsByCategoryId(Integer.parseInt(categoryId));
-            request.setAttribute("bouquets", bouquets);
+        throws ServletException, IOException {
+    String categoryIdStr = request.getParameter("categoryId");
+    List<BouquetTemplate> bouquets = new ArrayList<>();
+    List<Category> categories = new ArrayList<>();
+
+    try {
+        // Load tất cả category để hiển thị menu
+        CategoryDAO categoryDAO = new CategoryDAO();
+        categories = categoryDAO.getAllCategories();
+
+        if (categoryIdStr != null) {
+            int categoryId = Integer.parseInt(categoryIdStr);
+            BouquetDAO dao = new BouquetDAO();
+            bouquets = dao.getBouquetsByCategoryId(categoryId);
         }
-        request.getRequestDispatcher("bouquets.jsp").forward(request, response);
+    } catch (NumberFormatException e) {
+        e.printStackTrace();
     }
+
+    // Set danh sách category vào request để hiển thị menu
+    request.setAttribute("categories", categories);
+    // Set danh sách sản phẩm theo category
+    request.setAttribute("bouquets", bouquets);
+    // Chuyển tiếp về trang index.jsp (hoặc trang hiển thị chính)
+    request.getRequestDispatcher("index.jsp").forward(request, response);
+}
+
+
 
     /**
      * Handles the HTTP <code>POST</code> method.

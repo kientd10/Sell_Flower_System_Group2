@@ -16,4 +16,7 @@
         <servlet-name>BouquetServlet</servlet-name>
         <url-pattern>/bouquet</url-pattern>
     </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>category</welcome-file>
+    </welcome-file-list>
 </web-app>

@@ -30,7 +30,7 @@ public class CategoryDAO {
 
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
-        String sql = "SELECT category_id, category_name FROM categories";
+        String sql = "SELECT category_id, category_name FROM categories ORDER BY category_id ASC";
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 categories.add(new Category(rs.getInt("category_id"), rs.getString("category_name")));
@@ -39,5 +39,12 @@ public class CategoryDAO {
             e.printStackTrace();
         }
         return categories;
+    }
+    public static void main(String[] args) {
+        CategoryDAO dao = new CategoryDAO();
+        List<Category> categories = dao.getAllCategories();
+        for (Category c : categories) {
+            System.out.println("ID: " + c.getCategoryId() + ", Name: " + c.getCategoryName());
+        }
     }
 }
