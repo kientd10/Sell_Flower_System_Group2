@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
-        <title>Home | E Flower Shop</title>
+        <title>Home | Flower Shop</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/font-awesome.min.css" rel="stylesheet">
         <link href="css/prettyPhoto.css" rel="stylesheet">
@@ -35,16 +35,18 @@
                         <div class="col-sm-6">
                             <div class="contactinfo">
                                 <ul class="nav nav-pills">
-                                    <li><a href="#"><i class="fa fa-phone"></i> 0865816559</a></li>
-                                    <li><a href="#"><i class="fa fa-envelope"></i> admin@flowershop.com</a></li>
+                                    <li><a href="#"><i class="fa fa-phone"></i> 0123456789</a></li>
+                                    <li><a href="#"><i class="fa fa-envelope"></i> kientdhe186194@fpt.edu.vn</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="social-icons pull-right">
                                 <ul class="nav navbar-nav">
-                                    <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>
                                     
+                                    <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2"><i class="fa fa-brands fa-github"></i></a></li>
+                                    <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>                                   
+
                                 </ul>
                             </div>
                         </div>
@@ -57,28 +59,28 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="logo pull-left">
-                                <a href="index.jsp"><img src="images/home/logo.png" alt="" /></a>
+                                <a href="index.jsp"><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
                             </div>
                             <div class="btn-group pull-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        USA
+                                        VIETNAM
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="#">Canada</a></li>
+                                        <li><a href="#">VIETNAM</a></li>
                                         <li><a href="#">UK</a></li>
                                     </ul>
                                 </div>
 
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        DOLLAR
+                                        VND
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="#">Canadian Dollar</a></li>
-                                        <li><a href="#">Pound</a></li>
+                                        <li><a href="#">Dollar</a></li>
+                                        <li><a href="#">VND</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -88,14 +90,13 @@
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
                                     <li><a href="#"><i class="fa fa-user"></i> Account</a></li>
-                                    <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
-                                    <li><a href="checkout.jsp"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-                                    <li><a href="cart.jsp"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                    <li><a href="checkout.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
+                                    <li><a href="cart.jsp"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
                                         <c:if test="${sessionScope.user==null}" >
-                                        <li><a href="login.jsp" >Login</a></li> 
+                                        <li><a href="login.jsp">Login</a></li> 
                                         </c:if>
                                         <c:if test="${sessionScope.user!=null}">
-                                        <li><a href="Customer?action=logout">Logout</a></li> 
+                                        <li><a href="Customer?action=logout"><b>Logout</b></a></li> 
                                         </c:if> 
 
 
@@ -1066,8 +1067,8 @@
             <div class="footer-bottom">
                 <div class="container">
                     <div class="row">
-                        <p class="pull-left">Copyright © 2013 E Flower Shop Inc. All rights reserved.</p>
-                        <p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+                        <p class="pull-left">Copyright © 2025  Flower Shop. All rights reserved</p>
+                        <p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Group 2</a></span></p>
                     </div>
                 </div>
             </div>
