@@ -121,22 +121,13 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="index.jsp" class="active">Home</a></li>
-                                    <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
-                                        <ul role="menu" class="sub-menu">
-                                            <li><a href="shop.jsp">Products</a></li>
-                                            <li><a href="product-details.jsp">Product Details</a></li> 
-                                            <li><a href="checkout.jsp">Checkout</a></li> 
-                                            <li><a href="cart.jsp">Cart</a></li> 
-                                                <c:if test="${sessionScope.user==null}">
-                                                <li><a href="login.jsp">Login</a></li> 
-                                                </c:if>
-                                                
-                                                  <c:if test="${sessionScope.user!=null}">
-                                                      <li><a href="Customer?action=logout">Logout</a></li> 
-                                                </c:if>  
-                                               
-                                            
+                                <li><a href="index.jsp" class="active">Home</a></li>
+                                <li class="dropdown"><a href="#">Category<i class="fa fa-angle-down"></i></a>
+                                            <ul role="menu" class="sub-menu">
+                                            <li><a href="shop.jsp">Hoa cưới</a></li>
+                                            <li><a href="product-details.jsp">Hoa tiệc</a></li> 
+                                            <li><a href="checkout.jsp">Hoa sinh nhật</a></li> 
+                                            <li><a href="cart.jsp">Hoa chia buồn</a></li>                                                                                          
 
                                         </ul>
                                     </li> 
@@ -145,9 +136,9 @@
                                             <li><a href="blog.jsp">Blog List</a></li>
                                             <li><a href="blog-single.jsp">Blog Single</a></li>
                                         </ul>
-                                    </li> 
-                                    <li><a href="404.jsp">404</a></li>
+                                    </li>                              
                                     <li><a href="contact-us.jsp">Contact</a></li>
+                                    <li><a href="404.jsp">404</a></li>
                                 </ul>
                             </div>
                         </div>
