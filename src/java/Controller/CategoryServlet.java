@@ -58,10 +58,10 @@ public class CategoryServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        CategoryDAO categoryDAO = new CategoryDAO();
-        List<Category> categories = categoryDAO.getAllCategories();
-        request.setAttribute("categories", categories);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+    CategoryDAO categoryDAO = new CategoryDAO();
+    List<Category> categories = categoryDAO.getAllCategories();
+    request.setAttribute("categories", categories);
+    request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     /**
