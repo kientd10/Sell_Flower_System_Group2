@@ -1,0 +1,213 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('flowers-overlay.png') repeat;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.form-container {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    z-index: 1;
+    text-align: center;
+}
+
+.form-header {
+    margin-bottom: 20px;
+}
+
+.form-header .header-icon {
+    font-size: 40px;
+    color: #ff6f61;
+    margin-bottom: 10px;
+}
+
+.form-container h2 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.form-container .subtitle {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"],
+.form-container select {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background: #f9f9f9;
+    box-sizing: border-box;
+    height: 48px;
+}
+
+.form-container input[type="text"]:focus,
+.form-container input[type="email"]:focus,
+.form-container input[type="password"]:focus,
+.form-container select:focus {
+    outline: none;
+    border-color: #ff6f61;
+    background: #fff;
+    box-shadow: 0 0 5px rgba(255, 111, 97, 0.3);
+}
+
+.form-container input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin: 20px 0;
+    border: none;
+    border-radius: 8px;
+    background: #ff6f61;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.form-container input[type="submit"]:hover {
+    background: #e65b50;
+    transform: scale(1.02);
+}
+
+.form-container a {
+    color: #ff6f61;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.form-container a:hover {
+    color: #e65b50;
+    text-decoration: underline;
+}
+
+.form-container .links {
+    margin: 15px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-container .links a i {
+    margin-right: 5px;
+}
+
+.form-container .social-login {
+    margin-top: 20px;
+}
+
+.form-container .social-login a {
+    margin: 0 10px;
+    color: #333;
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.form-container .social-login a:hover {
+    color: #ff6f61;
+}
+
+.form-container .error-message,
+.form-container .success-message,
+.form-container .reset-link {
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-container .error-message i,
+.form-container .success-message i,
+.form-container .reset-link i {
+    margin-right: 8px;
+}
+
+.form-container .error-message {
+    color: #e65b50;
+    background: #ffe6e6;
+}
+
+.form-container .success-message,
+.form-container .reset-link {
+    color: #28a745;
+    background: #e6f4e6;
+}
+
+.form-container .reset-link a {
+    color: #28a745;
+    text-decoration: underline;
+}
+
+.form-container .reset-link a:hover {
+    color: #218838;
+}
+
+.input-group {
+    position: relative;
+    margin: 10px 0;
+}
+
+.input-group i {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 16px;
+}
+
+.input-group input,
+.input-group select {
+    padding-left: 40px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .form-container {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .form-container h2 {
+        font-size: 24px;
+    }
+
+    .input-group i {
+        left: 10px;
+    }
+}
