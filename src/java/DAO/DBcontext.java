@@ -23,7 +23,7 @@ public class DBcontext {
         
         String url = "jdbc:mysql://localhost:3306/flower_shop_db";
         String user = "root";
-        String password = "123456";
+        String password = "1234";
         
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
