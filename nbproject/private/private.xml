@@ -3,12 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/E:/SE1906-PRJ/FlowerSystem/Sell_Flower_System_Group2/src/java/Controller/ForgotPassword.java</file>
-=======
+            <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/index.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/css/main.css</file>
+            <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/css/style.css</file>
             <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/src/java/dal/PasswordResetDAO.java</file>
             <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/src/java/Controller/ForgotPassword.java</file>
->>>>>>> 558e0ca8e5f1ffd61c267f0ff9915b5da7a4c39d
         </group>
     </open-files>
 </project-private>
