@@ -29,6 +29,7 @@
     </head><!--/head-->
 
     <body>
+
         <header id="header"><!--header-->
 
             <div class="header_top"><!--header_top-->
@@ -45,10 +46,8 @@
                         <div class="col-sm-6">
                             <div class="social-icons pull-right">
                                 <ul class="nav navbar-nav">
-
                                     <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2"><i class="fa fa-brands fa-github"></i></a></li>
                                     <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>                                   
-
                                 </ul>
                             </div>
                         </div>
@@ -102,7 +101,7 @@
                                         <c:if test="${sessionScope.user != null}">
                                         <li><a href="cart.jsp"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
                                         </c:if>
-                                        <c:if test="${sessionScope.user==null}" >
+                                        <c:if test="${sessionScope.user==null}">
                                         <li><a href="login.jsp">Login</a></li> 
                                         </c:if>
                                         <c:if test="${sessionScope.user!=null}">
@@ -130,15 +129,18 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="index.jsp" class="active">Home</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/home" class="active">Home</a></li>
                                     <li class="dropdown"><a href="#">Category<i class="fa fa-angle-down"></i></a>
                                         <ul role="menu" class="sub-menu">
-                                            <c:forEach var="category" items="${categories}">
-                                                <li> <a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}">
-                                                        ${category.categoryName}</a>   </li>
+                                            <c:if test="${empty categories}">
+                                                <li><a href="#">Không có danh mục nào</a></li>
+                                                </c:if>
+                                                <c:forEach var="category" items="${categories}">
+                                                <li><a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}">
+                                                        ${category.categoryName}</a></li>
                                                     </c:forEach>
                                         </ul>
-                                    </li> 
+                                    </li>
                                     <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
                                         <ul role="menu" class="sub-menu">
                                             <li><a href="blog.jsp">Blog List</a></li>
@@ -373,25 +375,35 @@
                     </div>
 
                     <div class="col-sm-9 padding-right">
-                        <div class="features_items"><!--features_items-->
+                        <div class="features_items">        <!--features_items-->
                             <h2 class="title text-center">Features Items</h2>
-
                             <c:choose>
                                 <c:when test="${empty bouquets}">
-                                    <h4 style="text-align:center;color:#ff6f61;"> Không có sản phẩm nào trong danh mục này ! </h4>
+                                    <h4 style="text-align:center;color:#ff6f61;">
+                                        <c:choose>
+                                            <c:when test="${page == 'home'}">
+                                                Không có sản phẩm nào!
+                                            </c:when>
+                                            <c:when test="${page == 'category'}">
+                                                Không có sản phẩm nào trong danh mục này!
+                                            </c:when>
+                                            <c:otherwise>
+                                                Không có sản phẩm!
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </h4>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:forEach var="b" items="${bouquets}">
+                                    <c:forEach var="bou" items="${bouquets}">
+                                        <!-- Hiển thị sản phẩm -->
                                         <div class="col-sm-4">
                                             <div class="product-image-wrapper">
                                                 <div class="single-products">
                                                     <div class="productinfo text-center">
-                                                        <img src="${b.image}" alt="" style="height:200px;"/>
-                                                        <h2>${b.price}$</h2>
-                                                        <p>${b.name}</p>
-                                                        <a href="#" class="btn btn-default add-to-cart">
-                                                            <i class="fa fa-shopping-cart"></i>Thêm vào giỏ
-                                                        </a>
+                                                        <img src="${bou.image}" alt="${bou.name}" style="height:200px;"/>
+                                                        <h2>${bou.price} $</h2>
+                                                        <p>${bou.name}</p>
+                                                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Add to cart</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -399,7 +411,7 @@
                                     </c:forEach>
                                 </c:otherwise>
                             </c:choose>
-                        </div><!--features_items-->
+                        </div>     <!--features_items-->
 
                         <div class="category-tab"><!--category-tab-->
                             <div class="col-sm-12">

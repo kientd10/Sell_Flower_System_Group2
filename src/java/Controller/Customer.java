@@ -1,14 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Controller;
 
 import Model.User;
 import dal.UserDAO;
+import dal.CategoryDAO;
+import dal.BouquetDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -16,68 +12,51 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import Model.Category;
+import Model.BouquetTemplate;
 
-/**
- *
- * @author tuanh
- */
-@WebServlet(name="Customer", urlPatterns={"/Customer"})
+@WebServlet(name = "Customer", urlPatterns = {"/Customer"})
 public class Customer extends HttpServlet {
+
     private UserDAO userDAO;
 
     @Override
     public void init() throws ServletException {
         userDAO = new UserDAO();
     }
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Customer</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Customer at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.sendRedirect("login.jsp");
-    } 
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if ("logout".equals(action)) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("email".equals(cookie.getName())
+                            || "password".equals(cookie.getName())
+                            || "remember".equals(cookie.getName())) {
+                        cookie.setMaxAge(0);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                    }
+                }
+            }
+            response.sendRedirect("home"); // ✅ Về trang chủ thay vì login.jsp
+            return;
+        }
+        response.sendRedirect("home");
+    }
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-       String action = request.getParameter("action");
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
 
         if ("signin".equals(action)) {
             handleSignIn(request, response);
@@ -94,38 +73,30 @@ public class Customer extends HttpServlet {
         String password = request.getParameter("password");
         String remember = request.getParameter("remember");
 
+        if (email == null || password == null) {
+            request.setAttribute("error", "Email hoặc mật khẩu không được để trống!");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
         User user = userDAO.loginUser(email, password);
         if (user != null && user.isIsActive()) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
 
-            // Xử lý cookie cho "Remember me"
             if ("ON".equals(remember)) {
-                Cookie emailCookie = new Cookie("email", email);
-                Cookie passwordCookie = new Cookie("password", password);
-                Cookie rememberCookie = new Cookie("remember", "ON");
-                emailCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                passwordCookie.setMaxAge(7 * 24 * 60 * 60);
-                rememberCookie.setMaxAge(7 * 24 * 60 * 60);
-                response.addCookie(emailCookie);
-                response.addCookie(passwordCookie);
-                response.addCookie(rememberCookie);
+                setCookie(response, "email", email, 7 * 24 * 60 * 60);
+                setCookie(response, "password", password, 7 * 24 * 60 * 60);
+                setCookie(response, "remember", "ON", 7 * 24 * 60 * 60);
             } else {
-                // Xóa cookie nếu không chọn "Remember me"
-                Cookie emailCookie = new Cookie("email", "");
-                Cookie passwordCookie = new Cookie("password", "");
-                Cookie rememberCookie = new Cookie("remember", "");
-                emailCookie.setMaxAge(0);
-                passwordCookie.setMaxAge(0);
-                rememberCookie.setMaxAge(0);
-                response.addCookie(emailCookie);
-                response.addCookie(passwordCookie);
-                response.addCookie(rememberCookie);
+                deleteCookie(request, response, "email");
+                deleteCookie(request, response, "password");
+                deleteCookie(request, response, "remember");
             }
 
-            response.sendRedirect("index.jsp"); // Chuyển hướng tới trang chủ
+            response.sendRedirect("home"); // ✅ Chuyển hướng về HomeServlet để xử lý danh mục/sản phẩm
         } else {
-            request.setAttribute("error", "Email hoặc mật khẩu không đúng, hoặc tài khoản bị khóa!");
+            request.setAttribute("error", "Email hoặc mật khẩu không đúng!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
@@ -140,7 +111,13 @@ public class Customer extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
 
-        // Kiểm tra dữ liệu đầu vào
+        if (username == null || email == null || password == null || cfPassword == null
+                || fullName == null || phone == null || address == null) {
+            request.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
         if (!password.equals(cfPassword)) {
             request.setAttribute("errorpass", "Mật khẩu xác nhận không khớp!");
             request.setAttribute("username", username);
@@ -172,7 +149,6 @@ public class Customer extends HttpServlet {
             return;
         }
 
-        // Tạo người dùng mới
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
@@ -180,7 +156,7 @@ public class Customer extends HttpServlet {
         user.setFullName(fullName);
         user.setPhone(phone);
         user.setAddress(address);
-        user.setRoleId(1); // Gán vai trò Customer (role_id = 1)
+        user.setRoleId(1);
         user.setIsActive(true);
 
         if (userDAO.registerUser(user)) {
@@ -197,13 +173,29 @@ public class Customer extends HttpServlet {
         }
     }
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
+    private void setCookie(HttpServletResponse response, String name, String value, int maxAge) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge(maxAge);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+    private void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (name.equals(cookie.getName())) {
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Customer Servlet for handling login, logout, and signup";
+    }
 }
