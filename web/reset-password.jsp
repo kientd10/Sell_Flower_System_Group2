@@ -1,9 +1,3 @@
-<%-- 
-    Document   : resetpassword
-    Created on : May 25, 2025, 3:39:34 PM
-    Author     : tuanh
---%>
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -17,7 +11,8 @@
     <div class="form-container">
         <h2>Reset Password</h2>
         <form action="reset-password" method="post">
-            <input type="hidden" name="token" value="<%= request.getParameter("token") %>">
+            <input type="hidden" name="email" value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : request.getParameter("email") %>">
+            <input type="hidden" name="code" value="<%= request.getAttribute("code") != null ? request.getAttribute("code") : request.getParameter("code") %>">
             <div class="input-group">
                 <i class="fas fa-lock"></i>
                 <input type="password" name="password" placeholder="New Password" required>
