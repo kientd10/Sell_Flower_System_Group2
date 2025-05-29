@@ -26,39 +26,38 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
 </head>
+
 <body>
-    <header id="header">
-        <div class="header_top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="contactinfo">
-                            <ul class="nav nav-pills">
-                                <li><a href="#"><i class="fa fa-phone"></i> 0865816559</a></li>
-                                <li><a href="#"><i class="fa fa-envelope"></i> admin@flowershop.com</a></li>
-                            </ul>
+            <div class="header_top"><!--header_top-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="contactinfo">
+                                <ul class="nav nav-pills">
+                                    <li><a href="#"><i class="fa fa-phone"></i> 0123456789</a></li>
+                                    <li><a href="#"><i class="fa fa-envelope"></i> kientdhe186194@fpt.edu.vn</a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="social-icons pull-right">
-                            <ul class="nav navbar-nav">
-                                <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>
-                                
-                            </ul>
+                        <div class="col-sm-6">
+                            <div class="social-icons pull-right">
+                                <ul class="nav navbar-nav">
+                                    <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2"><i class="fa fa-brands fa-github"></i></a></li>
+                                    <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>                                   
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div><!--/header_top-->
 
         <div class="header-middle">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-4">
-                        <div class="logo pull-left">
-                            <a href="home"><img src="images/home/logo.png" alt="Flower Shop" /></a>
-                        </div>
-                        
+                            <div class="logo pull-left">
+                                <a href="index.jsp"><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
+                            </div>                       
                     </div>
                 </div>
             </div>
@@ -78,7 +77,7 @@
                         </div>
                         <div class="mainmenu pull-left">
                             <ul class="nav navbar-nav collapse navbar-collapse">
-                                <li><a href="index.jsp">Home</a></li>
+                                <li><a href="${pageContext.request.contextPath}/home" class="active">Home</a></li>
                                 <li style="padding-left: 0">/</li>
                                 <li style="padding-left: 0">Login</li>
                             </ul>

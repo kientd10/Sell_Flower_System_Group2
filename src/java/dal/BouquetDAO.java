@@ -50,4 +50,26 @@ public class BouquetDAO {
         }
         return bouquets;
     }
+
+    public List<BouquetTemplate> getAllBouquets() {
+        List<BouquetTemplate> bouquets = new ArrayList<>();
+        String sql = "SELECT template_id, template_name, description, base_price, image_url "
+                + "FROM bouquet_templates WHERE is_active = TRUE";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    bouquets.add(new BouquetTemplate(
+                            rs.getInt("template_id"),
+                            rs.getString("template_name"),
+                            rs.getString("description"),
+                            rs.getDouble("base_price"),
+                            rs.getString("image_url")
+                    ));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bouquets;
+    }
 }
