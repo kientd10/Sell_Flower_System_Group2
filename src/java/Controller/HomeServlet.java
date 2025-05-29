@@ -14,14 +14,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author ADMIN
  */
-public class BouquetServlet extends HttpServlet {
+public class HomeServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +39,10 @@ public class BouquetServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet BouquetServlet</title>");
+            out.println("<title>Servlet HomeServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet BouquetServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet HomeServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,41 +57,47 @@ public class BouquetServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    ////////////////////////// 
+    private CategoryDAO categoryDAO;
+    private BouquetDAO bouquetDAO;
+
+    @Override
+    public void init() throws ServletException {
+        categoryDAO = new CategoryDAO();
+        bouquetDAO = new BouquetDAO();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        List<Category> categories = categoryDAO.getAllCategories();
+        List<BouquetTemplate> bouquets;
+
         String categoryIdStr = request.getParameter("categoryId");
-        List<BouquetTemplate> bouquets = new ArrayList<>();
-        List<Category> categories = new ArrayList<>();
+        String page; // để phân biệt home hay category
 
-        try {
-            CategoryDAO categoryDAO = new CategoryDAO();
-            categories = categoryDAO.getAllCategories();
-
-            BouquetDAO dao = new BouquetDAO();
-
-            if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+            page = "category";
+            try {
                 int categoryId = Integer.parseInt(categoryIdStr);
-                bouquets = dao.getBouquetsByCategoryId(categoryId);
-                request.setAttribute("page", "category");  // phân biệt trang category
-            } else {
-                bouquets = dao.getAllBouquets();
-                request.setAttribute("page", "home");  // phân biệt trang home
+                bouquets = bouquetDAO.getBouquetsByCategoryId(categoryId);
+            } catch (NumberFormatException e) {
+                bouquets = bouquetDAO.getAllBouquets(); // fallback nếu lỗi
+                page = "home"; // coi như home nếu lỗi id
             }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            // nếu lỗi, load tất cả sản phẩm và coi là trang home
-            BouquetDAO dao = new BouquetDAO();
-            bouquets = dao.getAllBouquets();
-            request.setAttribute("page", "home");
+        } else {
+            page = "home";
+            bouquets = bouquetDAO.getAllBouquets(); // mặc định hiển thị tất cả
         }
 
         request.setAttribute("categories", categories);
         request.setAttribute("bouquets", bouquets);
+        request.setAttribute("page", page);  // truyền biến page vào JSP để phân biệt
 
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
+    ////////////////////////////
     /**
      * Handles the HTTP <code>POST</code> method.
      *
