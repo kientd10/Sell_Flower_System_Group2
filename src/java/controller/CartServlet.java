@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller;
 
 import dal.ProductDao;
@@ -12,7 +11,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Product;
 import model.ShoppingCart;
 
@@ -21,34 +23,37 @@ import model.ShoppingCart;
  * @author PC
  */
 public class CartServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CartServlet</title>");  
+            out.println("<title>Servlet CartServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CartServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet CartServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -56,18 +61,18 @@ public class CartServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         int user_id = 1;
         ProductDao c = new ProductDao();
-        List<ShoppingCart> cart = c.getCartByUserID(user_id);
-        List<Product> item = c.getProductsByUserID(user_id);
-        request.setAttribute("cart", cart);
-        request.setAttribute("item", item);
+        List<ShoppingCart> cart_items = c.getCartItemsByUserId(user_id);
+        request.setAttribute("cart", cart_items);
+        request.setAttribute("userId", user_id);
         request.getRequestDispatcher("/ViewOfCustomer/Cart.jsp").forward(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -75,12 +80,40 @@ public class CartServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
+            throws ServletException, IOException {
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        int templateId = Integer.parseInt(request.getParameter("templateId"));
+        String action = request.getParameter("action");
+
+        ProductDao c = new ProductDao();
+        ShoppingCart item = c.getItems(userId, templateId);
+        int current_quantity = item.getQuantity();
+        int new_quantity = "up".equals(action) ? current_quantity + 1 : current_quantity - 1;
+        int stock = item.getProduct().getStock();
+        if (new_quantity >= 0 && new_quantity - current_quantity <= stock) {
+            try {
+                c.updateQuantityAndStock(userId, templateId, new_quantity);
+            } catch (SQLException ex) {
+                Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+
+        }
+        double basePrice = item.getProduct().getBasePrice();
+        double new_price = new_quantity * basePrice;
+        request.setAttribute("updatedTemplateId", templateId);
+        request.setAttribute("updatedQuantity", new_quantity);
+        request.setAttribute("updatedLineTotal", new_price);
+        List<ShoppingCart> cart_items = c.getCartItemsByUserId(userId);
+        request.setAttribute("cart", cart_items);
+        request.setAttribute("userId", userId);
+        request.getRequestDispatcher("/ViewOfCustomer/Cart.jsp")
+                .forward(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
