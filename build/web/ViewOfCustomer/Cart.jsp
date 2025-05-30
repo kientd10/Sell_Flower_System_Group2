@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -152,106 +153,82 @@
 
         <section id="cart_items">
             <div class="container">
-                <div class="breadcrumbs">
-                    <ol class="breadcrumb">
-                        <li><a href="#">Home</a></li>
-                        <li class="active">Shopping Cart</li>
-                    </ol>
-                </div>
-                <div class="table-responsive cart_info">
-                    <table class="table table-condensed">
+                <h2>Giỏ hàng</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
                         <thead>
                             <tr class="cart_menu">
-                                <td class="image">Item</td>
-                                <td class="description">Desc</td>
-                                <td class="price">Price</td>
-                                <td class="quantity">Quantity</td>
-                                <td class="total">Total</td>
-                                <td></td>
+                                <th class="image">Tên Sản Phẩm</th>
+                                <th class="description">Mô tả</th>
+                                <th class="price">Giá</th>
+                                <th class="quantity">Số lượng</th>
+                                <th class="total">Tổng tiền</th>
+                                <th class="pay">Đặt Hàng</th>
+                                <th class="delete"></th>  
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="cart_product">
-                                    <a href=""><img src="images/cart/one.png" alt=""></a>
-                                </td>
-                                <td class="cart_description">
-                                    <h4><a href="">Colorblock Scuba</a></h4>
-                                    <p>Web ID: 1089772</p>
-                                </td>
-                                <td class="cart_price">
-                                    <p>$59</p>
-                                </td>
-                                <td class="cart_quantity">
-                                    <div class="cart_quantity_button">
-                                        <a class="cart_quantity_up" href=""> + </a>
-                                        <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                        <a class="cart_quantity_down" href=""> - </a>
-                                    </div>
-                                </td>
-                                <td class="cart_total">
-                                    <p class="cart_total_price">$59</p>
-                                </td>
-                                <td class="cart_delete">
-                                    <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="cart_product">
-                                    <a href=""><img src="images/cart/two.png" alt=""></a>
-                                </td>
-                                <td class="cart_description">
-                                    <h4><a href="">Colorblock Scuba</a></h4>
-                                    <p>Web ID: 1089772</p>
-                                </td>
-                                <td class="cart_price">
-                                    <p>$59</p>
-                                </td>
-                                <td class="cart_quantity">
-                                    <div class="cart_quantity_button">
-                                        <a class="cart_quantity_up" href=""> + </a>
-                                        <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                        <a class="cart_quantity_down" href=""> - </a>
-                                    </div>
-                                </td>
-                                <td class="cart_total">
-                                    <p class="cart_total_price">$59</p>
-                                </td>
-                                <td class="cart_delete">
-                                    <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="cart_product">
-                                    <a href=""><img src="images/cart/three.png" alt=""></a>
-                                </td>
-                                <td class="cart_description">
-                                    <h4><a href="">Colorblock Scuba</a></h4>
-                                    <p>Web ID: 1089772</p>
-                                </td>
-                                <td class="cart_price">
-                                    <p>$59</p>
-                                </td>
-                                <td class="cart_quantity">
-                                    <div class="cart_quantity_button">
-                                        <a class="cart_quantity_up" href=""> + </a>
-                                        <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                        <a class="cart_quantity_down" href=""> - </a>
-                                    </div>
-                                </td>
-                                <td class="cart_total">
-                                    <p class="cart_total_price">$59</p>
-                                </td>
-                                <td class="cart_delete">
-                                    <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-                                </td>
-                            </tr>
+                            <c:forEach items="${cart}" var="line">
+                                <tr>
+                                    <td class="cart_product">
+                                        <img
+                                            src="${pageContext.request.contextPath}/images/cart/${line.product.imageUrl}"
+                                            alt="${line.product.templateName}"
+                                            width="162.69"
+                                            />
+                                    </td>
+                                    <td>
+                                        <h4>${line.product.templateName}</h4>
+                                        <p>Web ID: ${line.product.templateId}</p>
+                                        <p>Còn hàng: ${line.product.stock}</p>
+                                    </td>
+                                    <td>
+                                        ${line.product.basePrice} VNĐ
+                                    </td>
+                                    <td class="cart_quantity">
+                                        <form  method="post" action="cart" style="display: inline">
+                                            <input type="hidden" name="userId" value="${userId}"/>
+                                            <input type="hidden" name="templateId" value="${line.product.templateId}"/>
+                                            <input type="hidden" name="action" value="down"/>
+                                            <button type="submit">-</button>
+                                        </form>
+                                        <input type="text" value="${line.quantity}" size="2" readonly/> 
+                                        <form  method="post" action="cart" style="display: inline">
+                                            <input type="hidden" name="userId" value="${userId}"/>
+                                            <input type="hidden" name="templateId" value="${line.product.templateId}"/>
+                                            <input type="hidden" name="action" value="up"/>
+                                            <button type="submit">+</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${line.product.templateId == updatedTemplateId}">
+                                                ${updatedLineTotal} VNĐ
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${line.product.basePrice * line.quantity} VNĐ
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td class="pay">
+                                        <input 
+                                            type="checkbox" 
+                                            name="orderItems" 
+                                            value="${line.product.templateId}" 
+                                            id="order_${line.product.templateId}" />
+                                    </td>
+                                    <td>
+                                        <a href="removeFromCart?cartId=${line.cartId}">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </section> <!--/#cart_items-->
+        </section>
 
         <section id="do_action">
             <div class="container">
