@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import javax.mail.Authenticator;
 
 /**
  *
@@ -77,7 +78,12 @@ public class ForgotPassword extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi hệ thống. Vui lòng thử lại sau.");
+        }
     }
 
     /**
@@ -91,74 +97,57 @@ public class ForgotPassword extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String email = request.getParameter("email");
+        if (email == null || email.trim().isEmpty()) {
+            request.setAttribute("error", "Vui lòng nhập email.");
+            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            return;
+        }
 
-        try {
-            // Check if email exists
-            if (!userDAO.emailExists(email)) {
-                request.setAttribute("error", "Email does not exist.");
+        String token = passwordResetDAO.generateResetToken(email);
+        if (token == null) {
+            request.setAttribute("error", "Email không tồn tại hoặc lỗi hệ thống.");
+            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+        } else {
+            try {
+                sendResetEmail(email, token);
+                request.setAttribute("message", "Mã xác nhận đã được gửi đến email của bạn.");
+                request.getRequestDispatcher("/verify-code.jsp?email=" + email).forward(request, response);
+            } catch (MessagingException e) {
+                request.setAttribute("error", "Lỗi khi gửi email: " + e.getMessage());
                 request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
-                return;
             }
-
-            // Generate reset token
-            String token = passwordResetDAO.generateResetToken(email);
-            String resetLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
-                              request.getContextPath() + "/reset-password?token=" + token;
-
-            // Send reset link via email
-            sendResetEmail(email, resetLink);
-
-            request.setAttribute("message", "A password reset link has been sent to your email.");
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Database error: " + e.getMessage());
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Failed to send email: " + e.getMessage());
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
         }
     }
 
-    private void sendResetEmail(String recipientEmail, String resetLink) throws MessagingException {
-        // Gmail SMTP configuration
-        String host = "smtp.gmail.com";
-        String port = "587";
+    private void sendResetEmail(String email, String token) throws MessagingException {
         final String username = "tutche180023@fpt.edu.vn"; // Thay bằng email của bạn
-        final String password = "rhbx tkws vjxq cbyz";    // Thay bằng App Password của bạn
+        final String password = "rhbx tkws vjxq cbyz"; // Thay bằng mật khẩu ứng dụng
 
-        // Set properties for the mail session
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", port);
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
 
-        // Create a mail session with authentication
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+        Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
 
-        // Create a new email message
         Message message = new MimeMessage(session);
         message.setFrom(new InternetAddress(username));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-        message.setSubject("Password Reset Request - Flower Shop");
-        message.setText("Dear Customer,\n\n"
-                + "You have requested to reset your password. Please click the link below to reset your password:\n\n"
-                + resetLink + "\n\n"
-                + "This link will expire in 1 hour. If you did not request a password reset, please ignore this email.\n\n"
-                + "Best regards,\nFlower Shop Team");
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+        message.setSubject("Flower Shop - Password Reset Code");
+        message.setText("Your password reset code is: " + token + "\nThis code is valid for 5 minute.");
 
-        // Send the email
         Transport.send(message);
+        System.out.println("Email sent successfully to " + email);
     
+
     }
 
     /**
