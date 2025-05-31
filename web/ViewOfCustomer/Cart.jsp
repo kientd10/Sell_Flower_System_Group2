@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -211,11 +212,17 @@
                                         </c:choose>
                                     </td>
                                     <td class="pay">
-                                        <input 
-                                            type="checkbox" 
-                                            name="orderItems" 
-                                            value="${line.product.templateId}" 
-                                            id="order_${line.product.templateId}" />
+                                        <form  method="post" action="cart" >
+                                            <input type="hidden" name="cartId" value="${line.cartId}" />
+                                            <input
+                                                type="checkbox"
+                                                name="isChecked"
+                                                onchange="this.form.submit()"
+                                                <c:if test="${fn:contains(selectedCartIds, line.cartId.toString())}">
+                                                    checked
+                                                </c:if>
+                                                />
+                                        </form>
                                     </td>
                                     <td>
                                         <a href="removeFromCart?cartId=${line.cartId}">
@@ -226,6 +233,14 @@
                             </c:forEach>
                         </tbody>
                     </table>
+                </div>
+                <c:if test="${not empty error}">
+                    <div class="alert alert-danger">${error}</div>
+                </c:if>
+                <div class="text-right" style="margin-top: 20px;">
+                    <form  method="get" action="pay" >
+                        <button type="submit" id="checkoutBtn" class="btn btn-success">Thanh Toán</button>
+                    </form>
                 </div>
             </div>
         </section>
