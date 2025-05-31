@@ -11,7 +11,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,10 +83,35 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String cartId = request.getParameter("cartId");
+        String isChecked = request.getParameter("isChecked");
+        if (cartId != null) {
+            HttpSession session = request.getSession();
+            List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
+            if (selectedCartIds == null) {
+                selectedCartIds = new ArrayList<>();
+            }
+
+            if (isChecked != null) {
+                if (!selectedCartIds.contains(cartId)) {
+                    selectedCartIds.add(cartId);
+                }
+            } else {
+                selectedCartIds.remove(cartId);
+            }
+            session.setAttribute("selectedCartIds", selectedCartIds);
+            if (selectedCartIds.isEmpty()) {
+                session.setAttribute("error", "Bạn phải chọn ít nhất một sản phẩm.");
+            } else {
+                session.removeAttribute("error");
+            }
+            session.setAttribute("selectedCartIds", selectedCartIds);
+            response.sendRedirect("cart");
+            return;
+        }
         int userId = Integer.parseInt(request.getParameter("userId"));
         int templateId = Integer.parseInt(request.getParameter("templateId"));
         String action = request.getParameter("action");
-
         ProductDao c = new ProductDao();
         ShoppingCart item = c.getItems(userId, templateId);
         int current_quantity = item.getQuantity();
