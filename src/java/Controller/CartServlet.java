@@ -4,7 +4,6 @@
  */
 package controller;
 
-import dal.ProductDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Product;
-import model.ShoppingCart;
+import Model.ShoppingCart;
 
 /**
  *
@@ -65,7 +63,7 @@ public class CartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int user_id = 1;
-        ProductDao c = new ProductDao();
+        ProductDAO c = new ProductDao();
         List<ShoppingCart> cart_items = c.getCartItemsByUserId(user_id);
         request.setAttribute("cart", cart_items);
         request.setAttribute("userId", user_id);

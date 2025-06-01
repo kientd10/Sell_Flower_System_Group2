@@ -6,17 +6,15 @@ public class ShoppingCart {
 
     private int CartId;
     private int UserId;
-    private Product Product;
     private int Quantity;
     private LocalDateTime AddedAt;
 
     public ShoppingCart() {
     }
 
-    public ShoppingCart(int CartId, int UserId, Product Product, int Quantity, LocalDateTime AddedAt) {
+    public ShoppingCart(int CartId, int UserId, int Quantity, LocalDateTime AddedAt) {
         this.CartId = CartId;
         this.UserId = UserId;
-        this.Product = Product;
         this.Quantity = Quantity;
         this.AddedAt = AddedAt;
     }
@@ -35,14 +33,6 @@ public class ShoppingCart {
 
     public void setUserId(int UserId) {
         this.UserId = UserId;
-    }
-
-    public Product getProduct() {
-        return Product;
-    }
-
-    public void setProduct(Product Product) {
-        this.Product = Product;
     }
 
     public int getQuantity() {

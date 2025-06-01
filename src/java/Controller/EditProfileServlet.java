@@ -4,7 +4,7 @@
  */
 package controller;
 
-import dal.UserDao;
+import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import model.User;
+import Model.User;
 
 /**
  *
@@ -61,7 +61,7 @@ public class EditProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int userID = 1; 
-        UserDao dao = new UserDao();
+        UserDAO dao = new UserDAO();
         User user = dao.getInfoUserByID(userID);
         LocalDateTime ldt = user.getCreatedAt();
         Date regDate = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
