@@ -396,13 +396,13 @@
                                 <c:otherwise>
                                     <c:forEach var="bou" items="${bouquets}">
                                         <!-- Hiển thị sản phẩm -->
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <div class="product-image-wrapper">
                                                 <div class="single-products">
                                                     <div class="productinfo text-center">
-                                                        <img src="${bou.image}" alt="${bou.name}" style="height:200px;"/>
-                                                        <h2>${bou.price} $</h2>
-                                                        <p>${bou.name}</p>
+                                                        <img src="${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;"/>
+                                                        <h2>${bou.basePrice} đ</h2>
+                                                        <p>${bou.templateName}</p>
                                                         <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Add to cart</a>
                                                     </div>
                                                 </div>
