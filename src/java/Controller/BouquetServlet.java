@@ -61,34 +61,54 @@ public class BouquetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //////////////////// View 
         String categoryIdStr = request.getParameter("categoryId");
-        List<BouquetTemplate> bouquets = new ArrayList<>();
         List<Category> categories = new ArrayList<>();
+        int page = 1;
+        int recordsPerPage = 8;
+
+        if (request.getParameter("pageNum") != null) {
+            page = Integer.parseInt(request.getParameter("pageNum"));
+        }
+        int offset = (page - 1) * recordsPerPage;
 
         try {
             CategoryDAO categoryDAO = new CategoryDAO();
             categories = categoryDAO.getAllCategories();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            BouquetDAO dao = new BouquetDAO();
+        BouquetDAO dao = new BouquetDAO();
+        List<BouquetTemplate> bouquets = new ArrayList<>();
+        int totalRecords = 0;
 
+        try {
             if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
                 int categoryId = Integer.parseInt(categoryIdStr);
-                bouquets = dao.getBouquetsByCategoryId(categoryId);
-                request.setAttribute("page", "category");  // phân biệt trang category
+                bouquets = dao.getBouquetsByCategoryIdPaging(categoryId, offset, recordsPerPage);
+                totalRecords = dao.countBouquetsByCategory(categoryId);
+                request.setAttribute("page", "category");
+                request.setAttribute("categoryId", categoryId);
             } else {
-                bouquets = dao.getAllBouquets();
-                request.setAttribute("page", "home");  // phân biệt trang home
+                bouquets = dao.getAllBouquetsPaging(offset, recordsPerPage);
+                totalRecords = dao.countAllBouquets();
+                request.setAttribute("page", "home");
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            // nếu lỗi, load tất cả sản phẩm và coi là trang home
-            BouquetDAO dao = new BouquetDAO();
-            bouquets = dao.getAllBouquets();
+            // fallback nếu lỗi
+            bouquets = dao.getAllBouquetsPaging(offset, recordsPerPage);
+            totalRecords = dao.countAllBouquets();
             request.setAttribute("page", "home");
         }
 
+        int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+
         request.setAttribute("categories", categories);
         request.setAttribute("bouquets", bouquets);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
 
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }

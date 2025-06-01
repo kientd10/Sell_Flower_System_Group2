@@ -40,6 +40,7 @@ public class CategoryDAO {
         }
         return categories;
     }
+
     public static void main(String[] args) {
         CategoryDAO dao = new CategoryDAO();
         List<Category> categories = dao.getAllCategories();

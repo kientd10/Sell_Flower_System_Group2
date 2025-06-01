@@ -28,23 +28,47 @@ public class CategoryServlet extends HttpServlet {
 
         List<Category> categories = categoryDAO.getAllCategories();
 
+        int pageNum = 1;
+        int recordsPerPage = 4; // hoặc số sản phẩm muốn hiển thị mỗi trang
+        String pageNumStr = request.getParameter("pageNum");
+        if (pageNumStr != null) {
+            try {
+                pageNum = Integer.parseInt(pageNumStr);
+            } catch (NumberFormatException e) {
+                pageNum = 1;
+            }
+        }
+
         String categoryIdStr = request.getParameter("categoryId");
         List<BouquetTemplate> bouquets = null;
+        int totalRecords = 0;
 
         if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
             try {
                 int categoryId = Integer.parseInt(categoryIdStr);
-                bouquets = bouquetDAO.getBouquetsByCategoryId(categoryId);
+                int offset = (pageNum - 1) * recordsPerPage;
+
+                bouquets = bouquetDAO.getBouquetsByCategoryIdPaging(categoryId, offset, recordsPerPage);
+                totalRecords = bouquetDAO.countBouquetsByCategory(categoryId);
+
+                request.setAttribute("categoryId", categoryId);
             } catch (NumberFormatException e) {
-                bouquets = bouquetDAO.getAllBouquets(); // fallback
+                bouquets = bouquetDAO.getAllBouquetsPaging((pageNum - 1) * recordsPerPage, recordsPerPage);
+                totalRecords = bouquetDAO.countAllBouquets();
             }
         } else {
-            bouquets = bouquetDAO.getAllBouquets();
+            int offset = (pageNum - 1) * recordsPerPage;
+            bouquets = bouquetDAO.getAllBouquetsPaging(offset, recordsPerPage);
+            totalRecords = bouquetDAO.countAllBouquets();
         }
+
+        int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
 
         request.setAttribute("categories", categories);
         request.setAttribute("bouquets", bouquets);
-        request.setAttribute("page", "category"); // báo JSP đây là trang category
+        request.setAttribute("page", "category");
+        request.setAttribute("currentPage", pageNum);
+        request.setAttribute("totalPages", totalPages);
 
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
