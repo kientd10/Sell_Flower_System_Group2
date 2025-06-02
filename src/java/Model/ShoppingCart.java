@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 import java.time.LocalDateTime;
 
@@ -6,15 +6,17 @@ public class ShoppingCart {
 
     private int CartId;
     private int UserId;
+    private BouquetTemplate BouquetTemplate;
     private int Quantity;
     private LocalDateTime AddedAt;
 
     public ShoppingCart() {
     }
 
-    public ShoppingCart(int CartId, int UserId, int Quantity, LocalDateTime AddedAt) {
+    public ShoppingCart(int CartId, int UserId, BouquetTemplate BouquetTemplate, int Quantity, LocalDateTime AddedAt) {
         this.CartId = CartId;
         this.UserId = UserId;
+        this.BouquetTemplate = BouquetTemplate;
         this.Quantity = Quantity;
         this.AddedAt = AddedAt;
     }
@@ -35,6 +37,14 @@ public class ShoppingCart {
         this.UserId = UserId;
     }
 
+    public BouquetTemplate getBouquetTemplate() {
+        return BouquetTemplate;
+    }
+
+    public void setBouquetTemplate(BouquetTemplate BouquetTemplate) {
+        this.BouquetTemplate = BouquetTemplate;
+    }
+
     public int getQuantity() {
         return Quantity;
     }
@@ -51,8 +61,10 @@ public class ShoppingCart {
         this.AddedAt = AddedAt;
     }
 
+
     public void add(ShoppingCart line) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+     
 }
