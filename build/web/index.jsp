@@ -400,11 +400,7 @@
                                             <div class="product-image-wrapper">
                                                 <div class="single-products">
                                                     <div class="productinfo text-center">
-                                                        <img
-                                                            src="${pageContext.request.contextPath}/images/cart/${bou.imageUrl}"
-                                                            alt="$${bou.templateId}"
-                                                            style="height:200px;"
-                                                            />
+                                                        <img src="${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;"/>
                                                         <h2>${bou.basePrice} đ</h2>
                                                         <p>${bou.templateName}</p>
                                                         <form action="add" method="GET">
@@ -421,6 +417,8 @@
                                 </c:otherwise>
                             </c:choose>
                         </div>     <!--features_items-->
+                        
+                        ///////////////////////pagination
                         <div class="pagination-area text-center">
                             <ul class="pagination">
                                 <c:set var="baseUrl" value="" />
@@ -455,6 +453,7 @@
                                 </c:if>
                             </ul>
                         </div>
+                        ///////////////////////////pagination
 
                         <div class="recommended_items"><!--recommended_items-->
                             <h2 class="title text-center">recommended items</h2>
