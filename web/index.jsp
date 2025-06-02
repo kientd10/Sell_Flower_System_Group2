@@ -165,71 +165,58 @@
             </div><!--/header-bottom-->        
         </header><!--/header-->
 
+<section id="slider"><!--slider-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
 
-        <section id="slider"><!--slider-->
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div id="slider-carousel" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
-                                <li data-target="#slider-carousel" data-slide-to="1"></li>
-                                <li data-target="#slider-carousel" data-slide-to="2"></li>
-                            </ol>
+                            <c:choose>
+                                <c:when test="${not empty featuredBouquets}">
+                                    <div id="slider-carousel" class="carousel slide" data-ride="carousel">
 
-                            <div class="carousel-inner">
-                                <div class="item active">
-                                    <div class="col-sm-6">
-                                        <h1><span style="color: #ff6f61">Flower Shop</span></h1>
-                                        <h2>Cứ thế thôi HẸ HẸ HẸ</h2>
-                                        <p>Tú tc, Kiên td, Đức vm, Đạt </p>
-                                        <button type="button" class="btn btn-default get">Mua ngay</button>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <img src="images/home/girl1.jpg" class="girl img-responsive" alt="" />
-                                        <img src="images/home/pricing.png"  class="pricing" alt="" />
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="col-sm-6">
-                                        <h1><span style="color: #ff6f61">Flower Shop</span></h1>
-                                        <h2>Cứ thế thôi HẸ HẸ HẸ</h2>
-                                        <p>Tú tc, Kiên td, Đức vm, Đạt</p>
-                                        <button type="button" class="btn btn-default get">Mua ngay</button>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <img src="images/home/girl2.jpg" class="girl img-responsive" alt="" />
-                                        <img src="images/home/pricing.png"  class="pricing" alt="" />
-                                    </div>
-                                </div>
+                                        <ol class="carousel-indicators">
+                                            <c:forEach var="item" items="${featuredBouquets}" varStatus="loop">
+                                                <li data-target="#slider-carousel" data-slide-to="${loop.index}" class="${loop.first ? 'active' : ''}"></li>
+                                                </c:forEach>
+                                        </ol>
 
-                                <div class="item">
-                                    <div class="col-sm-6">
-                                        <h1><span style="color: #ff6f61">Flower Shop</span></h1>
-                                        <h2>Cứ thế thôi HẸ HẸ HẸ</h2>
-                                        <p>Cứ thế thôi HẸ HẸ HẸ</p>
-                                        <button type="button" class="btn btn-default get">Mua ngay</button>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <img src="images/home/girl3.jpg" class="girl img-responsive" alt="" />
-                                        <img src="images/home/pricing.png" class="pricing" alt="" />
-                                    </div>
-                                </div>
+                                        <div class="carousel-inner">
+                                            <c:forEach var="item" items="${featuredBouquets}" varStatus="loop">
+                                                <div class="item ${loop.first ? 'active' : ''}">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <h1><span style="color: #ff6f61">Flower Shop</span></h1>
+                                                            <h2>${item.templateName}</h2>
+                                                            <p>${item.description}</p>
+                                                            <a href="product-detail.jsp?templateId=${item.templateId}" class="btn btn-default get">Mua ngay</a>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <img src="${item.imageUrl}" class="girl img-responsive" alt="${item.templateName}" />
+                                                            <img src="images/home/pricing.png" class="pricing" alt="Price Tag" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
 
-                            </div>
+                                        <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+                                            <i class="fa fa-angle-left"></i>
+                                        </a>
+                                        <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </c:when>
 
-                            <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-                            <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
+                                <c:otherwise>
+                                    <p style="text-align: center; font-weight: bold; color: red;">Không có sản phẩm nổi bật nào.</p>
+                                </c:otherwise>
+                            </c:choose>
+
                         </div>
-
                     </div>
                 </div>
-            </div>
-        </section><!--/slider-->
+            </section><!--/slider-->
 
         <section>
             <div class="container">

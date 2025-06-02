@@ -276,5 +276,33 @@ public class BouquetDAO {
             e.printStackTrace();
         }
     }
+    
+    public List<BouquetTemplate> getTopSellingBouquets(int limit) {
+        List<BouquetTemplate> bouquets = new ArrayList<>();
+        String sql = "SELECT bt.template_id, bt.template_name, bt.description, bt.base_price, bt.image_url " +
+                     "FROM order_details od " +
+                     "JOIN bouquet_templates bt ON od.template_id = bt.template_id " +
+                     "WHERE bt.is_active = TRUE " +
+                     "GROUP BY bt.template_id, bt.template_name, bt.description, bt.base_price, bt.image_url " +
+                     "ORDER BY SUM(od.quantity) DESC " +
+                     "LIMIT ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, limit);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    bouquets.add(new BouquetTemplate(
+                            rs.getInt("template_id"),
+                            rs.getString("template_name"),
+                            rs.getString("description"),
+                            rs.getDouble("base_price"),
+                            rs.getString("image_url")
+                    ));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bouquets;
+    }
 
 }
