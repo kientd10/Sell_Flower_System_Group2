@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package Controller;
 
+import dal.BouquetDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import Model.BouquetTemplate;
 import Model.ShoppingCart;
+import Model.User;
 
 /**
  *
@@ -62,12 +65,13 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int user_id = 1;
-        ProductDAO c = new ProductDao();
+        User user = (User) request.getSession().getAttribute("user");
+        int user_id = user.getUserId();
+        BouquetDAO c = new BouquetDAO();
         List<ShoppingCart> cart_items = c.getCartItemsByUserId(user_id);
         request.setAttribute("cart", cart_items);
         request.setAttribute("userId", user_id);
-        request.getRequestDispatcher("/ViewOfCustomer/Cart.jsp").forward(request, response);
+        request.getRequestDispatcher("cart.jsp").forward(request, response);
     }
 
     /**
@@ -110,21 +114,20 @@ public class CartServlet extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("userId"));
         int templateId = Integer.parseInt(request.getParameter("templateId"));
         String action = request.getParameter("action");
-        ProductDao c = new ProductDao();
+        BouquetDAO c = new BouquetDAO();
         ShoppingCart item = c.getItems(userId, templateId);
         int current_quantity = item.getQuantity();
         int new_quantity = "up".equals(action) ? current_quantity + 1 : current_quantity - 1;
-        int stock = item.getProduct().getStock();
-        if (new_quantity >= 0 && new_quantity - current_quantity <= stock) {
+        if (new_quantity >= 0) {
             try {
-                c.updateQuantityAndStock(userId, templateId, new_quantity);
-            } catch (SQLException ex) {
+                c.updateQuantity(userId, templateId, new_quantity);
+            } catch (Exception ex) {
                 Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
 
         }
-        double basePrice = item.getProduct().getBasePrice();
+        double basePrice = item.getBouquetTemplate().getBasePrice();
         double new_price = new_quantity * basePrice;
         request.setAttribute("updatedTemplateId", templateId);
         request.setAttribute("updatedQuantity", new_quantity);
@@ -132,7 +135,7 @@ public class CartServlet extends HttpServlet {
         List<ShoppingCart> cart_items = c.getCartItemsByUserId(userId);
         request.setAttribute("cart", cart_items);
         request.setAttribute("userId", userId);
-        request.getRequestDispatcher("/ViewOfCustomer/Cart.jsp")
+        request.getRequestDispatcher("cart.jsp")
                 .forward(request, response);
     }
 
