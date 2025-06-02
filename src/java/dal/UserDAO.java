@@ -17,10 +17,10 @@ import java.sql.Timestamp;
  */
 public class UserDAO {
 
-    private DBcontext dbContext;
+    private DBContext dbContext;
 
     public UserDAO() {
-        dbContext = new DBcontext();
+        dbContext = new DBContext();
     }
 
     // Đăng ký người dùng mới

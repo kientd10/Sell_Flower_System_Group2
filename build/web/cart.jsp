@@ -185,10 +185,7 @@
                             <c:forEach items="${cart}" var="line">
                                 <tr>
                                     <td class="cart_product">
-                                        <img
-                                            src="${pageContext.request.contextPath}/images/cart/${line.bouquetTemplate.imageUrl}"
-                                            alt="${line.bouquetTemplate.templateName}"
-                                            />
+   
                                     </td>
                                     <td>
                                         <h4>${line.bouquetTemplate.templateName}</h4>
@@ -373,3 +370,4 @@
     </c:if>>
 </body>
 </html>
+
