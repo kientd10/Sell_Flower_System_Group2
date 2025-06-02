@@ -164,15 +164,38 @@
                 </div>
             </div><!--/header-bottom-->        
         </header><!--/header-->
-
+        <style>
+            .table-fixed {
+                table-layout: fixed;
+                width: 100%;
+            }
+            .table-fixed th.image,
+            .table-fixed td.cart_product {
+                padding: 0;
+                width: 150px;
+                overflow: hidden;
+            }
+            .image-wrapper {
+                width: 150px;
+                height: 150px;
+                overflow: hidden;
+                position: relative;
+            }
+            .image-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+        </style>
         <section id="cart_items">
             <div class="container">
                 <h2>Giỏ hàng</h2>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-fixed">
                         <thead>
                             <tr class="cart_menu">
-                                <th class="image">Tên Sản Phẩm</th>
+                                <th class="image" style="width: 200px;">Tên Sản Phẩm</th>
                                 <th class="description">Mô tả</th>
                                 <th class="price">Giá</th>
                                 <th class="quantity">Số lượng</th>
@@ -185,7 +208,10 @@
                             <c:forEach items="${cart}" var="line">
                                 <tr>
                                     <td class="cart_product">
-   
+                                        <img
+                                            class="image-wrapper"
+                                            src="${pageContext.request.contextPath}/images/cart/${line.bouquetTemplate.imageUrl}"
+                                            alt="${line.bouquetTemplate.templateName}" />
                                     </td>
                                     <td>
                                         <h4>${line.bouquetTemplate.templateName}</h4>
@@ -235,6 +261,14 @@
                             </c:forEach>
                         </tbody>
                     </table>
+                </div>
+                <c:if test="${not empty error}">
+                    <div class="alert alert-danger">${error}</div>
+                </c:if>
+                <div class="text-right" style="margin-top: 20px;">
+                    <form  method="get" action="pay" >
+                        <button type="submit" id="checkoutBtn" class="btn btn-success">Thanh Toán</button>
+                    </form>
                 </div>
             </div>
         </section>

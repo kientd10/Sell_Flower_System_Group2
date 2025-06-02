@@ -165,58 +165,58 @@
             </div><!--/header-bottom-->        
         </header><!--/header-->
 
-<section id="slider"><!--slider-->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12">
+        <section id="slider"><!--slider-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
 
-                            <c:choose>
-                                <c:when test="${not empty featuredBouquets}">
-                                    <div id="slider-carousel" class="carousel slide" data-ride="carousel">
+                        <c:choose>
+                            <c:when test="${not empty featuredBouquets}">
+                                <div id="slider-carousel" class="carousel slide" data-ride="carousel">
 
-                                        <ol class="carousel-indicators">
-                                            <c:forEach var="item" items="${featuredBouquets}" varStatus="loop">
-                                                <li data-target="#slider-carousel" data-slide-to="${loop.index}" class="${loop.first ? 'active' : ''}"></li>
-                                                </c:forEach>
-                                        </ol>
+                                    <ol class="carousel-indicators">
+                                        <c:forEach var="item" items="${featuredBouquets}" varStatus="loop">
+                                            <li data-target="#slider-carousel" data-slide-to="${loop.index}" class="${loop.first ? 'active' : ''}"></li>
+                                            </c:forEach>
+                                    </ol>
 
-                                        <div class="carousel-inner">
-                                            <c:forEach var="item" items="${featuredBouquets}" varStatus="loop">
-                                                <div class="item ${loop.first ? 'active' : ''}">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <h1><span style="color: #ff6f61">Flower Shop</span></h1>
-                                                            <h2>${item.templateName}</h2>
-                                                            <p>${item.description}</p>
-                                                            <a href="product-detail.jsp?templateId=${item.templateId}" class="btn btn-default get">Mua ngay</a>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <img src="${item.imageUrl}" class="girl img-responsive" alt="${item.templateName}" />
-                                                            <img src="images/home/pricing.png" class="pricing" alt="Price Tag" />
-                                                        </div>
+                                    <div class="carousel-inner">
+                                        <c:forEach var="item" items="${featuredBouquets}" varStatus="loop">
+                                            <div class="item ${loop.first ? 'active' : ''}">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <h1><span style="color: #ff6f61">Flower Shop</span></h1>
+                                                        <h2>${item.templateName}</h2>
+                                                        <p>${item.description}</p>
+                                                        <a href="product-detail.jsp?templateId=${item.templateId}" class="btn btn-default get">Mua ngay</a>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <img src="${item.imageUrl}" class="girl img-responsive" alt="${item.templateName}" />
+                                                        <img src="images/home/pricing.png" class="pricing" alt="Price Tag" />
                                                     </div>
                                                 </div>
-                                            </c:forEach>
-                                        </div>
-
-                                        <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-                                            <i class="fa fa-angle-left"></i>
-                                        </a>
-                                        <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
+                                            </div>
+                                        </c:forEach>
                                     </div>
-                                </c:when>
 
-                                <c:otherwise>
-                                    <p style="text-align: center; font-weight: bold; color: red;">Không có sản phẩm nổi bật nào.</p>
-                                </c:otherwise>
-                            </c:choose>
+                                    <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+                                        <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                </div>
+                            </c:when>
 
-                        </div>
+                            <c:otherwise>
+                                <p style="text-align: center; font-weight: bold; color: red;">Không có sản phẩm nổi bật nào.</p>
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
                 </div>
-            </section><!--/slider-->
+            </div>
+        </section><!--/slider-->
 
         <section>
             <div class="container">
@@ -387,15 +387,22 @@
                                             <div class="product-image-wrapper">
                                                 <div class="single-products">
                                                     <div class="productinfo text-center">
-                                                        <img src="${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;"/>
+                                                        <img src="${pageContext.request.contextPath}/images/cart/${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;"/>
                                                         <h2>${bou.basePrice} đ</h2>
                                                         <p>${bou.templateName}</p>
-                                                        <form action="add" method="GET">
-                                                            <input type="hidden" name="templateId" value="${bou.templateId}">
-                                                            <button type="submit" class="btn btn-default add-to-cart">
+                                                        <c:if test="${sessionScope.user == null}">
+                                                            <a href="login.jsp" class="btn btn-default add-to-cart">
                                                                 <i class="fa fa-shopping-cart"></i> Add to cart
-                                                            </button>
-                                                        </form>
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${sessionScope.user != null}">
+                                                            <form action="add" method="GET">
+                                                                <input type="hidden" name="templateId" value="${bou.templateId}">
+                                                                <button type="submit" class="btn btn-default add-to-cart">
+                                                                    <i class="fa fa-shopping-cart"></i> Add to cart
+                                                                </button>
+                                                            </form>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
@@ -403,9 +410,7 @@
                                     </c:forEach>
                                 </c:otherwise>
                             </c:choose>
-                        </div>     <!--features_items-->
-                        
-                        ///////////////////////pagination
+                        </div> 
                         <div class="pagination-area text-center">
                             <ul class="pagination">
                                 <c:set var="baseUrl" value="" />
@@ -424,15 +429,11 @@
                                         <a href="${baseUrl}${currentPage - 1}">&laquo;</a>
                                     </li>
                                 </c:if>
-
-                                <!-- Hiển thị các số trang -->
                                 <c:forEach var="i" begin="1" end="${totalPages}">
                                     <li class="${i == currentPage ? 'active' : ''}">
                                         <a href="${baseUrl}${i}">${i}</a>
                                     </li>
                                 </c:forEach>
-
-                                <!-- Nút trang sau -->
                                 <c:if test="${currentPage < totalPages}">
                                     <li>
                                         <a href="${baseUrl}${currentPage + 1}">&raquo;</a>
@@ -440,9 +441,7 @@
                                 </c:if>
                             </ul>
                         </div>
-                        ///////////////////////////pagination
-
-                        <div class="recommended_items"><!--recommended_items-->
+                        <div class="recommended_items">
                             <h2 class="title text-center">recommended items</h2>
 
                             <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">

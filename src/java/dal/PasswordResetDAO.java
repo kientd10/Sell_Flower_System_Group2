@@ -4,7 +4,7 @@
  */
 package dal;
 
-import dal.DBContext;
+import dal.DBcontext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 public class PasswordResetDAO {
 
-    private DBContext dbContext = new DBContext();
+    private DBcontext dbContext = new DBcontext();
     // Sử dụng Timer để lập lịch xóa token
     private Timer tokenCleanupTimer = new Timer(true); // Timer chạy nền (daemon thread)
 

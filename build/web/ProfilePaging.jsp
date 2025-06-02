@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
-        <title>Login | E-Shopper</title>
+        <title>Home | Flower Shop</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/font-awesome.min.css" rel="stylesheet">
         <link href="css/prettyPhoto.css" rel="stylesheet">
@@ -34,25 +34,23 @@
 
     <body>
         <header id="header"><!--header-->
+
             <div class="header_top"><!--header_top-->
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="contactinfo">
                                 <ul class="nav nav-pills">
-                                    <li><a href=""><i class="fa fa-phone"></i> +2 95 01 88 821</a></li>
-                                    <li><a href=""><i class="fa fa-envelope"></i> info@domain.com</a></li>
+                                    <li><a href="#"><i class="fa fa-phone"></i> 0123456789</a></li>
+                                    <li><a href="#"><i class="fa fa-envelope"></i> kientdhe186194@fpt.edu.vn</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="social-icons pull-right">
                                 <ul class="nav navbar-nav">
-                                    <li><a href=""><i class="fa fa-facebook"></i></a></li>
-                                    <li><a href=""><i class="fa fa-twitter"></i></a></li>
-                                    <li><a href=""><i class="fa fa-linkedin"></i></a></li>
-                                    <li><a href=""><i class="fa fa-dribbble"></i></a></li>
-                                    <li><a href=""><i class="fa fa-google-plus"></i></a></li>
+                                    <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2"><i class="fa fa-brands fa-github"></i></a></li>
+                                    <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>                                   
                                 </ul>
                             </div>
                         </div>
@@ -65,28 +63,28 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="logo pull-left">
-                                <a href="index.html"><img src="images/home/logo.png" alt="" /></a>
+                                <a href="index.jsp"><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
                             </div>
                             <div class="btn-group pull-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        USA
+                                        VIETNAM
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="">Canada</a></li>
-                                        <li><a href="">UK</a></li>
+                                        <li><a href="#">VIETNAM</a></li>
+                                        <li><a href="#">UK</a></li>
                                     </ul>
                                 </div>
 
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        DOLLAR
+                                        VND
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="">Canadian Dollar</a></li>
-                                        <li><a href="">Pound</a></li>
+                                        <li><a href="#">Dollar</a></li>
+                                        <li><a href="#">VND</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -94,11 +92,22 @@
                         <div class="col-sm-8">
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
-                                    <li><a href=""><i class="fa fa-user"></i> Account</a></li>
-                                    <li><a href=""><i class="fa fa-star"></i> Wishlist</a></li>
-                                    <li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-                                    <li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-                                    <li><a href="login.html" class="active"><i class="fa fa-lock"></i> Login</a></li>
+                                    <c:if test="${sessionScope.user != null}">
+                                        <li><a href="profile"><i class="fa fa-user"></i> Account</a></li>
+                                        <li><a href="checkout.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.user == null}">
+                                        <li><a href="login.jsp"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.user != null}">
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.user==null}">
+                                        <li><a href="login.jsp">Login</a></li> 
+                                        </c:if>
+                                        <c:if test="${sessionScope.user!=null}">
+                                        <li><a href="Customer?action=logout"><b>Logout</b></a></li> 
+                                        </c:if> 
                                 </ul>
                             </div>
                         </div>
@@ -120,35 +129,40 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="index.html">Home</a></li>
-                                    <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
+                                    <li><a href="${pageContext.request.contextPath}/home" class="active">Home</a></li>
+                                    <li class="dropdown"><a href="#">Category<i class="fa fa-angle-down"></i></a>
                                         <ul role="menu" class="sub-menu">
-                                            <li><a href="shop.html">Products</a></li>
-                                            <li><a href="product-details.html">Product Details</a></li> 
-                                            <li><a href="checkout.html">Checkout</a></li> 
-                                            <li><a href="cart.html">Cart</a></li> 
-                                            <li><a href="login.html" class="active">Login</a></li> 
+                                            <c:if test="${empty categories}">
+                                                <li><a href="#">Không có danh mục nào</a></li>
+                                                </c:if>
+                                                <c:forEach var="category" items="${categories}">
+                                                <li><a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}">
+                                                        ${category.categoryName}</a></li>
+                                                    </c:forEach>
                                         </ul>
-                                    </li> 
+                                    </li>
                                     <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
                                         <ul role="menu" class="sub-menu">
-                                            <li><a href="blog.html">Blog List</a></li>
-                                            <li><a href="blog-single.html">Blog Single</a></li>
+                                            <li><a href="blog.jsp">Blog List</a></li>
+                                            <li><a href="blog-single.jsp">Blog Single</a></li>
                                         </ul>
-                                    </li> 
-                                    <li><a href="404.html">404</a></li>
-                                    <li><a href="contact-us.html">Contact</a></li>
+                                    </li>                              
+                                    <li><a href="contact-us.jsp">Contact</a></li>
+                                    <li><a href="404.jsp">404</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="search_box pull-right">
                                 <input type="text" placeholder="Search"/>
+                                <button type="submit">
+                                    <i class="fa fa-eye" style="border: none; height: 29px; line-height: 29px;"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div><!--/header-bottom-->
+            </div><!--/header-bottom-->        
         </header><!--/header-->
 
         <div class="container rounded bg-white mt-5 mb-5">
@@ -243,13 +257,15 @@
                                                 placeholder="Nhập địa chỉ" />
                                         </div>
 
+                                        <fmt:formatDate value="${user.createdAt}" pattern="dd/MM/yyyy" var="formattedDate" />
+
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Create Date</label>
                                             <input
                                                 type="text"
                                                 class="form-control"
                                                 readonly
-                                                value="<fmt:formatDate value='${create_date}' pattern='dd/MM/yyyy'/>" />
+                                                value="${formattedDate}" />
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -328,7 +344,7 @@
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label font-weight-bold">Create Date</label>
                                         <div class="p-2 bg-light rounded">
-                                            <fmt:formatDate value="${create_date}" pattern="dd/MM/yyyy"/>
+                                            <fmt:formatDate value="${user.createdAt}" pattern="dd/MM/yyyy"/>
                                         </div>
                                     </div>
 
@@ -365,171 +381,57 @@
             </div>
         </div>
     </div>
-    <footer id="footer"><!--Footer-->
-        <div class="footer-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="companyinfo">
-                            <h2><span>e</span>-shopper</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,sed do eiusmod tempor</p>
-                        </div>
-                    </div>
-                    <div class="col-sm-7">
-                        <div class="col-sm-3">
-                            <div class="video-gallery text-center">
-                                <a href="#">
-                                    <div class="iframe-img">
-                                        <img src="images/home/iframe1.png" alt="" />
-                                    </div>
-                                    <div class="overlay-icon">
-                                        <i class="fa fa-play-circle-o"></i>
-                                    </div>
-                                </a>
-                                <p>Circle of Hands</p>
-                                <h2>24 DEC 2014</h2>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                            <div class="video-gallery text-center">
-                                <a href="#">
-                                    <div class="iframe-img">
-                                        <img src="images/home/iframe2.png" alt="" />
-                                    </div>
-                                    <div class="overlay-icon">
-                                        <i class="fa fa-play-circle-o"></i>
-                                    </div>
-                                </a>
-                                <p>Circle of Hands</p>
-                                <h2>24 DEC 2014</h2>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                            <div class="video-gallery text-center">
-                                <a href="#">
-                                    <div class="iframe-img">
-                                        <img src="images/home/iframe3.png" alt="" />
-                                    </div>
-                                    <div class="overlay-icon">
-                                        <i class="fa fa-play-circle-o"></i>
-                                    </div>
-                                </a>
-                                <p>Circle of Hands</p>
-                                <h2>24 DEC 2014</h2>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                            <div class="video-gallery text-center">
-                                <a href="#">
-                                    <div class="iframe-img">
-                                        <img src="images/home/iframe4.png" alt="" />
-                                    </div>
-                                    <div class="overlay-icon">
-                                        <i class="fa fa-play-circle-o"></i>
-                                    </div>
-                                </a>
-                                <p>Circle of Hands</p>
-                                <h2>24 DEC 2014</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="address">
-                            <img src="images/home/map.png" alt="" />
-                            <p>505 S Atlantic Ave Virginia Beach, VA(Virginia)</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <p class="pull-left">Copyright © 2025  Flower Shop. All rights reserved</p>
+                <p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Group 2</a></span></p>
             </div>
         </div>
+    </div>
 
-        <div class="footer-widget">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Service</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="">Online Help</a></li>
-                                <li><a href="">Contact Us</a></li>
-                                <li><a href="">Order Status</a></li>
-                                <li><a href="">Change Location</a></li>
-                                <li><a href="">FAQ’s</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Quock Shop</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="">T-Shirt</a></li>
-                                <li><a href="">Mens</a></li>
-                                <li><a href="">Womens</a></li>
-                                <li><a href="">Gift Cards</a></li>
-                                <li><a href="">Shoes</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Policies</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="">Terms of Use</a></li>
-                                <li><a href="">Privecy Policy</a></li>
-                                <li><a href="">Refund Policy</a></li>
-                                <li><a href="">Billing System</a></li>
-                                <li><a href="">Ticket System</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>About Shopper</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="">Company Information</a></li>
-                                <li><a href="">Careers</a></li>
-                                <li><a href="">Store Location</a></li>
-                                <li><a href="">Affillate Program</a></li>
-                                <li><a href="">Copyright</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-sm-offset-1">
-                        <div class="single-widget">
-                            <h2>About Shopper</h2>
-                            <form action="#" class="searchform">
-                                <input type="text" placeholder="Your email address" />
-                                <button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
-                                <p>Get the most recent updates from <br />our site and be updated your self...</p>
-                            </form>
-                        </div>
-                    </div>
+</footer><!--/Footer-->
 
-                </div>
-            </div>
+
+
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.scrollUp.min.js"></script>
+<script src="js/price-range.js"></script>
+<script src="js/jquery.prettyPhoto.js"></script>
+<script src="js/main.js"></script>
+<c:if test="${sessionScope.user != null }">
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="width: 300px; z-index: 500000">
+        <div class="toast-header">
+            <!--                     <img src="assets/img/logo/guitar.png" class="rounded me-2" alt="iconlmao" style= "  max-width: 100%;
+                height: auto;
+                max-height: 20px;">-->
+            <strong class="mr-auto">Notification</strong>
+            <small>just now</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="row">
-                    <p class="pull-left">Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
-                    <p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
-                </div>
-            </div>
+        <div class="toast-body">
+            Login successfully
         </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.toast').toast({
+                delay: 3500 // 5 seconds delay before fade-out animation
+            });
+            $('.toast').toast('show');
+        });
 
-    </footer><!--/Footer-->
-
-
-
-    <script src="js/jquery.js"></script>
-    <script src="js/price-range.js"></script>
-    <script src="js/jquery.scrollUp.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.prettyPhoto.js"></script>
-    <script src="js/main.js"></script>
+    </script>
+    <style>
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+</c:if>>
 </body>
 </html>
