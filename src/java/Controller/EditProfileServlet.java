@@ -62,8 +62,6 @@ public class EditProfileServlet extends HttpServlet {
         int user_id = user.getUserId();
         UserDAO dao = new UserDAO();
         User use = dao.getInfoUserByID(user_id);
-        java.sql.Timestamp ts = user.getCreatedAt();         
-        request.setAttribute("create_date", ts);
         request.setAttribute("user", use);
         String mode = request.getParameter("mode");
         request.setAttribute("editMode", mode != null && mode.equals("edit"));

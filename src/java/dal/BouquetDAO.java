@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import Model.BouquetTemplate;
 import Model.ShoppingCart;
-import dal.DBContext;
+import dal.DBcontext;
 
 public class BouquetDAO {
 
@@ -23,7 +23,7 @@ public class BouquetDAO {
 
     public BouquetDAO() {
         try {
-            conn = new DBContext().getConnection();
+            conn = new DBcontext().getConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
