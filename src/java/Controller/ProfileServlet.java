@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package Controller;
 
 import dal.UserDAO;
 import java.io.IOException;
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import Model.User;
+import java.security.Timestamp;
 
 /**
  *
@@ -61,12 +62,13 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserDAO c = new UserDAO();
-        User d = c.getInfoUserByID(1);
-        LocalDateTime ldt = d.getCreatedAt();
-        Date regDate = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        request.setAttribute("create_date", regDate);
+        User user = (User) request.getSession().getAttribute("user");
+        int user_id = user.getUserId();
+        User d = c.getInfoUserByID(user_id);
+        java.sql.Timestamp ts = d.getCreatedAt();
+        request.setAttribute("create_date", ts);
         request.setAttribute("user", d);
-        request.getRequestDispatcher("/ViewOfCustomer/ProfilePaging.jsp").forward(request, response);
+        request.getRequestDispatcher("ProfilePaging.jsp").forward(request, response);
     }
 
     /**
