@@ -58,11 +58,11 @@ public class Customer extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        if ("signin".equals(action)) {
+        if(action.equals("signin")){
             handleSignIn(request, response);
-        } else if ("signup".equals(action)) {
+        }else if(action.equals("signup")){
             handleSignUp(request, response);
-        } else {
+        }else {
             response.sendRedirect("login.jsp");
         }
     }
