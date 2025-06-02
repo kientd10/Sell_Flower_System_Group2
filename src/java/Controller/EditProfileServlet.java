@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package Controller;
 
 import dal.UserDAO;
 import java.io.IOException;
@@ -11,8 +11,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import Model.User;
 
@@ -60,16 +58,16 @@ public class EditProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userID = 1; 
+        User user = (User) request.getSession().getAttribute("user");
+        int user_id = user.getUserId();
         UserDAO dao = new UserDAO();
-        User user = dao.getInfoUserByID(userID);
-        LocalDateTime ldt = user.getCreatedAt();
-        Date regDate = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        request.setAttribute("create_date", regDate);
-        request.setAttribute("user", user);
+        User use = dao.getInfoUserByID(user_id);
+        java.sql.Timestamp ts = user.getCreatedAt();         
+        request.setAttribute("create_date", ts);
+        request.setAttribute("user", use);
         String mode = request.getParameter("mode");
         request.setAttribute("editMode", mode != null && mode.equals("edit"));
-        request.getRequestDispatcher("/ViewOfCustomer/ProfilePaging.jsp").forward(request, response);
+        request.getRequestDispatcher("ProfilePaging.jsp").forward(request, response);
     }
 
     /**
@@ -89,12 +87,12 @@ public class EditProfileServlet extends HttpServlet {
         String address = request.getParameter("address");
         String phone = request.getParameter("phone");
         String username = request.getParameter("username");
-        UserDao dao = new UserDao();
+        UserDAO dao = new UserDAO();
         dao.changeInfoUserByID(userID, username, fullname, email, address, phone);
         User user = dao.getInfoUserByID(userID);
         request.setAttribute("user", user);
         request.setAttribute("editMode", false);
-        request.getRequestDispatcher("/ViewOfCustomer/ProfilePaging.jsp").forward(request, response);
+        request.getRequestDispatcher("ProfilePaging.jsp").forward(request, response);
     }
 
     /**
