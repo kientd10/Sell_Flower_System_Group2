@@ -33,4 +33,7 @@ public class DBcontext {
             }
         }
     }
+    public static Connection getJDBCConnection() throws SQLException {
+    return new DBcontext().getConnection();
+}
 }
