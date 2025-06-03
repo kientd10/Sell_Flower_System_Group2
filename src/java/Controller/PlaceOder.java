@@ -178,7 +178,7 @@ public class PlaceOder extends HttpServlet {
             response.getWriter().println("<h2>Đặt hàng thành công!</h2>");
             response.getWriter().println("<p>Mã đơn hàng: " + orderId + "</p>");
             response.getWriter().println("<p>Tổng tiền: " + totalAmount + " VNĐ</p>");
-
+            
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().println("Lỗi đặt hàng: " + e.getMessage());

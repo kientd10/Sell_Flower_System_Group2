@@ -16,6 +16,7 @@ import java.util.List;
 import Model.BouquetTemplate;
 import Model.ShoppingCart;
 import dal.DBcontext;
+import java.sql.SQLException;
 
 public class BouquetDAO {
 
@@ -303,6 +304,30 @@ public class BouquetDAO {
             e.printStackTrace();
         }
         return bouquets;
+    }
+    public List<BouquetTemplate> searchBouquetTemplates(String searchQuery) throws SQLException {
+        List<BouquetTemplate> results = new ArrayList<>();
+        String query = "SELECT template_id, template_name, description, base_price, image_url " +
+                      "FROM bouquet_templates WHERE is_active = TRUE AND (template_name LIKE ? OR description LIKE ?)";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            String searchPattern = "%" + searchQuery + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    BouquetTemplate template = new BouquetTemplate();
+                    template.setTemplateId(rs.getInt("template_id"));
+                    template.setTemplateName(rs.getString("template_name"));
+                    template.setDescription(rs.getString("description"));
+                    template.setBasePrice(rs.getDouble("base_price"));
+                    template.setImageUrl(rs.getString("image_url"));
+                    results.add(template);
+                }
+            }
+        }
+        return results;
     }
 
 }
