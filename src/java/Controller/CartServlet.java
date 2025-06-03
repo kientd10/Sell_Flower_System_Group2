@@ -93,7 +93,6 @@ public class CartServlet extends HttpServlet {
             if (selectedCartIds == null) {
                 selectedCartIds = new ArrayList<>();
             }
-
             if (isChecked != null) {
                 if (!selectedCartIds.contains(cartId)) {
                     selectedCartIds.add(cartId);
@@ -101,10 +100,7 @@ public class CartServlet extends HttpServlet {
             } else {
                 selectedCartIds.remove(cartId);
             }
-            session.setAttribute("selectedCartIds", selectedCartIds);
-            if (selectedCartIds.isEmpty()) {
-                session.setAttribute("error", "Bạn phải chọn ít nhất một sản phẩm.");
-            } else {
+            if(!selectedCartIds.isEmpty()){
                 session.removeAttribute("error");
             }
             session.setAttribute("selectedCartIds", selectedCartIds);
