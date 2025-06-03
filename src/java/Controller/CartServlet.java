@@ -120,8 +120,6 @@ public class CartServlet extends HttpServlet {
             } catch (Exception ex) {
                 Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-
         }
         double basePrice = item.getBouquetTemplate().getBasePrice();
         double new_price = new_quantity * basePrice;
