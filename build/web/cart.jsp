@@ -210,7 +210,7 @@
                                     <td class="cart_product">
                                         <img
                                             class="image-wrapper"
-                                            src="${pageContext.request.contextPath}/images/cart/${line.bouquetTemplate.imageUrl}"
+                                            src="${line.bouquetTemplate.imageUrl}"
                                             alt="${line.bouquetTemplate.templateName}" />
                                     </td>
                                     <td>

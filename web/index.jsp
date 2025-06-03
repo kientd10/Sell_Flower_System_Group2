@@ -130,7 +130,7 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="${pageContext.request.contextPath}/home" class="active">Home</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Home</a></li>
                                     <li class="dropdown"><a href="#">Category<i class="fa fa-angle-down"></i></a>
                                         <ul role="menu" class="sub-menu">
                                             <c:if test="${empty categories}">
@@ -212,7 +212,6 @@
                                     </a>
                                 </div>
                             </c:when>
-
                             <c:otherwise>
                                 <p style="text-align: center; font-weight: bold; color: red;">Không có sản phẩm nổi bật nào.</p>
                             </c:otherwise>
@@ -223,141 +222,58 @@
             </div>
         </section><!--/slider-->
 
-        <section>
+        <section>                                        <!--/left-->
             <div class="container">
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="left-sidebar">
                             <h2>Category</h2>
-                            <div class="panel-group category-products" id="accordian"><!--category-productsr-->
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
-                                                <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                                                Sportswear
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="sportswear" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li><a href="#">Nike </a></li>
-                                                <li><a href="#">Under Armour </a></li>
-                                                <li><a href="#">Adidas </a></li>
-                                                <li><a href="#">Puma</a></li>
-                                                <li><a href="#">ASICS </a></li>
-                                            </ul>
+                            <div class="panel-group category-products" id="accordian"><!--category-productsr--> 
+                                <c:forEach var="category" items="${categories}">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}">
+                                                    <span class="badge pull-right"><i class="fa fa-plus"></i></span>
+                                                        ${category.categoryName}
+                                                </a>
+                                            </h4>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordian" href="#mens">
-                                                <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                                                Mens
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="mens" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li><a href="#">Fendi</a></li>
-                                                <li><a href="#">Guess</a></li>
-                                                <li><a href="#">Valentino</a></li>
-                                                <li><a href="#">Dior</a></li>
-                                                <li><a href="#">Versace</a></li>
-                                                <li><a href="#">Armani</a></li>
-                                                <li><a href="#">Prada</a></li>
-                                                <li><a href="#">Dolce and Gabbana</a></li>
-                                                <li><a href="#">Chanel</a></li>
-                                                <li><a href="#">Gucci</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordian" href="#womens">
-                                                <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                                                Womens
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="womens" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li><a href="#">Fendi</a></li>
-                                                <li><a href="#">Guess</a></li>
-                                                <li><a href="#">Valentino</a></li>
-                                                <li><a href="#">Dior</a></li>
-                                                <li><a href="#">Versace</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Kids</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Fashion</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Households</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Interiors</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Clothing</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Bags</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Shoes</a></h4>
-                                    </div>
-                                </div>
+                                </c:forEach>
                             </div><!--/category-products-->
 
-                            <div class="brands_products"><!--brands_products-->
-                                <h2>Brands</h2>
-                                <div class="brands-name">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <li><a href="#"> <span class="pull-right">(50)</span>Acne</a></li>
-                                        <li><a href="#"> <span class="pull-right">(56)</span>Grüne Erde</a></li>
-                                        <li><a href="#"> <span class="pull-right">(27)</span>Albiro</a></li>
-                                        <li><a href="#"> <span class="pull-right">(32)</span>Ronhill</a></li>
-                                        <li><a href="#"> <span class="pull-right">(5)</span>Oddmolly</a></li>
-                                        <li><a href="#"> <span class="pull-right">(9)</span>Boudestijn</a></li>
-                                        <li><a href="#"> <span class="pull-right">(4)</span>Rösch creative culture</a></li>
-                                    </ul>
+                            <div class="price-range"><!--/Filter-->
+                                <h2 style="text-align: center; color: #ff9900;">PRICE RANGE</h2>
+                                <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #f0f0f0; border-radius: 5px; max-width: 250px; margin: auto;">
+                                    <input type="number" id="minPrice" placeholder="Giá từ (vnđ)"
+                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
+                                    <input type="number" id="maxPrice" placeholder="Giá đến (vnđ)"
+                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
+                                    <button id="priceFilterBtn"
+                                            style="background-color: #ff9900; color: white; border: none; padding: 8px 18px; border-radius: 3px; cursor: pointer;">
+                                        Lọc giá
+                                    </button>
                                 </div>
-                            </div><!--/brands_products-->
+                            </div>
+                            
+                            <script>
+    document.getElementById("priceFilterBtn").addEventListener("click", function () {
+        const minPrice = document.getElementById("minPrice").value;
+        const maxPrice = document.getElementById("maxPrice").value;
 
-                            <div class="price-range"><!--price-range-->
-                                <h2>Price Range</h2>
-                                <div class="well text-center">
-                                    <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600" data-slider-step="5" data-slider-value="[250,450]" id="sl2" ><br />
-                                    <b class="pull-left">$ 0</b> <b class="pull-right">$ 600</b>
-                                </div>
-                            </div><!--/price-range-->
+        // Lấy categoryId hiện tại nếu có từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryId = urlParams.get("categoryId");
+
+        let query = "bouquet?";
+        if (minPrice) query += `minPrice=${minPrice}&`;
+        if (maxPrice) query += `maxPrice=${maxPrice}&`;
+        if (categoryId) query += `categoryId=${categoryId}&`;
+
+        window.location.href = query;
+    });
+</script>
 
                             <div class="shipping text-center"><!--shipping-->
                                 <img src="images/home/shipping.jpg" alt="" />
@@ -366,7 +282,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-9 padding-right">
+                    <div class="col-sm-9 padding-right">                       
                         <div class="features_items"> <!--features_items-->
                             <h2 class="title text-center">
                                 <c:choose>
@@ -404,7 +320,9 @@
                                             <div class="product-image-wrapper">
                                                 <div class="single-products">
                                                     <div class="productinfo text-center">
-                                                        <img src="${pageContext.request.contextPath}/images/cart/${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;"/>
+                                                        <a href="product-details.jsp?templateId=${bou.templateId}">
+                                                            <img src="${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;"/>
+                                                        </a>
                                                         <h2>${bou.basePrice} đ</h2>
                                                         <p>${bou.templateName}</p>
                                                         <c:if test="${sessionScope.user == null}">
@@ -428,6 +346,8 @@
                                 </c:otherwise>
                             </c:choose>
                         </div>
+                        <!--features_items-->
+
                         <div class="pagination-area text-center">
                             <ul class="pagination">
                                 <c:set var="baseUrl" value="" />
@@ -451,6 +371,7 @@
                                         <a href="${baseUrl}${i}">${i}</a>
                                     </li>
                                 </c:forEach>
+
                                 <c:if test="${currentPage < totalPages}">
                                     <li>
                                         <a href="${baseUrl}${currentPage + 1}">&raquo;</a>
@@ -458,6 +379,7 @@
                                 </c:if>
                             </ul>
                         </div>
+
                         <div class="recommended_items">
                             <h2 class="title text-center">recommended items</h2>
 
@@ -729,7 +651,7 @@
         <c:if test="${sessionScope.user != null }">
             <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="width: 300px; z-index: 500000">
                 <div class="toast-header">
-                    <!--                     <img src="assets/img/logo/guitar.png" class="rounded me-2" alt="iconlmao" style= "  max-width: 100%;
+                    <!--<img src="assets/img/logo/guitar.png" class="rounded me-2" alt="iconlmao" style= "  max-width: 100%;
                         height: auto;
                         max-height: 20px;">-->
                     <strong class="mr-auto">Notification</strong>

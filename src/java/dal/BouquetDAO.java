@@ -75,60 +75,60 @@ public class BouquetDAO {
         return bouquets;
     }
     
-    public List<BouquetTemplate> getBouquetsByCategoryIdPaging(int categoryId, int offset, int limit) {
-        List<BouquetTemplate> list = new ArrayList<>();
-        String sql = "SELECT template_id, template_name, description, base_price, image_url "
-                + "FROM bouquet_templates "
-                + "WHERE category_id = ? AND is_active = TRUE "
-                + "ORDER BY template_id "
-                + "LIMIT ?, ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, categoryId);
-            stmt.setInt(2, offset);
-            stmt.setInt(3, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    list.add(new BouquetTemplate(
-                            rs.getInt("template_id"),
-                            rs.getString("template_name"),
-                            rs.getString("description"),
-                            rs.getDouble("base_price"),
-                            rs.getString("image_url")
-                    ));
-                }
+public List<BouquetTemplate> getBouquetsByCategoryIdPaging(int categoryId, int offset, int limit) {
+    List<BouquetTemplate> list = new ArrayList<>();
+    String sql = "SELECT template_id, template_name, description, base_price, image_url "
+               + "FROM bouquet_templates "
+               + "WHERE category_id = ? AND is_active = TRUE "
+               + "ORDER BY template_id "
+               + "LIMIT ?, ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, categoryId);
+        stmt.setInt(2, offset);
+        stmt.setInt(3, limit);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(new BouquetTemplate(
+                        rs.getInt("template_id"),
+                        rs.getString("template_name"),
+                        rs.getString("description"),
+                        rs.getDouble("base_price"),
+                        rs.getString("image_url")
+                ));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return list;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return list;
+}
 
-    public List<BouquetTemplate> getAllBouquetsPaging(int offset, int limit) {
-        List<BouquetTemplate> list = new ArrayList<>();
-        String sql = "SELECT template_id, template_name, description, base_price, image_url "
-                + "FROM bouquet_templates "
-                + "WHERE is_active = TRUE "
-                + "ORDER BY template_id "
-                + "LIMIT ?, ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, offset);
-            stmt.setInt(2, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    list.add(new BouquetTemplate(
-                            rs.getInt("template_id"),
-                            rs.getString("template_name"),
-                            rs.getString("description"),
-                            rs.getDouble("base_price"),
-                            rs.getString("image_url")
-                    ));
-                }
+public List<BouquetTemplate> getAllBouquetsPaging(int offset, int limit) {
+    List<BouquetTemplate> list = new ArrayList<>();
+    String sql = "SELECT template_id, template_name, description, base_price, image_url "
+               + "FROM bouquet_templates "
+               + "WHERE is_active = TRUE "
+               + "ORDER BY template_id "
+               + "LIMIT ?, ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, offset);   // offset
+        stmt.setInt(2, limit);    // limit
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(new BouquetTemplate(
+                        rs.getInt("template_id"),
+                        rs.getString("template_name"),
+                        rs.getString("description"),
+                        rs.getDouble("base_price"),
+                        rs.getString("image_url")
+                ));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return list;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return list;
+}
 
     public int countAllBouquets() {
         String sql = "SELECT COUNT(*) FROM bouquet_templates WHERE is_active = TRUE";
@@ -329,5 +329,75 @@ public class BouquetDAO {
         }
         return results;
     }
+public List<BouquetTemplate> filterBouquets(int categoryId, Double minPrice, Double maxPrice, int offset, int limit) {
+    List<BouquetTemplate> bouquets = new ArrayList<>();
+    StringBuilder sql = new StringBuilder("SELECT template_id, template_name, description, base_price, image_url FROM bouquet_templates WHERE is_active = TRUE");
+    
+    if (categoryId != -1) {
+        sql.append(" AND category_id = ?");
+    }
+    if (minPrice != null) {
+        sql.append(" AND base_price >= ?");
+    }
+    if (maxPrice != null) {
+        sql.append(" AND base_price <= ?");
+    }
+    sql.append(" ORDER BY template_id LIMIT ?, ?");
+    
+    try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        int paramIndex = 1;
+        if (categoryId != -1) stmt.setInt(paramIndex++, categoryId);
+        if (minPrice != null) stmt.setDouble(paramIndex++, minPrice);
+        if (maxPrice != null) stmt.setDouble(paramIndex++, maxPrice);
+        stmt.setInt(paramIndex++, offset);
+        stmt.setInt(paramIndex++, limit);
+        
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                bouquets.add(new BouquetTemplate(
+                        rs.getInt("template_id"),
+                        rs.getString("template_name"),
+                        rs.getString("description"),
+                        rs.getDouble("base_price"),
+                        rs.getString("image_url")
+                ));
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 
+    return bouquets;
+}
+
+public int countFilteredBouquets(int categoryId, Double minPrice, Double maxPrice) {
+    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM bouquet_templates WHERE is_active = TRUE");
+    
+    if (categoryId != -1) {
+        sql.append(" AND category_id = ?");
+    }
+    if (minPrice != null) {
+        sql.append(" AND base_price >= ?");
+    }
+    if (maxPrice != null) {
+        sql.append(" AND base_price <= ?");
+    }
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        int paramIndex = 1;
+        if (categoryId != -1) stmt.setInt(paramIndex++, categoryId);
+        if (minPrice != null) stmt.setDouble(paramIndex++, minPrice);
+        if (maxPrice != null) stmt.setDouble(paramIndex++, maxPrice);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return 0;
+}
 }
