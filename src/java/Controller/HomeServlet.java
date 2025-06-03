@@ -14,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -70,31 +71,66 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Category> categories = categoryDAO.getAllCategories();
-        List<BouquetTemplate> bouquets;
+      HttpSession session = request.getSession();
+        
+        // Lấy các thuộc tính từ session (nếu có từ SearchServlet)
+        List<BouquetTemplate> searchResults = (List<BouquetTemplate>) session.getAttribute("searchResults");
+        String searchQuery = (String) session.getAttribute("searchQuery");
+        String error = (String) session.getAttribute("error");
 
-        String categoryIdStr = request.getParameter("categoryId");
-        String page; // để phân biệt home hay category
+        try {
+            // Lấy danh sách danh mục
+            List<Category> categories = categoryDAO.getAllCategories();
+            request.setAttribute("categories", categories);
 
-        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
-            page = "category";
-            try {
-                int categoryId = Integer.parseInt(categoryIdStr);
-                bouquets = bouquetDAO.getBouquetsByCategoryId(categoryId);
-            } catch (NumberFormatException e) {
-                bouquets = bouquetDAO.getAllBouquets(); // fallback nếu lỗi
-                page = "home"; // coi như home nếu lỗi id
+            // Lấy danh sách sản phẩm nổi bật (cho slider)
+            List<BouquetTemplate> featuredBouquets = bouquetDAO.getAllBouquets(); // Sử dụng tạm getAllBouquets()
+            request.setAttribute("featuredBouquets", featuredBouquets);
+
+            // Xử lý danh sách bouquets
+            List<BouquetTemplate> bouquets;
+            String page; // để phân biệt home, category, hoặc search
+
+            String categoryIdStr = request.getParameter("categoryId");
+            if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+                page = "category";
+                try {
+                    int categoryId = Integer.parseInt(categoryIdStr);
+                    bouquets = bouquetDAO.getBouquetsByCategoryId(categoryId);
+                } catch (NumberFormatException e) {
+                    bouquets = bouquetDAO.getAllBouquets(); // fallback nếu lỗi
+                    page = "home";
+                }
+            } else if (searchResults != null) {
+                // Nếu có kết quả tìm kiếm từ SearchServlet
+                page = "search";
+                bouquets = searchResults;
+                request.setAttribute("searchQuery", searchQuery); // Truyền searchQuery để hiển thị
+            } else {
+                page = "home";
+                bouquets = bouquetDAO.getAllBouquets(); // mặc định hiển thị tất cả
             }
-        } else {
-            page = "home";
-            bouquets = bouquetDAO.getAllBouquets(); // mặc định hiển thị tất cả
+
+            request.setAttribute("bouquets", bouquets);
+            request.setAttribute("page", page);  // truyền biến page vào JSP để phân biệt
+
+            // Chuyển error từ session sang request nếu có
+            if (error != null) {
+                request.setAttribute("error", error);
+            }
+
+            // Xóa các thuộc tính trong session sau khi sử dụng
+            session.removeAttribute("searchResults");
+            session.removeAttribute("searchQuery");
+            session.removeAttribute("error");
+
+            // Forward về index.jsp
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Đã xảy ra lỗi khi tải trang chủ. Vui lòng thử lại.");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
-
-        request.setAttribute("categories", categories);
-        request.setAttribute("bouquets", bouquets);
-        request.setAttribute("page", page);  // truyền biến page vào JSP để phân biệt
-
-        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     ////////////////////////////

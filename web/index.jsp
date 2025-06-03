@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="en">
 
     <head>
@@ -152,14 +153,18 @@
                                 </ul>
                             </div>
                         </div>
+
                         <div class="col-sm-3">
                             <div class="search_box pull-right">
-                                <input type="text" placeholder="Search"/>
-                                <button type="submit">
-                                    <i class="fa fa-eye" style="border: none; height: 29px; line-height: 29px;"></i>
-                                </button>
+                                <form action="SearchServlet" method="GET">
+                                    <input type="text" name="searchQuery" placeholder="Tìm kiếm giỏ hoa..." required/>
+                                    <button type="submit">
+                                        <i class="fa fa-search" style="border: none; height: 29px; line-height: 29px;"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div><!--/header-bottom-->        
@@ -362,12 +367,24 @@
                     </div>
 
                     <div class="col-sm-9 padding-right">
-                        <div class="features_items">        <!--features_items-->
-                            <h2 class="title text-center">Features Items</h2>
+                        <div class="features_items"> <!--features_items-->
+                            <h2 class="title text-center">
+                                <c:choose>
+                                    <c:when test="${page == 'search'}">
+                                        Kết Quả Tìm Kiếm cho "<c:out value="${searchQuery}"/>"
+                                    </c:when>
+                                    <c:otherwise>
+                                        Features Items
+                                    </c:otherwise>
+                                </c:choose>
+                            </h2>
                             <c:choose>
                                 <c:when test="${empty bouquets}">
                                     <h4 style="text-align:center;color:#ff6f61;">
                                         <c:choose>
+                                            <c:when test="${page == 'search'}">
+                                                Không tìm thấy giỏ hoa nào phù hợp với từ khóa của bạn!
+                                            </c:when>
                                             <c:when test="${page == 'home'}">
                                                 Không có sản phẩm nào!
                                             </c:when>
@@ -410,7 +427,7 @@
                                     </c:forEach>
                                 </c:otherwise>
                             </c:choose>
-                        </div> 
+                        </div>
                         <div class="pagination-area text-center">
                             <ul class="pagination">
                                 <c:set var="baseUrl" value="" />
