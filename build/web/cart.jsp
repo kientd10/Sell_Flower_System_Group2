@@ -266,7 +266,7 @@
                     <div class="alert alert-danger">${error}</div>
                 </c:if>
                 <div class="text-right" style="margin-top: 20px;">
-                    <form  method="get" action="checkoutuser.jsp" >
+                    <form  method="get" action="checkout.jsp" >
                         <button type="submit" id="checkoutBtn" class="btn btn-success">Thanh Toán</button>
                     </form>
                 </div>
