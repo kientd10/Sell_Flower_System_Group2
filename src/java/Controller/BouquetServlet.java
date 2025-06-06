@@ -62,75 +62,73 @@ public class BouquetServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //////////////////// View 
-String categoryIdStr = request.getParameter("categoryId");
-    String minPriceStr = request.getParameter("minPrice");
-    String maxPriceStr = request.getParameter("maxPrice");
-    int page = 1;
-    int recordsPerPage = 8;
+        String categoryIdStr = request.getParameter("categoryId");
+        String minPriceStr = request.getParameter("minPrice");
+        String maxPriceStr = request.getParameter("maxPrice");
+        int page = 1;
+        int recordsPerPage = 8;
 
-    if (request.getParameter("pageNum") != null) {
+        if (request.getParameter("pageNum") != null) {
+            try {
+                page = Integer.parseInt(request.getParameter("pageNum"));
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
+        int offset = (page - 1) * recordsPerPage;
+        int categoryId = -1;
+        Double minPrice = null, maxPrice = null;
+
         try {
-            page = Integer.parseInt(request.getParameter("pageNum"));
+            if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+                categoryId = Integer.parseInt(categoryIdStr);
+            }
+            if (minPriceStr != null && !minPriceStr.isEmpty()) {
+                minPrice = Double.parseDouble(minPriceStr);
+            }
+            if (maxPriceStr != null && !maxPriceStr.isEmpty()) {
+                maxPrice = Double.parseDouble(maxPriceStr);
+            }
         } catch (NumberFormatException e) {
-            page = 1;
+            minPrice = null;
+            maxPrice = null;
         }
-    }
 
-    int offset = (page - 1) * recordsPerPage;
-    int categoryId = -1;
-    Double minPrice = null, maxPrice = null;
-
-    // Parse categoryId
-    if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
         try {
-            categoryId = Integer.parseInt(categoryIdStr);
-        } catch (NumberFormatException e) {
-            categoryId = -1;
+            BouquetDAO bouquetDAO = new BouquetDAO();
+            CategoryDAO categoryDAO = new CategoryDAO();
+
+            List<BouquetTemplate> bouquets;
+            List<Category> categories = categoryDAO.getAllCategories();
+            int totalRecords;
+
+            if (categoryId != -1 || minPrice != null || maxPrice != null) {
+                bouquets = bouquetDAO.filterBouquets(categoryId, minPrice, maxPrice, offset, recordsPerPage);
+                totalRecords = bouquetDAO.countFilteredBouquets(categoryId, minPrice, maxPrice);
+                request.setAttribute("page", "filter");
+                request.setAttribute("categoryId", categoryId != -1 ? categoryId : null);
+                request.setAttribute("minPrice", minPrice);
+                request.setAttribute("maxPrice", maxPrice);
+            } else {
+                bouquets = bouquetDAO.getAllBouquetsPaging(offset, recordsPerPage);
+                totalRecords = bouquetDAO.countAllBouquets();
+                request.setAttribute("page", "home");
+            }
+
+            int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+
+            request.setAttribute("categories", categories);
+            request.setAttribute("bouquets", bouquets);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
         }
-    }
-
-    // Parse price range
-    try {
-        if (minPriceStr != null && !minPriceStr.isEmpty()) {
-            minPrice = Double.parseDouble(minPriceStr);
-        }
-        if (maxPriceStr != null && !maxPriceStr.isEmpty()) {
-            maxPrice = Double.parseDouble(maxPriceStr);
-        }
-    } catch (NumberFormatException e) {
-        minPrice = null;
-        maxPrice = null;
-    }
-
-    BouquetDAO bouquetDAO = new BouquetDAO();
-    CategoryDAO categoryDAO = new CategoryDAO();
-
-    List<BouquetTemplate> bouquets = new ArrayList<>();
-    List<Category> categories = categoryDAO.getAllCategories();
-    int totalRecords = 0;
-
-    // Xử lý lọc theo category và khoảng giá
-    if (categoryId != -1 || minPrice != null || maxPrice != null) {
-        bouquets = bouquetDAO.filterBouquets(categoryId, minPrice, maxPrice, offset, recordsPerPage);
-        totalRecords = bouquetDAO.countFilteredBouquets(categoryId, minPrice, maxPrice);
-        request.setAttribute("page", "filter");
-        request.setAttribute("categoryId", categoryId != -1 ? categoryId : null);
-        request.setAttribute("minPrice", minPrice);
-        request.setAttribute("maxPrice", maxPrice);
-    } else {
-        bouquets = bouquetDAO.getAllBouquetsPaging(offset, recordsPerPage);
-        totalRecords = bouquetDAO.countAllBouquets();
-        request.setAttribute("page", "home");
-    }
-
-    int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
-
-    request.setAttribute("categories", categories);
-    request.setAttribute("bouquets", bouquets);
-    request.setAttribute("currentPage", page);
-    request.setAttribute("totalPages", totalPages);
-
-    request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     /**
