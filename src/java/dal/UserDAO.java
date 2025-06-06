@@ -4,6 +4,7 @@
  */
 package dal;
 
+import Model.Role;
 import Model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -205,27 +206,11 @@ public class UserDAO {
             dbContext.closeConnection(conn);
         }
     }
+    
+    
+    
+   
 
-   public static void main(String[] args) {
-    UserDAO dao = new UserDAO();
-    User user = dao.getInfoUserByID(1);  // Lấy user có user_id = 1
-
-    if (user != null && user.getUsername() != null) {
-        System.out.println("=== Thông tin User ID = 1 ===");
-        System.out.println("User ID: " + user.getUserId());
-        System.out.println("Username: " + user.getUsername());
-        System.out.println("Password: " + user.getPassword());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("Full Name: " + user.getFullName());
-        System.out.println("Phone: " + user.getPhone());
-        System.out.println("Address: " + user.getAddress());
-        System.out.println("Role ID: " + user.getRoleId());
-        System.out.println("Active: " + user.isIsActive());
-        System.out.println("Created At: " + user.getCreatedAt());
-    } else {
-        System.out.println("Không tìm thấy user với user_id = 1 hoặc dữ liệu bị thiếu.");
-    }
-}
 
 
 }
