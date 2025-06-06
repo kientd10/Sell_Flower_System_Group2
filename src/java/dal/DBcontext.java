@@ -3,17 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dal;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 /**
  *
  * @author tuanh
  */
-public class DBContext {
+public class DBcontext {
+
     private static final String URL = "jdbc:mysql://localhost:3306/flower_shop_db_1";
-    private static final String USER = "root"; 
-    private static final String PASSWORD = "123456"; 
+    private static final String USER = "root";
+    private static final String PASSWORD = "123456";
 
     public Connection getConnection() throws SQLException {
         try {
@@ -32,5 +35,9 @@ public class DBContext {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static Connection getJDBCConnection() throws SQLException {
+        return new DBcontext().getConnection();
     }
 }

@@ -19,6 +19,7 @@ public class User {
     private String phone;
     private String address;
     private int RoleId; 
+    private Role role;
     private boolean isActive;
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -38,6 +39,13 @@ public class User {
         this.isActive = isActive;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public int getUserId() {
