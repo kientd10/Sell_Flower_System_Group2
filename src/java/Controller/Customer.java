@@ -69,35 +69,12 @@ public class Customer extends HttpServlet {
 
     private void handleSignIn(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String remember = request.getParameter("remember");
+        String action = request.getParameter("action");
 
-        if (email == null || password == null) {
-            request.setAttribute("error", "Email hoặc mật khẩu không được để trống!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
-
-        User user = userDAO.loginUser(email, password);
-        if (user != null && user.isIsActive()) {
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-
-            if ("ON".equals(remember)) {
-                setCookie(response, "email", email, 7 * 24 * 60 * 60);
-                setCookie(response, "password", password, 7 * 24 * 60 * 60);
-                setCookie(response, "remember", "ON", 7 * 24 * 60 * 60);
-            } else {
-                deleteCookie(request, response, "email");
-                deleteCookie(request, response, "password");
-                deleteCookie(request, response, "remember");
-            }
-
-            response.sendRedirect("home"); // ✅ Chuyển hướng về HomeServlet để xử lý danh mục/sản phẩm
+        if ("signup".equals(action)) {
+            handleSignUp(request, response);
         } else {
-            request.setAttribute("error", "Email hoặc mật khẩu không đúng!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            response.sendRedirect("login.jsp");
         }
     }
 
@@ -156,7 +133,7 @@ public class Customer extends HttpServlet {
         user.setFullName(fullName);
         user.setPhone(phone);
         user.setAddress(address);
-        user.setRoleId(1);
+        user.setRoleId(1); // Mặc định là Khách hàng (role_id: 1)
         user.setIsActive(true);
 
         if (userDAO.registerUser(user)) {
@@ -170,27 +147,6 @@ public class Customer extends HttpServlet {
             request.setAttribute("phone", phone);
             request.setAttribute("address", address);
             request.getRequestDispatcher("login.jsp").forward(request, response);
-        }
-    }
-
-    private void setCookie(HttpServletResponse response, String name, String value, int maxAge) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setMaxAge(maxAge);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-    }
-
-    private void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (name.equals(cookie.getName())) {
-                    cookie.setMaxAge(0);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-                    break;
-                }
-            }
         }
     }
 
