@@ -2,15 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/index.jsp</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/Controller/CartServlet.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/Controller/ForgotPassword.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/dal/CategoryDAO.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/dal/BouquetDAO.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/Controller/BouquetServlet.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/Controller/HomeServlet.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/WEB-INF/web.xml</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

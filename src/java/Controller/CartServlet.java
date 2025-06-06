@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import Model.BouquetTemplate;
 import Model.ShoppingCart;
 import Model.User;
+import java.util.Arrays;
 
 /**
  *
@@ -85,58 +86,48 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String cartId = request.getParameter("cartId");
-        String isChecked = request.getParameter("isChecked");
-        if (cartId != null) {
-            HttpSession session = request.getSession();
-            List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
-            if (selectedCartIds == null) {
-                selectedCartIds = new ArrayList<>();
-            }
+         HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
 
-            if (isChecked != null) {
-                if (!selectedCartIds.contains(cartId)) {
-                    selectedCartIds.add(cartId);
-                }
-            } else {
-                selectedCartIds.remove(cartId);
-            }
-            session.setAttribute("selectedCartIds", selectedCartIds);
-            if (selectedCartIds.isEmpty()) {
-                session.setAttribute("error", "Bạn phải chọn ít nhất một sản phẩm.");
-            } else {
-                session.removeAttribute("error");
-            }
-            session.setAttribute("selectedCartIds", selectedCartIds);
-            response.sendRedirect("cart");
+        if (user == null) {
+            response.sendRedirect("login");
             return;
         }
-        int userId = Integer.parseInt(request.getParameter("userId"));
-        int templateId = Integer.parseInt(request.getParameter("templateId"));
-        String action = request.getParameter("action");
+
+        int user_id = user.getUserId();
         BouquetDAO c = new BouquetDAO();
-        ShoppingCart item = c.getItems(userId, templateId);
-        int current_quantity = item.getQuantity();
-        int new_quantity = "up".equals(action) ? current_quantity + 1 : current_quantity - 1;
-        if (new_quantity >= 0) {
+
+        String[] templateIds = request.getParameterValues("templateId[]");
+        String[] quantities = request.getParameterValues("quantity[]");
+        String[] cartIds = request.getParameterValues("cartId[]");
+        String[] checkedCartIds = request.getParameterValues("isChecked[]");
+        if (templateIds != null && quantities != null && templateIds.length == quantities.length) {
             try {
-                c.updateQuantity(userId, templateId, new_quantity);
+                for (int i = 0; i < templateIds.length; i++) {
+                    int templateId = Integer.parseInt(templateIds[i]);
+                    int quantity = Integer.parseInt(quantities[i]);
+                    c.updateQuantity(user_id, templateId, quantity);
+                }
             } catch (Exception ex) {
                 Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-
         }
-        double basePrice = item.getBouquetTemplate().getBasePrice();
-        double new_price = new_quantity * basePrice;
-        request.setAttribute("updatedTemplateId", templateId);
-        request.setAttribute("updatedQuantity", new_quantity);
-        request.setAttribute("updatedLineTotal", new_price);
-        List<ShoppingCart> cart_items = c.getCartItemsByUserId(userId);
-        request.setAttribute("cart", cart_items);
-        request.setAttribute("userId", userId);
-        request.getRequestDispatcher("cart.jsp")
-                .forward(request, response);
+
+        List<String> selectedCartIds = new ArrayList<>();
+        if (checkedCartIds != null) {
+            selectedCartIds.addAll(Arrays.asList(checkedCartIds));
+        }
+
+        if (selectedCartIds.isEmpty()) {
+            session.setAttribute("error", "Chọn ít nhất 1 sản phẩm");
+            response.sendRedirect("cart");
+            return;
+        } else {
+            session.removeAttribute("error");
+        }
+
+        session.setAttribute("selectedCartIds", selectedCartIds);
+        response.sendRedirect("checkout.jsp");
     }
 
     /**
