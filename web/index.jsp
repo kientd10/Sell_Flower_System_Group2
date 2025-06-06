@@ -115,7 +115,6 @@
                 </div>
             </div><!--/header-middle-->
 
-
             <div class="header-bottom"><!--header-bottom-->
                 <div class="container">
                     <div class="row">
@@ -228,7 +227,7 @@
                     <div class="col-sm-3">
                         <div class="left-sidebar">
                             <h2>Category</h2>
-                            <div class="panel-group category-products" id="accordian"><!--category-productsr--> 
+                            <div class="panel-group category-products" id="accordian"><!--category-product--> 
                                 <c:forEach var="category" items="${categories}">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
@@ -243,47 +242,50 @@
                                 </c:forEach>
                             </div><!--/category-products-->
 
-<div class="price-range"><!--/Filter-->
-    <h2 style="text-align: center; color: #ff9900;">PRICE RANGE</h2>
-    <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #f0f0f0; border-radius: 5px; max-width: 250px; margin: auto;">
-        <input type="number" id="minPrice" placeholder="Giá từ (vnđ)"
-               value="${minPrice != null ? minPrice : ''}"
-               style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
-        <input type="number" id="maxPrice" placeholder="Giá đến (vnđ)"
-               value="${maxPrice != null ? maxPrice : ''}"
-               style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
-        <button id="priceFilterBtn"
-                style="background-color: #ff9900; color: white; border: none; padding: 8px 18px; border-radius: 3px; cursor: pointer;">
-            Lọc giá
-        </button>
-    </div>
-</div>
+                            <div class="price-range"><!--/Filter-->
+                                <h2 style="text-align: center; color: #ff9900;">PRICE RANGE</h2>
+                                <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #f0f0f0; border-radius: 5px; max-width: 250px; margin: auto;">
+                                    <input type="number" id="minPrice" placeholder="Giá từ (vnđ)"
+                                           value="${minPrice != null ? minPrice : ''}"
+                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
+                                    <input type="number" id="maxPrice" placeholder="Giá đến (vnđ)"
+                                           value="${maxPrice != null ? maxPrice : ''}"
+                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
+                                    <button id="priceFilterBtn"
+                                            style="background-color: #ff9900; color: white; border: none; padding: 8px 18px; border-radius: 3px; cursor: pointer;">
+                                        Lọc giá
+                                    </button>
+                                </div>
+                            </div>
 
-<script>
-    document.getElementById("priceFilterBtn").addEventListener("click", function (event) {
-        event.preventDefault(); // ngăn form submit nếu có
-        const minPrice = document.getElementById("minPrice").value.trim();
-        const maxPrice = document.getElementById("maxPrice").value.trim();
+                            <script>
+                                document.getElementById("priceFilterBtn").addEventListener("click", function (event) {
+                                    event.preventDefault(); // ngăn form submit nếu có
+                                    const minPrice = document.getElementById("minPrice").value.trim();
+                                    const maxPrice = document.getElementById("maxPrice").value.trim();
 
-        console.log("minPrice:", minPrice);
-        console.log("maxPrice:", maxPrice);
+                                    console.log("minPrice:", minPrice);
+                                    console.log("maxPrice:", maxPrice);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const categoryId = urlParams.get("categoryId");
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    const categoryId = urlParams.get("categoryId");
 
-        const params = new URLSearchParams();
+                                    const params = new URLSearchParams();
 
-        if (minPrice !== "") params.append("minPrice", minPrice);
-        if (maxPrice !== "") params.append("maxPrice", maxPrice);
-        if (categoryId) params.append("categoryId", categoryId);
+                                    if (minPrice !== "")
+                                        params.append("minPrice", minPrice);
+                                    if (maxPrice !== "")
+                                        params.append("maxPrice", maxPrice);
+                                    if (categoryId)
+                                        params.append("categoryId", categoryId);
 
-        params.append("pageNum", "1");
+                                    params.append("pageNum", "1");
 
-        console.log("Redirect URL:", "bouquet?" + params.toString());
+                                    console.log("Redirect URL:", "bouquet?" + params.toString());
 
-        window.location.href = "bouquet?" + params.toString();
-    });
-</script>
+                                    window.location.href = "bouquet?" + params.toString();
+                                });
+                            </script>
 
 
                             <div class="shipping text-center"><!--shipping-->
@@ -294,69 +296,69 @@
                     </div>
 
                     <div class="col-sm-9 padding-right">                       
-<div class="features_items"> <!--features_items-->
-    <h2 class="title text-center">
-        <c:choose>
-            <c:when test="${page == 'filter'}">
-                Kết quả lọc sản phẩm
-            </c:when>
-            <c:when test="${page == 'search'}">
-                Kết quả tìm kiếm cho "<c:out value='${searchQuery}'/>"
-            </c:when>
-            <c:otherwise>
-                Sản phẩm nổi bật
-            </c:otherwise>
-        </c:choose>
-    </h2>
+                        <div class="features_items"> <!--features_items-->
+                            <h2 class="title text-center">
+                                <c:choose>
+                                    <c:when test="${page == 'filter'}">
+                                        Kết quả lọc sản phẩm
+                                    </c:when>
+                                    <c:when test="${page == 'search'}">
+                                        Kết quả tìm kiếm cho "<c:out value='${searchQuery}'/>"
+                                    </c:when>
+                                    <c:otherwise>
+                                        Sản phẩm nổi bật
+                                    </c:otherwise>
+                                </c:choose>
+                            </h2>
 
-    <c:choose>
-        <c:when test="${empty bouquets}">
-            <h4 style="text-align:center; color:#ff6f61;">
-                <c:choose>
-                    <c:when test="${page == 'filter'}">
-                        Không có sản phẩm nào phù hợp với bộ lọc!
-                    </c:when>
-                    <c:when test="${page == 'search'}">
-                        Không tìm thấy giỏ hoa nào phù hợp với từ khóa của bạn!
-                    </c:when>
-                    <c:otherwise>
-                        Không có sản phẩm nào!
-                    </c:otherwise>
-                </c:choose>
-            </h4>
-        </c:when>
-        <c:otherwise>
-            <c:forEach var="bou" items="${bouquets}">
-                <div class="col-sm-3">
-                    <div class="product-image-wrapper">
-                        <div class="single-products">
-                            <div class="productinfo text-center">
-                                <a href="product-details.jsp?templateId=${bou.templateId}">
-                                    <img src="${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;" />
-                                </a>
-                                <h2>${bou.basePrice} đ</h2>
-                                <p>${bou.templateName}</p>
-                                <c:if test="${sessionScope.user == null}">
-                                    <a href="login.jsp" class="btn btn-default add-to-cart">
-                                        <i class="fa fa-shopping-cart"></i> Add to cart
-                                    </a>
-                                </c:if>
-                                <c:if test="${sessionScope.user != null}">
-                                    <form action="add" method="GET">
-                                        <input type="hidden" name="templateId" value="${bou.templateId}" />
-                                        <button type="submit" class="btn btn-default add-to-cart">
-                                            <i class="fa fa-shopping-cart"></i> Add to cart
-                                        </button>
-                                    </form>
-                                </c:if>
-                            </div>
+                            <c:choose>
+                                <c:when test="${empty bouquets}">
+                                    <h4 style="text-align:center; color:#ff6f61;">
+                                        <c:choose>
+                                            <c:when test="${page == 'filter'}">
+                                                Không có sản phẩm nào phù hợp với bộ lọc!
+                                            </c:when>
+                                            <c:when test="${page == 'search'}">
+                                                Không tìm thấy giỏ hoa nào phù hợp với từ khóa của bạn!
+                                            </c:when>
+                                            <c:otherwise>
+                                                Không có sản phẩm nào!
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </h4>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="bou" items="${bouquets}">
+                                        <div class="col-sm-3">
+                                            <div class="product-image-wrapper">
+                                                <div class="single-products">
+                                                    <div class="productinfo text-center">
+                                                        <a href="${pageContext.request.contextPath}/bouquet-detail?templateId=${bou.templateId}">
+                                                            <img src="${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;" />
+                                                        </a>
+                                                        <h2>${bou.basePrice} đ</h2>
+                                                        <p>${bou.templateName}</p>
+                                                        <c:if test="${sessionScope.user == null}">
+                                                            <a href="login.jsp" class="btn btn-default add-to-cart">
+                                                                <i class="fa fa-shopping-cart"></i> Add to cart
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${sessionScope.user != null}">
+                                                            <form action="add" method="GET">
+                                                                <input type="hidden" name="templateId" value="${bou.templateId}" />
+                                                                <button type="submit" class="btn btn-default add-to-cart">
+                                                                    <i class="fa fa-shopping-cart"></i> Add to cart
+                                                                </button>
+                                                            </form>
+                                                        </c:if>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
-                    </div>
-                </div>
-            </c:forEach>
-        </c:otherwise>
-    </c:choose>
-</div>
                         <!--features_items-->
 
                         <div class="pagination-area text-center">
@@ -676,12 +678,12 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function () {
-                    $('.toast').toast({
-                        delay: 3500 // 5 seconds delay before fade-out animation
-                    });
-                    $('.toast').toast('show');
-                });
+                                $(document).ready(function () {
+                                    $('.toast').toast({
+                                        delay: 3500 // 5 seconds delay before fade-out animation
+                                    });
+                                    $('.toast').toast('show');
+                                });
 
             </script>
             <style>
