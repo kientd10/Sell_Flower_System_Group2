@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import Model.Category;
-import dal.DBContext;
+import dal.DBcontext;
 
 public class CategoryDAO {
 
@@ -22,7 +22,7 @@ public class CategoryDAO {
 
     public CategoryDAO() {
         try {
-            conn = new DBContext().getConnection();
+            conn = new DBcontext().getConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }

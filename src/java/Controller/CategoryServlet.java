@@ -29,7 +29,7 @@ public class CategoryServlet extends HttpServlet {
         List<Category> categories = categoryDAO.getAllCategories();
 
         int pageNum = 1;
-        int recordsPerPage = 4; // hoặc số sản phẩm muốn hiển thị mỗi trang
+        int recordsPerPage = 12; // hoặc số sản phẩm muốn hiển thị mỗi trang
         String pageNumStr = request.getParameter("pageNum");
         if (pageNumStr != null) {
             try {

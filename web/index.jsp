@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="en">
 
     <head>
@@ -39,7 +40,7 @@
                             <div class="contactinfo">
                                 <ul class="nav nav-pills">
                                     <li><a href="#"><i class="fa fa-phone"></i> 0123456789</a></li>
-                                    <li><a href="#"><i class="fa fa-envelope"></i> kientdhe186194@fpt.edu.vn</a></li>
+                                    <li><a href="#"><i class="fa fa-envelope"></i> Group2@fpt.edu.vn</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -114,7 +115,6 @@
                 </div>
             </div><!--/header-middle-->
 
-
             <div class="header-bottom"><!--header-bottom-->
                 <div class="container">
                     <div class="row">
@@ -129,7 +129,7 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="${pageContext.request.contextPath}/home" class="active">Home</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Home</a></li>
                                     <li class="dropdown"><a href="#">Category<i class="fa fa-angle-down"></i></a>
                                         <ul role="menu" class="sub-menu">
                                             <c:if test="${empty categories}">
@@ -152,14 +152,18 @@
                                 </ul>
                             </div>
                         </div>
+
                         <div class="col-sm-3">
                             <div class="search_box pull-right">
-                                <input type="text" placeholder="Search"/>
-                                <button type="submit">
-                                    <i class="fa fa-eye" style="border: none; height: 29px; line-height: 29px;"></i>
-                                </button>
+                                <form action="SearchServlet" method="GET">
+                                    <input type="text" name="searchQuery" placeholder="Tìm kiếm giỏ hoa..." required/>
+                                    <button type="submit">
+                                        <i class="fa fa-search" style="border: none; height: 29px; line-height: 29px;"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div><!--/header-bottom-->        
@@ -207,7 +211,6 @@
                                     </a>
                                 </div>
                             </c:when>
-
                             <c:otherwise>
                                 <p style="text-align: center; font-weight: bold; color: red;">Không có sản phẩm nổi bật nào.</p>
                             </c:otherwise>
@@ -218,141 +221,72 @@
             </div>
         </section><!--/slider-->
 
-        <section>
+        <section>                                        <!--/left-->
             <div class="container">
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="left-sidebar">
                             <h2>Category</h2>
-                            <div class="panel-group category-products" id="accordian"><!--category-productsr-->
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
-                                                <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                                                Sportswear
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="sportswear" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li><a href="#">Nike </a></li>
-                                                <li><a href="#">Under Armour </a></li>
-                                                <li><a href="#">Adidas </a></li>
-                                                <li><a href="#">Puma</a></li>
-                                                <li><a href="#">ASICS </a></li>
-                                            </ul>
+                            <div class="panel-group category-products" id="accordian"><!--category-product--> 
+                                <c:forEach var="category" items="${categories}">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}">
+                                                    <span class="badge pull-right"><i class="fa fa-plus"></i></span>
+                                                        ${category.categoryName}
+                                                </a>
+                                            </h4>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordian" href="#mens">
-                                                <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                                                Mens
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="mens" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li><a href="#">Fendi</a></li>
-                                                <li><a href="#">Guess</a></li>
-                                                <li><a href="#">Valentino</a></li>
-                                                <li><a href="#">Dior</a></li>
-                                                <li><a href="#">Versace</a></li>
-                                                <li><a href="#">Armani</a></li>
-                                                <li><a href="#">Prada</a></li>
-                                                <li><a href="#">Dolce and Gabbana</a></li>
-                                                <li><a href="#">Chanel</a></li>
-                                                <li><a href="#">Gucci</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordian" href="#womens">
-                                                <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                                                Womens
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="womens" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li><a href="#">Fendi</a></li>
-                                                <li><a href="#">Guess</a></li>
-                                                <li><a href="#">Valentino</a></li>
-                                                <li><a href="#">Dior</a></li>
-                                                <li><a href="#">Versace</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Kids</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Fashion</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Households</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Interiors</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Clothing</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Bags</a></h4>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a href="#">Shoes</a></h4>
-                                    </div>
-                                </div>
+                                </c:forEach>
                             </div><!--/category-products-->
 
-                            <div class="brands_products"><!--brands_products-->
-                                <h2>Brands</h2>
-                                <div class="brands-name">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <li><a href="#"> <span class="pull-right">(50)</span>Acne</a></li>
-                                        <li><a href="#"> <span class="pull-right">(56)</span>Grüne Erde</a></li>
-                                        <li><a href="#"> <span class="pull-right">(27)</span>Albiro</a></li>
-                                        <li><a href="#"> <span class="pull-right">(32)</span>Ronhill</a></li>
-                                        <li><a href="#"> <span class="pull-right">(5)</span>Oddmolly</a></li>
-                                        <li><a href="#"> <span class="pull-right">(9)</span>Boudestijn</a></li>
-                                        <li><a href="#"> <span class="pull-right">(4)</span>Rösch creative culture</a></li>
-                                    </ul>
+                            <div class="price-range"><!--/Filter-->
+                                <h2 style="text-align: center; color: #ff9900;">PRICE RANGE</h2>
+                                <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #f0f0f0; border-radius: 5px; max-width: 250px; margin: auto;">
+                                    <input type="number" id="minPrice" placeholder="Giá từ (vnđ)"
+                                           value="${minPrice != null ? minPrice : ''}"
+                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
+                                    <input type="number" id="maxPrice" placeholder="Giá đến (vnđ)"
+                                           value="${maxPrice != null ? maxPrice : ''}"
+                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
+                                    <button id="priceFilterBtn"
+                                            style="background-color: #ff9900; color: white; border: none; padding: 8px 18px; border-radius: 3px; cursor: pointer;">
+                                        Lọc giá
+                                    </button>
                                 </div>
-                            </div><!--/brands_products-->
+                            </div>
 
-                            <div class="price-range"><!--price-range-->
-                                <h2>Price Range</h2>
-                                <div class="well text-center">
-                                    <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600" data-slider-step="5" data-slider-value="[250,450]" id="sl2" ><br />
-                                    <b class="pull-left">$ 0</b> <b class="pull-right">$ 600</b>
-                                </div>
-                            </div><!--/price-range-->
+                            <script>
+                                document.getElementById("priceFilterBtn").addEventListener("click", function (event) {
+                                    event.preventDefault(); // ngăn form submit nếu có
+                                    const minPrice = document.getElementById("minPrice").value.trim();
+                                    const maxPrice = document.getElementById("maxPrice").value.trim();
+
+                                    console.log("minPrice:", minPrice);
+                                    console.log("maxPrice:", maxPrice);
+
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    const categoryId = urlParams.get("categoryId");
+
+                                    const params = new URLSearchParams();
+
+                                    if (minPrice !== "")
+                                        params.append("minPrice", minPrice);
+                                    if (maxPrice !== "")
+                                        params.append("maxPrice", maxPrice);
+                                    if (categoryId)
+                                        params.append("categoryId", categoryId);
+
+                                    params.append("pageNum", "1");
+
+                                    console.log("Redirect URL:", "bouquet?" + params.toString());
+
+                                    window.location.href = "bouquet?" + params.toString();
+                                });
+                            </script>
+
 
                             <div class="shipping text-center"><!--shipping-->
                                 <img src="images/home/shipping.jpg" alt="" />
@@ -361,33 +295,47 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-9 padding-right">
-                        <div class="features_items">        <!--features_items-->
-                            <h2 class="title text-center">Features Items</h2>
+                    <div class="col-sm-9 padding-right">                       
+                        <div class="features_items"> <!--features_items-->
+                            <h2 class="title text-center">
+                                <c:choose>
+                                    <c:when test="${page == 'filter'}">
+                                        Kết quả lọc sản phẩm
+                                    </c:when>
+                                    <c:when test="${page == 'search'}">
+                                        Kết quả tìm kiếm cho "<c:out value='${searchQuery}'/>"
+                                    </c:when>
+                                    <c:otherwise>
+                                        Sản phẩm nổi bật
+                                    </c:otherwise>
+                                </c:choose>
+                            </h2>
+
                             <c:choose>
                                 <c:when test="${empty bouquets}">
-                                    <h4 style="text-align:center;color:#ff6f61;">
+                                    <h4 style="text-align:center; color:#ff6f61;">
                                         <c:choose>
-                                            <c:when test="${page == 'home'}">
-                                                Không có sản phẩm nào!
+                                            <c:when test="${page == 'filter'}">
+                                                Không có sản phẩm nào phù hợp với bộ lọc!
                                             </c:when>
-                                            <c:when test="${page == 'category'}">
-                                                Không có sản phẩm nào trong danh mục này!
+                                            <c:when test="${page == 'search'}">
+                                                Không tìm thấy giỏ hoa nào phù hợp với từ khóa của bạn!
                                             </c:when>
                                             <c:otherwise>
-                                                Không có sản phẩm!
+                                                Không có sản phẩm nào!
                                             </c:otherwise>
                                         </c:choose>
                                     </h4>
                                 </c:when>
                                 <c:otherwise>
                                     <c:forEach var="bou" items="${bouquets}">
-                                        <!-- Hiển thị sản phẩm -->
                                         <div class="col-sm-3">
                                             <div class="product-image-wrapper">
                                                 <div class="single-products">
                                                     <div class="productinfo text-center">
-                                                        <img src="${pageContext.request.contextPath}/images/cart/${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;"/>
+                                                        <a href="${pageContext.request.contextPath}/bouquet-detail?templateId=${bou.templateId}">
+                                                            <img src="${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;" />
+                                                        </a>
                                                         <h2>${bou.basePrice} đ</h2>
                                                         <p>${bou.templateName}</p>
                                                         <c:if test="${sessionScope.user == null}">
@@ -397,7 +345,7 @@
                                                         </c:if>
                                                         <c:if test="${sessionScope.user != null}">
                                                             <form action="add" method="GET">
-                                                                <input type="hidden" name="templateId" value="${bou.templateId}">
+                                                                <input type="hidden" name="templateId" value="${bou.templateId}" />
                                                                 <button type="submit" class="btn btn-default add-to-cart">
                                                                     <i class="fa fa-shopping-cart"></i> Add to cart
                                                                 </button>
@@ -712,7 +660,7 @@
         <c:if test="${sessionScope.user != null }">
             <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="width: 300px; z-index: 500000">
                 <div class="toast-header">
-                    <!--                     <img src="assets/img/logo/guitar.png" class="rounded me-2" alt="iconlmao" style= "  max-width: 100%;
+                    <!--<img src="assets/img/logo/guitar.png" class="rounded me-2" alt="iconlmao" style= "  max-width: 100%;
                         height: auto;
                         max-height: 20px;">-->
                     <strong class="mr-auto">Notification</strong>
@@ -726,12 +674,12 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function () {
-                    $('.toast').toast({
-                        delay: 3500 // 5 seconds delay before fade-out animation
-                    });
-                    $('.toast').toast('show');
-                });
+                                $(document).ready(function () {
+                                    $('.toast').toast({
+                                        delay: 3500 // 5 seconds delay before fade-out animation
+                                    });
+                                    $('.toast').toast('show');
+                                });
 
             </script>
             <style>

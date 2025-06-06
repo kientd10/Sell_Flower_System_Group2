@@ -14,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -70,31 +71,98 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Category> categories = categoryDAO.getAllCategories();
-        List<BouquetTemplate> bouquets;
+        HttpSession session = request.getSession();
 
-        String categoryIdStr = request.getParameter("categoryId");
-        String page; // để phân biệt home hay category
+        List<BouquetTemplate> searchResults = (List<BouquetTemplate>) session.getAttribute("searchResults");
+        String searchQuery = (String) session.getAttribute("searchQuery");
+        String error = (String) session.getAttribute("error");
 
-        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
-            page = "category";
-            try {
-                int categoryId = Integer.parseInt(categoryIdStr);
-                bouquets = bouquetDAO.getBouquetsByCategoryId(categoryId);
-            } catch (NumberFormatException e) {
-                bouquets = bouquetDAO.getAllBouquets(); // fallback nếu lỗi
-                page = "home"; // coi như home nếu lỗi id
+        try {
+            List<Category> categories = categoryDAO.getAllCategories();
+            request.setAttribute("categories", categories);
+
+            List<BouquetTemplate> featuredBouquets = bouquetDAO.getAllBouquets(); // Cho slider
+            request.setAttribute("featuredBouquets", featuredBouquets);
+
+            List<BouquetTemplate> bouquets;
+            String pageType;
+
+            // Phân trang: lấy page từ request, mặc định page = 1
+            String pageStr = request.getParameter("page");
+            int page = 1;
+            if (pageStr != null) {
+                try {
+                    page = Integer.parseInt(pageStr);
+                    if (page < 1) {
+                        page = 1;
+                    }
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
             }
-        } else {
-            page = "home";
-            bouquets = bouquetDAO.getAllBouquets(); // mặc định hiển thị tất cả
+            int pageSize = 12; // số sản phẩm mỗi trang, bạn tùy chỉnh
+
+            String categoryIdStr = request.getParameter("categoryId");
+            int totalItems = 0;
+            int totalPages = 0;
+
+            if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+                pageType = "category";
+                try {
+                    int categoryId = Integer.parseInt(categoryIdStr);
+                    totalItems = bouquetDAO.countBouquetsByCategory(categoryId);
+                    totalPages = (int) Math.ceil((double) totalItems / pageSize);
+                    if (page > totalPages) {
+                        page = totalPages;
+                    }
+
+                    int offset = (page - 1) * pageSize;
+                    bouquets = bouquetDAO.getBouquetsByCategoryIdPaging(categoryId, offset, pageSize);
+                } catch (NumberFormatException e) {
+                    bouquets = bouquetDAO.getAllBouquetsPaging((page - 1) * pageSize, pageSize);
+                    pageType = "home";
+                    totalItems = bouquetDAO.countAllBouquets();
+                    totalPages = (int) Math.ceil((double) totalItems / pageSize);
+                }
+            } else if (searchResults != null) {
+                pageType = "search";
+                bouquets = searchResults; // Có thể cần phân trang cho search tùy trường hợp
+                request.setAttribute("searchQuery", searchQuery);
+                totalItems = bouquets.size();
+                totalPages = 1; // hoặc tùy logic nếu search có phân trang
+            } else {
+                pageType = "home";
+                totalItems = bouquetDAO.countAllBouquets();
+                totalPages = (int) Math.ceil((double) totalItems / pageSize);
+                if (page > totalPages) {
+                    page = totalPages;
+                }
+                int offset = (page - 1) * pageSize;
+                bouquets = bouquetDAO.getAllBouquetsPaging(offset, pageSize);
+            }
+
+            request.setAttribute("bouquets", bouquets);
+            request.setAttribute("page", pageType);
+
+            // Truyền thông tin phân trang cho JSP
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+
+            if (error != null) {
+                request.setAttribute("error", error);
+            }
+
+            session.removeAttribute("searchResults");
+            session.removeAttribute("searchQuery");
+            session.removeAttribute("error");
+
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Đã xảy ra lỗi khi tải trang chủ. Vui lòng thử lại.");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
-
-        request.setAttribute("categories", categories);
-        request.setAttribute("bouquets", bouquets);
-        request.setAttribute("page", page);  // truyền biến page vào JSP để phân biệt
-
-        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     ////////////////////////////

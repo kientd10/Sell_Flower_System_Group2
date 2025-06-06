@@ -14,14 +14,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author ADMIN
  */
-public class BouquetServlet extends HttpServlet {
+public class BouquetDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +39,10 @@ public class BouquetServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet BouquetServlet</title>");
+            out.println("<title>Servlet BouquetDetailServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet BouquetServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet BouquetDetailServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,73 +60,32 @@ public class BouquetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //////////////////// View 
-        String categoryIdStr = request.getParameter("categoryId");
-        String minPriceStr = request.getParameter("minPrice");
-        String maxPriceStr = request.getParameter("maxPrice");
-        int page = 1;
-        int recordsPerPage = 8;
-
-        if (request.getParameter("pageNum") != null) {
-            try {
-                page = Integer.parseInt(request.getParameter("pageNum"));
-            } catch (NumberFormatException e) {
-                page = 1;
-            }
-        }
-
-        int offset = (page - 1) * recordsPerPage;
-        int categoryId = -1;
-        Double minPrice = null, maxPrice = null;
-
+        String idRaw = request.getParameter("templateId");
         try {
-            if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
-                categoryId = Integer.parseInt(categoryIdStr);
-            }
-            if (minPriceStr != null && !minPriceStr.isEmpty()) {
-                minPrice = Double.parseDouble(minPriceStr);
-            }
-            if (maxPriceStr != null && !maxPriceStr.isEmpty()) {
-                maxPrice = Double.parseDouble(maxPriceStr);
-            }
-        } catch (NumberFormatException e) {
-            minPrice = null;
-            maxPrice = null;
-        }
-
-        try {
+            int id = Integer.parseInt(idRaw);
             BouquetDAO bouquetDAO = new BouquetDAO();
+            BouquetTemplate bouquet = bouquetDAO.getBouquetById(id);
+
+            // Lấy danh sách categories từ CategoryDAO
             CategoryDAO categoryDAO = new CategoryDAO();
-
-            List<BouquetTemplate> bouquets;
             List<Category> categories = categoryDAO.getAllCategories();
-            int totalRecords;
 
-            if (categoryId != -1 || minPrice != null || maxPrice != null) {
-                bouquets = bouquetDAO.filterBouquets(categoryId, minPrice, maxPrice, offset, recordsPerPage);
-                totalRecords = bouquetDAO.countFilteredBouquets(categoryId, minPrice, maxPrice);
-                request.setAttribute("page", "filter");
-                request.setAttribute("categoryId", categoryId != -1 ? categoryId : null);
+            // Lấy giá lọc nếu có (có thể lấy từ param hoặc mặc định)
+            String minPrice = request.getParameter("minPrice");
+            String maxPrice = request.getParameter("maxPrice");
+
+            if (bouquet != null) {
+                request.setAttribute("bouquet", bouquet);
+                request.setAttribute("categories", categories);
                 request.setAttribute("minPrice", minPrice);
                 request.setAttribute("maxPrice", maxPrice);
+                request.getRequestDispatcher("product-details.jsp").forward(request, response);
             } else {
-                bouquets = bouquetDAO.getAllBouquetsPaging(offset, recordsPerPage);
-                totalRecords = bouquetDAO.countAllBouquets();
-                request.setAttribute("page", "home");
+                response.sendRedirect("error.jsp");
             }
-
-            int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
-
-            request.setAttribute("categories", categories);
-            request.setAttribute("bouquets", bouquets);
-            request.setAttribute("currentPage", page);
-            request.setAttribute("totalPages", totalPages);
-
-            request.getRequestDispatcher("index.jsp").forward(request, response);
-
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            response.sendRedirect("error.jsp");
         }
     }
 

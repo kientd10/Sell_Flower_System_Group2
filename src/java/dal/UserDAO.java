@@ -4,6 +4,7 @@
  */
 package dal;
 
+import Model.Role;
 import Model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,10 +18,10 @@ import java.sql.Timestamp;
  */
 public class UserDAO {
 
-    private DBContext dbContext;
+    private DBcontext dbContext;
 
     public UserDAO() {
-        dbContext = new DBContext();
+        dbContext = new DBcontext();
     }
 
     // Đăng ký người dùng mới
@@ -171,6 +172,10 @@ public class UserDAO {
                 h.setPhone(rs.getString("phone"));
                 h.setCreatedAt(rs.getTimestamp("created_at"));
                 h.setIsActive(rs.getBoolean("is_active"));
+                h.setUserId(rs.getInt("user_id"));
+                h.setPassword(rs.getString("password"));
+                h.setRoleId(rs.getInt("role_id"));
+
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -202,5 +207,11 @@ public class UserDAO {
             dbContext.closeConnection(conn);
         }
     }
+    
+    
+    
+   
+
+
 
 }

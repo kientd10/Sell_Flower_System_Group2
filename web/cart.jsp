@@ -292,7 +292,6 @@
                     </form>
                 </c:if>
             </div>
-
         </section>
         <div class="footer-bottom">
             <div class="container">
