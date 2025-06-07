@@ -66,7 +66,7 @@ public class BouquetServlet extends HttpServlet {
         String minPriceStr = request.getParameter("minPrice");
         String maxPriceStr = request.getParameter("maxPrice");
         int page = 1;
-        int recordsPerPage = 8;
+        int recordsPerPage = 12;
 
         if (request.getParameter("pageNum") != null) {
             try {
@@ -103,7 +103,15 @@ public class BouquetServlet extends HttpServlet {
             List<Category> categories = categoryDAO.getAllCategories();
             int totalRecords;
 
-            if (categoryId != -1 || minPrice != null || maxPrice != null) {
+            // Phân loại chính xác từng loại lọc
+            if (categoryId != -1 && minPrice == null && maxPrice == null) {
+                // Chỉ lọc theo categoryId
+                bouquets = bouquetDAO.filterBouquets(categoryId, null, null, offset, recordsPerPage);
+                totalRecords = bouquetDAO.countFilteredBouquets(categoryId, null, null);
+                request.setAttribute("page", "category");
+                request.setAttribute("categoryId", categoryId);
+            } else if (categoryId != -1 || minPrice != null || maxPrice != null) {
+                // Có lọc theo category + price
                 bouquets = bouquetDAO.filterBouquets(categoryId, minPrice, maxPrice, offset, recordsPerPage);
                 totalRecords = bouquetDAO.countFilteredBouquets(categoryId, minPrice, maxPrice);
                 request.setAttribute("page", "filter");
@@ -111,6 +119,7 @@ public class BouquetServlet extends HttpServlet {
                 request.setAttribute("minPrice", minPrice);
                 request.setAttribute("maxPrice", maxPrice);
             } else {
+                // Không lọc
                 bouquets = bouquetDAO.getAllBouquetsPaging(offset, recordsPerPage);
                 totalRecords = bouquetDAO.countAllBouquets();
                 request.setAttribute("page", "home");
