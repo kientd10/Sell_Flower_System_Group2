@@ -29,125 +29,114 @@ public class Customer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if ("logout".equals(action)) {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("email".equals(cookie.getName())
-                            || "password".equals(cookie.getName())
-                            || "remember".equals(cookie.getName())) {
-                        cookie.setMaxAge(0);
-                        cookie.setPath("/");
-                        response.addCookie(cookie);
-                    }
-                }
-            }
-            response.sendRedirect("home"); // ✅ Về trang chủ thay vì login.jsp
-            return;
-        }
-        response.sendRedirect("home");
+        doPost(request, response);
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
+        UserDAO dao = new UserDAO();
+        //login
+        if (action.equals("signin")) {
+            String email = request.getParameter("email");
+            String pass = request.getParameter("password");
+            String remember = request.getParameter("remember");
+            Model.User a = dao.loginUser(email, pass);
+            if (a == null) {
+                request.setAttribute("error", "Account is not exist!");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            } else {
+                //set cookie
+                HttpSession session = request.getSession();
+                session.setAttribute("user", a);
+                Cookie Email = new Cookie("email", email);
+                Cookie Pass = new Cookie("password", pass);
+                Cookie Remember = new Cookie("remember", remember);
+                if (remember != null) {
+                    Email.setMaxAge(60 * 60 * 24 * 30);
+                    Pass.setMaxAge(60 * 60 * 24 * 3);
+                    Remember.setMaxAge(60 * 60 * 24 * 30);
+                } else {
+                    Email.setMaxAge(0);
+                    Pass.setMaxAge(0);
+                    Remember.setMaxAge(0);
+                }
+                response.addCookie(Email);
+                response.addCookie(Pass);
+                response.addCookie(Remember);
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+            }
 
-        if(action.equals("signin")){
-            handleSignIn(request, response);
-        }else if(action.equals("signup")){
-            handleSignUp(request, response);
-        }else {
-            response.sendRedirect("login.jsp");
-        }
-    }
-
-    private void handleSignIn(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getParameter("action");
-
-        if ("signup".equals(action)) {
-            handleSignUp(request, response);
-        } else {
-            response.sendRedirect("login.jsp");
-        }
-    }
-
-    private void handleSignUp(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String username = request.getParameter("name");
-        String email = request.getParameter("Email");
-        String password = request.getParameter("Password");
-        String cfPassword = request.getParameter("CfPassword");
-        String fullName = request.getParameter("fullname");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-
-        if (username == null || email == null || password == null || cfPassword == null
-                || fullName == null || phone == null || address == null) {
-            request.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
         }
 
-        if (!password.equals(cfPassword)) {
-            request.setAttribute("errorpass", "Mật khẩu xác nhận không khớp!");
-            request.setAttribute("username", username);
-            request.setAttribute("email", email);
-            request.setAttribute("fullname", fullName);
-            request.setAttribute("phone", phone);
-            request.setAttribute("address", address);
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
+        //Log out
+        if (action.equals("logout")) {
+            HttpSession session = request.getSession();
+            session.removeAttribute("user");
+            session.invalidate();
+            response.sendRedirect("home");
         }
 
-        if (userDAO.isUsernameExists(username)) {
-            request.setAttribute("errorname", "Tên người dùng đã tồn tại!");
-            request.setAttribute("email", email);
-            request.setAttribute("fullname", fullName);
-            request.setAttribute("phone", phone);
-            request.setAttribute("address", address);
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
+        //Sign up
+        if (action.equals("signup")) {
+            String name = request.getParameter("name");
+            String email = request.getParameter("Email");
+            String pass = request.getParameter("Password");
+            String cfPass = request.getParameter("CfPassword");
+            String fullname = request.getParameter("fullname");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+
+            boolean checkemail = dao.emailExists(email);
+            boolean checkusername = dao.isUsernameExists(name);
+            if (checkusername == false) { // check user name exist
+                if (checkemail == false) { // check email exist
+                    if (pass.equals(cfPass)) { // pass equal confirm pass -> signup
+                        request.setAttribute("done", "Register successfull!");
+                        User user = new User();
+                        user.setUsername(name);
+                        user.setEmail(email);
+                        user.setPassword(pass);
+                        user.setFullName(fullname);
+                        user.setPhone(phone);
+                        user.setAddress(address);
+                        user.setRoleId(1); // Mặc định là Khách hàng (role_id: 1)
+                        user.setIsActive(true);
+                        dao.registerUser(user);
+                        request.getRequestDispatcher("login.jsp").forward(request, response);
+                    } else {
+                        request.setAttribute("errorpass", "Confirm pass is not true!");
+                        request.setAttribute("username", name);
+                        request.setAttribute("fullname", fullname);
+                        request.setAttribute("email", email);
+                        request.setAttribute("phone", phone);
+                        request.setAttribute("address", address);
+                        request.getRequestDispatcher("login.jsp").forward(request, response);
+                    }
+                } else {
+                    request.setAttribute("username", name);
+                    request.setAttribute("fullname", fullname);
+                    request.setAttribute("phone", phone);
+                    request.setAttribute("address", address);
+                    request.setAttribute("emailavailable", "Email is existed!");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                }
+            } else {
+                request.setAttribute("errorname", "Username is existed!");
+                request.setAttribute("fullname", fullname);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
+
         }
 
-        if (userDAO.emailExists(email)) {
-            request.setAttribute("emailavailable", "Email đã được sử dụng!");
-            request.setAttribute("username", username);
-            request.setAttribute("fullname", fullName);
-            request.setAttribute("phone", phone);
-            request.setAttribute("address", address);
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
-
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setFullName(fullName);
-        user.setPhone(phone);
-        user.setAddress(address);
-        user.setRoleId(1); // Mặc định là Khách hàng (role_id: 1)
-        user.setIsActive(true);
-
-        if (userDAO.registerUser(user)) {
-            request.setAttribute("done", "Đăng ký thành công! Vui lòng đăng nhập.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Đăng ký thất bại! Vui lòng thử lại.");
-            request.setAttribute("username", username);
-            request.setAttribute("email", email);
-            request.setAttribute("fullname", fullName);
-            request.setAttribute("phone", phone);
-            request.setAttribute("address", address);
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        }
     }
 
     @Override
