@@ -72,7 +72,6 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#">VIETNAM</a></li>
-                                        <li><a href="#">UK</a></li>
                                     </ul>
                                 </div>
 
@@ -82,7 +81,6 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="#">Dollar</a></li>
                                         <li><a href="#">VND</a></li>
                                     </ul>
                                 </div>
@@ -144,7 +142,6 @@
                                     <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
                                         <ul role="menu" class="sub-menu">
                                             <li><a href="blog.jsp">Blog List</a></li>
-                                            <li><a href="blog-single.jsp">Blog Single</a></li>
                                         </ul>
                                     </li>                              
                                     <li><a href="contact-us.jsp">Contact</a></li>
@@ -156,7 +153,7 @@
                         <div class="col-sm-3">
                             <div class="search_box pull-right">
                                 <form action="SearchServlet" method="GET">
-                                    <input type="text" name="searchQuery" placeholder="Tìm kiếm giỏ hoa..." required/>
+                                    <input type="text" name="searchQuery" placeholder="Tìm kiếm mẫu hoa..." required/>
                                     <button type="submit">
                                         <i class="fa fa-search" style="border: none; height: 29px; line-height: 29px;"></i>
                                     </button>
@@ -169,7 +166,7 @@
             </div><!--/header-bottom-->        
         </header><!--/header-->
 
-        <section id="slider"><!--slider-->
+        <section id="slider""><!--slider-->
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -226,7 +223,7 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="left-sidebar">
-                            <h2>Category</h2>
+                            <h2 style="font-size: 20px; padding: 5px 10px;" >Category</h2>
                             <div class="panel-group category-products" id="accordian"><!--category-product--> 
                                 <c:forEach var="category" items="${categories}">
                                     <div class="panel panel-default">
@@ -297,16 +294,16 @@
 
                     <div class="col-sm-9 padding-right">                       
                         <div class="features_items"> <!--features_items-->
-                            <h2 class="title text-center">
+                            <h2 class="title text-center st" style="font-size: 20px; padding: 5px 10px;">
                                 <c:choose>
                                     <c:when test="${page == 'filter'}">
-                                        Kết quả lọc sản phẩm
+                                        Kết quả lọc giá sản phẩm
                                     </c:when>
                                     <c:when test="${page == 'search'}">
                                         Kết quả tìm kiếm cho "<c:out value='${searchQuery}'/>"
                                     </c:when>
                                     <c:otherwise>
-                                        Sản phẩm nổi bật
+                                        Danh sách sản phẩm
                                     </c:otherwise>
                                 </c:choose>
                             </h2>
@@ -319,7 +316,7 @@
                                                 Không có sản phẩm nào phù hợp với bộ lọc!
                                             </c:when>
                                             <c:when test="${page == 'search'}">
-                                                Không tìm thấy giỏ hoa nào phù hợp với từ khóa của bạn!
+                                                Không tìm thấy mẫu hoa nào phù hợp với từ khóa của bạn!
                                             </c:when>
                                             <c:otherwise>
                                                 Không có sản phẩm nào!
@@ -359,12 +356,16 @@
                                 </c:otherwise>
                             </c:choose>
                         </div> 
-                        <div class="pagination-area text-center">
+
+                        <div class="pagination-area text-center"><!--Pagination-area-->
                             <ul class="pagination">
                                 <c:set var="baseUrl" value="" />
                                 <c:choose>
                                     <c:when test="${page == 'category'}">
                                         <c:set var="baseUrl" value="bouquet?categoryId=${categoryId}&pageNum=" />
+                                    </c:when>
+                                    <c:when test="${page == 'filter'}">
+                                        <c:set var="baseUrl" value="bouquet?categoryId=${categoryId}&minPrice=${minPrice}&maxPrice=${maxPrice}&pageNum=" />
                                     </c:when>
                                     <c:otherwise>
                                         <c:set var="baseUrl" value="home?pageNum=" />
@@ -377,18 +378,24 @@
                                         <a href="${baseUrl}${currentPage - 1}">&laquo;</a>
                                     </li>
                                 </c:if>
+
+                                <!-- Các số trang -->
                                 <c:forEach var="i" begin="1" end="${totalPages}">
                                     <li class="${i == currentPage ? 'active' : ''}">
                                         <a href="${baseUrl}${i}">${i}</a>
                                     </li>
                                 </c:forEach>
+
+                                <!-- Nút trang sau -->
                                 <c:if test="${currentPage < totalPages}">
                                     <li>
                                         <a href="${baseUrl}${currentPage + 1}">&raquo;</a>
                                     </li>
                                 </c:if>
                             </ul>
-                        </div>
+                        </div> <!--/Pagination-area-->
+
+
                         <div class="recommended_items">
                             <h2 class="title text-center">recommended items</h2>
 
@@ -497,7 +504,7 @@
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="companyinfo">
-                                <h2><span>e</span> Flower Shop</h2>
+                                <h2> Flower Shop</h2>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,sed do eiusmod tempor</p>
                             </div>
                         </div>
@@ -565,7 +572,7 @@
                         <div class="col-sm-3">
                             <div class="address">
                                 <img src="images/home/map.png" alt="" />
-                                <p>505 S Atlantic Ave Virginia Beach, VA(Virginia)</p>
+                                <p>Khu CNC Hòa Lạc, Km29 Đại lộ Thăng Long, Thạch Thất, Hà Nội</p>
                             </div>
                         </div>
                     </div>
