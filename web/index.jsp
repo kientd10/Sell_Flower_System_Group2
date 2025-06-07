@@ -358,9 +358,7 @@
                                     </c:forEach>
                                 </c:otherwise>
                             </c:choose>
-                        </div>
-                        <!--features_items-->
-
+                        </div> 
                         <div class="pagination-area text-center">
                             <ul class="pagination">
                                 <c:set var="baseUrl" value="" />
@@ -384,7 +382,6 @@
                                         <a href="${baseUrl}${i}">${i}</a>
                                     </li>
                                 </c:forEach>
-
                                 <c:if test="${currentPage < totalPages}">
                                     <li>
                                         <a href="${baseUrl}${currentPage + 1}">&raquo;</a>
@@ -392,7 +389,6 @@
                                 </c:if>
                             </ul>
                         </div>
-
                         <div class="recommended_items">
                             <h2 class="title text-center">recommended items</h2>
 

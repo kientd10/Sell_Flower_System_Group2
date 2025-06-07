@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="en">
 
     <head>
@@ -191,165 +192,107 @@
         <section id="cart_items">
             <div class="container">
                 <h2>Giỏ hàng</h2>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-fixed">
-                        <thead>
-                            <tr class="cart_menu">
-                                <th class="image" style="width: 200px;">Tên Sản Phẩm</th>
-                                <th class="description">Mô tả</th>
-                                <th class="price">Giá</th>
-                                <th class="quantity">Số lượng</th>
-                                <th class="total">Tổng tiền</th>
-                                <th class="pay">Đặt Hàng</th>
-                                <th class="delete"></th>  
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach items="${cart}" var="line">
-                                <tr>
-                                    <td class="cart_product">
-                                        <img
-                                            class="image-wrapper"
-                                            src="${line.bouquetTemplate.imageUrl}"
-                                            alt="${line.bouquetTemplate.templateName}" />
-                                    </td>
-                                    <td>
-                                        <h4>${line.bouquetTemplate.templateName}</h4>
-                                        <p>Web ID: ${line.bouquetTemplate.templateId}</p>
-                                    </td>
-                                    <td>
-                                        ${line.bouquetTemplate.basePrice} VNĐ
-                                    </td>
-                                    <td class="cart_quantity">
-                                        <form  method="post" action="cart" style="display: inline">
-                                            <input type="hidden" name="userId" value="${userId}"/>
-                                            <input type="hidden" name="templateId" value="${line.bouquetTemplate.templateId}"/>
-                                            <input type="hidden" name="action" value="down"/>
-                                            <button type="submit">-</button>
-                                        </form>
-                                        <input type="text" value="${line.quantity}" size="2" readonly/> 
-                                        <form  method="post" action="cart" style="display: inline">
-                                            <input type="hidden" name="userId" value="${userId}"/>
-                                            <input type="hidden" name="templateId" value="${line.bouquetTemplate.templateId}"/>
-                                            <input type="hidden" name="action" value="up"/>
-                                            <button type="submit">+</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${line.bouquetTemplate.templateId == updatedTemplateId}">
-                                                ${updatedLineTotal} VNĐ
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${line.bouquetTemplate.basePrice * line.quantity} VNĐ
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td class="pay">
-                                        <input 
-                                            type="checkbox" 
-                                            name="orderItems" 
-                                            value="${line.bouquetTemplate.templateId}" 
-                                            id="order_${line.bouquetTemplate.templateId}" />
-                                    </td>
-                                    <td>
-                                        <a href="removeFromCart?cartId=${line.cartId}">
-                                            <i class="fa fa-times"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-                <c:if test="${not empty error}">
-                    <div class="alert alert-danger">${error}</div>
+                <c:if test="${cart.isEmpty()}">
+                    <div class="alert alert-danger">Chưa chọn sản phẩm nào vào giỏ hàng </div>
                 </c:if>
-                <div class="text-right" style="margin-top: 20px;">
-                    <form  method="get" action="checkout.jsp" >
-                        <button type="submit" id="checkoutBtn" class="btn btn-success">Thanh Toán</button>
+                <c:if test="${!cart.isEmpty()}">
+                    <form action="cart" method="post">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-fixed">
+                                <thead>
+                                    <tr class="cart_menu">
+                                        <th class="image" style="width: 200px;">Tên Sản Phẩm</th>
+                                        <th class="description">Mô tả</th>
+                                        <th class="price">Giá</th>
+                                        <th class="quantity">Số lượng</th>
+                                        <th class="total">Tổng tiền</th>
+                                        <th class="pay">Đặt Hàng</th>
+                                        <th class="delete"></th>  
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="${cart}" var="line">
+                                        <tr>
+                                            <td class="cart_product">
+                                                <img
+                                                    class="image-wrapper"
+                                                    src="${pageContext.request.contextPath}/images/cart/${line.bouquetTemplate.imageUrl}"
+                                                    alt="${line.bouquetTemplate.templateName}" />
+                                            </td>
+                                            <td>
+                                                <h4>${line.bouquetTemplate.templateName}</h4>
+                                                <p>Web ID: ${line.bouquetTemplate.templateId}</p>
+                                            </td>
+                                            <td>
+                                                ${line.bouquetTemplate.basePrice} VNĐ
+                                            </td>
+                                            <td class="cart_quantity">
+                                                    <button type="button"
+                                                            onclick="decreaseQty('${line.bouquetTemplate.templateId}')"
+                                                            class="btn btn-xs btn-default">
+                                                        &minus;
+                                                    </button>
+                                                    <input type="number"
+                                                           id="qty_${line.bouquetTemplate.templateId}"
+                                                           name="quantity[]"
+                                                           value="${line.quantity}"
+                                                           min="1"
+                                                           data-base-price="${line.bouquetTemplate.basePrice}"
+                                                           readonly
+                                                           style="width:60px; text-align:center;"/>
+
+                                                    <!-- Nút tăng -->
+                                                    <button type="button"
+                                                            onclick="increaseQty('${line.bouquetTemplate.templateId}')"
+                                                            class="btn btn-xs btn-default">
+                                                        &#43;
+                                                    </button>
+
+                                                    <!-- Hidden input để gửi templateId lên server -->
+                                                    <input type="hidden"
+                                                           name="templateId[]"
+                                                           value="${line.bouquetTemplate.templateId}"/>
+                                            </td>
+                                            <td>
+                                                <span id="lineTotal_${line.bouquetTemplate.templateId}">
+                                                    ${line.bouquetTemplate.basePrice * line.quantity}
+                                                </span> VNĐ
+                                            </td>
+                                            <td >
+                                                <input type="hidden" name="cartId[]" value="${line.cartId}" />
+                                                <input
+                                                    type="checkbox"
+                                                    name="isChecked[]"
+                                                    value="${line.cartId}"
+                                                    <c:if test="${fn:contains(selectedCartIds, line.cartId.toString())}">
+                                                        checked
+                                                    </c:if>
+                                                    />
+                                            </td>
+                                            <td>
+                                                <a href="remove?cartId=${line.cartId}">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-right" style="margin-top:20px;">
+                            <c:if test="${not empty sessionScope.error}">
+                                <div class="alert alert-danger">${sessionScope.error}</div>
+                            </c:if>
+                        </div>
+                        <c:if test="${!sessionScope.isEmpty}">
+                            <div class="text-right" style="margin-top:20px;">
+                                <button type="submit" class="btn btn-success">Thanh Toán</button>
+                            </div>
+                        </c:if>
                     </form>
-                </div>
+                </c:if>
             </div>
         </section>
-
-        <section id="do_action">
-            <div class="container">
-                <div class="heading">
-                    <h3>What would you like to do next?</h3>
-                    <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="chose_area">
-                            <ul class="user_option">
-                                <li>
-                                    <input type="checkbox">
-                                    <label>Use Coupon Code</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox">
-                                    <label>Use Gift Voucher</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox">
-                                    <label>Estimate Shipping & Taxes</label>
-                                </li>
-                            </ul>
-                            <ul class="user_info">
-                                <li class="single_field">
-                                    <label>Country:</label>
-                                    <select>
-                                        <option>United States</option>
-                                        <option>Bangladesh</option>
-                                        <option>UK</option>
-                                        <option>India</option>
-                                        <option>Pakistan</option>
-                                        <option>Ucrane</option>
-                                        <option>Canada</option>
-                                        <option>Dubai</option>
-                                    </select>
-
-                                </li>
-                                <li class="single_field">
-                                    <label>Region / State:</label>
-                                    <select>
-                                        <option>Select</option>
-                                        <option>Dhaka</option>
-                                        <option>London</option>
-                                        <option>Dillih</option>
-                                        <option>Lahore</option>
-                                        <option>Alaska</option>
-                                        <option>Canada</option>
-                                        <option>Dubai</option>
-                                    </select>
-
-                                </li>
-                                <li class="single_field zip-field">
-                                    <label>Zip Code:</label>
-                                    <input type="text">
-                                </li>
-                            </ul>
-                            <a class="btn btn-default update" href="">Get Quotes</a>
-                            <a class="btn btn-default check_out" href="">Continue</a>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="total_area">
-                            <ul>
-                                <li>Cart Sub Total <span>$59</span></li>
-                                <li>Eco Tax <span>$2</span></li>
-                                <li>Shipping Cost <span>Free</span></li>
-                                <li>Total <span>$61</span></li>
-                            </ul>
-                            <a class="btn btn-default update" href="">Update</a>
-                            <a class="btn btn-default check_out" href="">Check Out</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section><!--/#do_action-->
-
         <div class="footer-bottom">
             <div class="container">
                 <div class="row">
@@ -386,12 +329,12 @@
             </div>
         </div>
         <script>
-            $(document).ready(function () {
-                $('.toast').toast({
-                    delay: 3500 // 5 seconds delay before fade-out animation
-                });
-                $('.toast').toast('show');
-            });
+                                                                $(document).ready(function () {
+                                                                    $('.toast').toast({
+                                                                        delay: 3500 // 5 seconds delay before fade-out animation
+                                                                    });
+                                                                    $('.toast').toast('show');
+                                                                });
 
         </script>
         <style>
@@ -402,6 +345,31 @@
             }
         </style>
     </c:if>>
+    <script>
+        function increaseQty(id) {
+            const input = document.getElementById('qty_' + id);
+            let current = parseInt(input.value);
+            input.value = current + 1;
+            updateLineTotal(id);
+        }
+
+        function decreaseQty(id) {
+            const input = document.getElementById('qty_' + id);
+            let current = parseInt(input.value);
+            if (current > 1) {
+                input.value = current - 1;
+                updateLineTotal(id);
+            }
+        }
+
+        function updateLineTotal(id) {
+            const input = document.getElementById('qty_' + id);
+            const qty = parseInt(input.value);
+            const basePrice = parseFloat(input.getAttribute('data-base-price'));
+            const lineTotalEl = document.getElementById('lineTotal_' + id);
+            lineTotalEl.textContent = (basePrice * qty);
+        }
+    </script>
 </body>
 </html>
 

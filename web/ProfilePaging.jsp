@@ -167,7 +167,6 @@
 
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
-                <!-- Cột trái: Avatar + Tên + Email của khách hàng -->
                 <div class="col-md-3 border-right">
                     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                         <c:choose>
@@ -198,8 +197,6 @@
                         <span></span>
                     </div>
                 </div>
-
-                <!-- Cột phải: Profile Settings (edit / non-edit) -->
                 <div class="col-md-5 border-right">
                     <div class="p-3 py-5">
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -231,29 +228,29 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Status</label>
-                                            <select name="isActive" class="form-control">
-                                                <option
-                                                    value="true"
-                                                    <c:if test="${user.isActive}">selected</c:if>
-                                                        >
-                                                        Active
-                                                    </option>
-                                                    <option
-                                                        value="false"
-                                                    <c:if test="${!user.isActive}">selected</c:if>
-                                                        >
-                                                        Inactive
-                                                    </option>
-                                                </select>
-                                            </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label font-weight-bold">Address</label>
+                                            <c:if test="${user.isActive}">
                                                 <input
                                                     type="text"
-                                                    name="address"
                                                     class="form-control"
-                                                    value="<c:out value='${user.address}'/>"
+                                                    readonly
+                                                    value="Active" />
+                                            </c:if>
+                                            <c:if test="${!user.isActive}">
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    readonly
+                                                    value="Inactive" />
+                                            </c:if>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label font-weight-bold">Address</label>
+                                            <input
+                                                type="text"
+                                                name="address"
+                                                class="form-control"
+                                                value="<c:out value='${user.address}'/>"
                                                 placeholder="Nhập địa chỉ" />
                                         </div>
 

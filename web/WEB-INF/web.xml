@@ -29,6 +29,10 @@
         <servlet-class>Controller.AddServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>RemoveServlet</servlet-name>
+        <servlet-class>Controller.RemoveServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>BouquetDetailServlet</servlet-name>
         <servlet-class>Controller.BouquetDetailServlet</servlet-class>
     </servlet>
@@ -59,6 +63,10 @@
     <servlet-mapping>
         <servlet-name>EditProfileServlet</servlet-name>
         <url-pattern>/edit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveServlet</servlet-name>
+        <url-pattern>/remove</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>BouquetDetailServlet</servlet-name>

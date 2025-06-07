@@ -185,20 +185,21 @@ public class UserDAO {
         return h;
     }
 
-    public void changeInfoUserByID(int user_id, String username, String fullname, String email, String Address, String phone) {
-        String sql = "UPDATE users SET username = ?, full_name = ?, email = ?, address = ?, phone = ? WHERE user_id = ?";
+    public void changeInfoUserByID(int user_id, String username, String fullname, String email, String Address, String phone, String password) {
+        String sql = "UPDATE users SET username = ?, full_name = ?, email = ?, address = ?, phone = ?  , password = ? WHERE user_id = ?";
         Connection conn = null;
         PreparedStatement st = null;
 
         try {
-            conn = dbContext.getConnection(); // <-- THÊM DÒNG NÀY
+            conn = dbContext.getConnection();
             st = conn.prepareStatement(sql);
             st.setString(1, username);
             st.setString(2, fullname);
             st.setString(3, email);
             st.setString(4, Address);
             st.setString(5, phone);
-            st.setInt(6, user_id);
+            st.setString(6, password);
+            st.setInt(7, user_id);
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
