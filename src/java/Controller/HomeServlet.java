@@ -87,8 +87,8 @@ public class HomeServlet extends HttpServlet {
             List<BouquetTemplate> bouquets;
             String pageType;
 
-            // Phân trang: lấy page từ request, mặc định page = 1
-            String pageStr = request.getParameter("page");
+            // Phân trang: lấy page từ request, mặc định pageNum = 1
+            String pageStr = request.getParameter("pageNum");
             int page = 1;
             if (pageStr != null) {
                 try {
