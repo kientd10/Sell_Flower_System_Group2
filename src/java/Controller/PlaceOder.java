@@ -89,6 +89,22 @@ public class PlaceOder extends HttpServlet {
         String receiverPhone = request.getParameter("receiverPhone");
         String receiverAddress = request.getParameter("receiverAddress");
         String deliveryTime = request.getParameter("deliveryTime");
+        // Validate thời gian giao hàng không được là quá khứ
+try {
+    Timestamp deliveryTimestamp = Timestamp.valueOf(deliveryTime.replace("T", " ") + ":00");
+    Timestamp now = new Timestamp(System.currentTimeMillis());
+    if (deliveryTimestamp.before(now)) {
+        response.getWriter().println("❗ Thời gian giao hàng không hợp lệ. Vui lòng chọn thời gian trong tương lai.");
+        return;
+    }
+} catch (Exception e) {
+    response.getWriter().println("❗ Định dạng thời gian không hợp lệ.");
+    return;
+}
+        if (!receiverPhone.matches("^0\\d{9}$")) {
+    response.getWriter().println("<h3 style='color:red;'>Số điện thoại không hợp lệ. Vui lòng nhập số bắt đầu bằng 0 và có đúng 10 chữ số.</h3>");
+    return;
+}
 
         try (Connection conn = DBcontext.getJDBCConnection()) {
             conn.setAutoCommit(false);
