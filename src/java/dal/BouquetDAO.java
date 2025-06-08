@@ -15,8 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import Model.BouquetTemplate;
 import Model.ShoppingCart;
+import Model.TemplateIngredient;
 import dal.DBcontext;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BouquetDAO {
 
@@ -416,11 +419,8 @@ public class BouquetDAO {
 
     public BouquetTemplate getBouquetById(int id) {
         String sql = "SELECT * FROM bouquet_templates WHERE template_id = ?";
-        // Sử dụng try-with-resources để tự động đóng PreparedStatement, ResultSet và Connection
         try (Connection conn = DBcontext.getJDBCConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
-
             st.setInt(1, id);
-
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
                     return new BouquetTemplate(
@@ -432,11 +432,70 @@ public class BouquetDAO {
                     );
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("Debug: No template found with ID " + id);
         return null;
     }
 
+    public List<BouquetTemplate> getRecommendedTemplates(int currentTemplateId) throws SQLException {
+        List<BouquetTemplate> recommendations = new ArrayList<>();
+
+        try (Connection conn = DBcontext.getJDBCConnection()) {
+            String currentTemplateSql = "SELECT category_id, base_price FROM bouquet_templates WHERE template_id = ? AND is_active = TRUE";
+            double currentPrice = 0.0;
+            int categoryId = 0;
+
+            try (PreparedStatement stmt = conn.prepareStatement(currentTemplateSql)) {
+                stmt.setInt(1, currentTemplateId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        categoryId = rs.getInt("category_id");
+                        currentPrice = rs.getDouble("base_price");
+                        System.out.println("Debug: Template ID=" + currentTemplateId + ", category_id=" + categoryId + ", base_price=" + currentPrice);
+                    } else {
+                        System.out.println("Debug: No active template found for ID=" + currentTemplateId);
+                        return recommendations;
+                    }
+                }
+            }
+
+            double minPrice = currentPrice * 0.8;
+            double maxPrice = currentPrice * 1.2;
+            System.out.println("Debug: minPrice=" + minPrice + ", maxPrice=" + maxPrice);
+
+            String sql = "SELECT template_id, template_name, description, base_price, image_url FROM bouquet_templates "
+                    + "WHERE is_active = TRUE AND template_id != ? AND category_id = ? AND base_price BETWEEN ? AND ? "
+                    + "ORDER BY ABS(base_price - ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, currentTemplateId);
+                stmt.setInt(2, categoryId);
+                stmt.setDouble(3, minPrice);
+                stmt.setDouble(4, maxPrice);
+                stmt.setDouble(5, currentPrice);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    int count = 0;
+                    while (rs.next()) {
+                        BouquetTemplate template = new BouquetTemplate(
+                                rs.getInt("template_id"),
+                                rs.getString("template_name"),
+                                rs.getString("description"),
+                                rs.getDouble("base_price"),
+                                rs.getString("image_url")
+                        );
+                        recommendations.add(template);
+                        count++;
+                    }
+                    System.out.println("Debug: Found " + count + " recommendations for template ID=" + currentTemplateId);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching recommended templates: " + e.getMessage());
+            throw e;
+        }
+
+        return recommendations;
+    }
 }
