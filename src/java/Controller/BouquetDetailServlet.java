@@ -65,17 +65,17 @@ public class BouquetDetailServlet extends HttpServlet {
             int id = Integer.parseInt(idRaw);
             BouquetDAO bouquetDAO = new BouquetDAO();
             BouquetTemplate bouquet = bouquetDAO.getBouquetById(id);
+            List<BouquetTemplate> recommendations = bouquetDAO.getRecommendedTemplates(id); // Thêm gợi ý
 
-            // Lấy danh sách categories từ CategoryDAO
             CategoryDAO categoryDAO = new CategoryDAO();
             List<Category> categories = categoryDAO.getAllCategories();
 
-            // Lấy giá lọc nếu có (có thể lấy từ param hoặc mặc định)
             String minPrice = request.getParameter("minPrice");
             String maxPrice = request.getParameter("maxPrice");
 
             if (bouquet != null) {
                 request.setAttribute("bouquet", bouquet);
+                request.setAttribute("recommendations", recommendations); // Set recommendations
                 request.setAttribute("categories", categories);
                 request.setAttribute("minPrice", minPrice);
                 request.setAttribute("maxPrice", maxPrice);
