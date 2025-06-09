@@ -71,7 +71,7 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="#">VIETNAM</a></li>
+                                        <li><a href="#">HANOI</a></li>
                                     </ul>
                                 </div>
 
