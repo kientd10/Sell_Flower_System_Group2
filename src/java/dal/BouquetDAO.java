@@ -498,4 +498,43 @@ public class BouquetDAO {
 
         return recommendations;
     }
+    public void addBouquet(BouquetTemplate b) {
+    String sql = "INSERT INTO bouquet_templates (template_name, description, base_price, image_url, is_active, category_id, created_by) "
+               + "VALUES (?, ?, ?, ?, TRUE, 1, 1)"; // category_id và created_by bạn có thể tùy chỉnh
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, b.getTemplateName());
+        ps.setString(2, b.getDescription());
+        ps.setDouble(3, b.getBasePrice());
+        ps.setString(4, b.getImageUrl());
+        ps.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+    public void updateBouquet(BouquetTemplate b) {
+    String sql = "UPDATE bouquet_templates SET template_name = ?, description = ?, base_price = ?, image_url = ? "
+               + "WHERE template_id = ?";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, b.getTemplateName());
+        ps.setString(2, b.getDescription());
+        ps.setDouble(3, b.getBasePrice());
+        ps.setString(4, b.getImageUrl());
+        ps.setInt(5, b.getTemplateId());
+        ps.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+    public void softDeleteBouquet(int id) {
+    String sql = "UPDATE bouquet_templates SET is_active = FALSE WHERE template_id = ?";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        ps.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 }
