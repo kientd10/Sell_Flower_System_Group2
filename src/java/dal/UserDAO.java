@@ -50,6 +50,17 @@ public class UserDAO {
             dbContext.closeConnection(conn);
         }
     }
+    public String getPassword(String email) throws SQLException {
+    String sql = "SELECT password FROM users WHERE email = ?";
+    try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, email);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getString("password");
+        }
+        return null;
+    }
+}
 
     // Kiểm tra email đã tồn tại
     public boolean emailExists(String email) {
