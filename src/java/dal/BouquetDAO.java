@@ -260,7 +260,7 @@ public class BouquetDAO {
         }
     }
 
-    public void deleteCartItems(int templateId , int user_id) {
+    public void deleteCartItems(int templateId, int user_id) {
         String sql = "DELETE FROM shopping_cart  WHERE user_id = ? and template_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, user_id);
@@ -272,33 +272,21 @@ public class BouquetDAO {
     }
 
     public void addToCart(int userId, int templateId, int quantity) {
-        String checkSql = "SELECT quantity FROM shopping_cart WHERE user_id = ? AND template_id = ?";
-        String updateSql = "UPDATE shopping_cart SET quantity = quantity + ? WHERE user_id = ? AND template_id = ?";
-        String insertSql = "INSERT INTO shopping_cart (user_id, template_id, quantity, added_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
+        String upsertSql
+                = "INSERT INTO shopping_cart (user_id, template_id, quantity, added_at) "
+                + "VALUES (?, ?, ?, CURRENT_TIMESTAMP) "
+                + "ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity);";
 
-        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
-            checkStmt.setInt(1, userId);
-            checkStmt.setInt(2, templateId);
+        try (PreparedStatement stmt = conn.prepareStatement(upsertSql)) {
+            conn.setAutoCommit(false);
 
-            try (ResultSet rs = checkStmt.executeQuery()) {
-                if (rs.next()) {
-                    try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
-                        updateStmt.setInt(1, quantity);
-                        updateStmt.setInt(2, userId);
-                        updateStmt.setInt(3, templateId);
-                        updateStmt.executeUpdate();
-                    }
-                } else {
-                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-                        insertStmt.setInt(1, userId);
-                        insertStmt.setInt(2, templateId);
-                        insertStmt.setInt(3, quantity);
-                        insertStmt.executeUpdate();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            stmt.setInt(1, userId);
+            stmt.setInt(2, templateId);
+            stmt.setInt(3, quantity);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+           e.printStackTrace();
         }
     }
 
