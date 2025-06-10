@@ -283,7 +283,7 @@ public class BouquetDAO {
             try (ResultSet rs = checkStmt.executeQuery()) {
                 if (rs.next()) {
                     try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
-                        updateStmt.setInt(1, quantity);     // tăng thêm quantity
+                        updateStmt.setInt(1, quantity);
                         updateStmt.setInt(2, userId);
                         updateStmt.setInt(3, templateId);
                         updateStmt.executeUpdate();
@@ -368,8 +368,6 @@ public class BouquetDAO {
         if (maxPrice != null) {
             sql.append(" AND base_price <= ?");
         }
-
-// Không dùng tham số PreparedStatement cho limit và offset, nối trực tiếp
         sql.append(" ORDER BY template_id LIMIT " + limit + " OFFSET " + offset);
 
         try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
