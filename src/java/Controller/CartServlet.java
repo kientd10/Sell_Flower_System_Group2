@@ -66,13 +66,48 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         User user = (User) request.getSession().getAttribute("user");
-        int user_id = user.getUserId();
-        BouquetDAO c = new BouquetDAO();
-        List<ShoppingCart> cart_items = c.getCartItemsByUserId(user_id);
-        request.setAttribute("cart", cart_items);
-        request.setAttribute("userId", user_id);
-        request.getRequestDispatcher("cart.jsp").forward(request, response);
+        if (user == null) {
+            List<ShoppingCart> sessionCart = (List<ShoppingCart>) session.getAttribute("cart");
+            if (sessionCart == null) {
+                sessionCart = new ArrayList<>();
+                session.setAttribute("cart", sessionCart);
+            }
+            request.setAttribute("cart", sessionCart);
+            request.getRequestDispatcher("cart.jsp").forward(request, response);
+        } else {
+            boolean merged = session.getAttribute("cartMerged") != null;
+            List<ShoppingCart> cart_session = (List<ShoppingCart>) session.getAttribute("cart");
+            int user_id = user.getUserId();
+
+            BouquetDAO c = new BouquetDAO();
+            List<ShoppingCart> cart_db = c.getCartItemsByUserId(user_id);
+            if (cart_db == null) {
+                cart_db = new ArrayList<>();
+            }
+
+            if (!merged && cart_session != null) {
+                for (ShoppingCart sessionItem : cart_session) {
+                    boolean found = false;
+                    for (ShoppingCart cartItems : cart_db) {
+                        if (sessionItem.getBouquetTemplate().getTemplateId() == cartItems.getBouquetTemplate().getTemplateId()) {
+                            cartItems.setQuantity(cartItems.getQuantity() + sessionItem.getQuantity());
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        cart_db.add(new ShoppingCart(user_id, sessionItem.getBouquetTemplate(), sessionItem.getQuantity()));
+                    }
+                }
+                session.setAttribute("cartMerged", true);
+            }
+
+            session.setAttribute("cart", cart_db);
+            request.setAttribute("cart", cart_db);
+            request.getRequestDispatcher("cart.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -86,7 +121,7 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
@@ -99,8 +134,8 @@ public class CartServlet extends HttpServlet {
 
         String[] templateIds = request.getParameterValues("templateId[]");
         String[] quantities = request.getParameterValues("quantity[]");
-        String[] cartIds = request.getParameterValues("cartId[]");
         String[] checkedCartIds = request.getParameterValues("isChecked[]");
+
         if (templateIds != null && quantities != null && templateIds.length == quantities.length) {
             try {
                 for (int i = 0; i < templateIds.length; i++) {
@@ -108,6 +143,9 @@ public class CartServlet extends HttpServlet {
                     int quantity = Integer.parseInt(quantities[i]);
                     c.updateQuantity(user_id, templateId, quantity);
                 }
+                List<ShoppingCart> updatedCart = c.getCartItemsByUserId(user_id);
+                session.setAttribute("cart", updatedCart);
+
             } catch (Exception ex) {
                 Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -121,13 +159,11 @@ public class CartServlet extends HttpServlet {
         if (selectedCartIds.isEmpty()) {
             session.setAttribute("error", "Chọn ít nhất 1 sản phẩm");
             response.sendRedirect("cart");
-            return;
         } else {
             session.removeAttribute("error");
+            session.setAttribute("selectedCartIds", selectedCartIds);
+            response.sendRedirect("checkout.jsp");
         }
-
-        session.setAttribute("selectedCartIds", selectedCartIds);
-        response.sendRedirect("checkout.jsp");
     }
 
     /**

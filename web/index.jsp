@@ -93,19 +93,14 @@
                                     <c:if test="${sessionScope.user != null}">
                                         <li><a href="profile"><i class="fa fa-user"></i> Account</a></li>
                                         <li><a href="checkout.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.user == null}">
-                                        <li><a href="login.jsp"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.user != null}">
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.user==null}">
-                                        <li><a href="login.jsp">Login</a></li> 
-                                        </c:if>
-                                        <c:if test="${sessionScope.user!=null}">
                                         <li><a href="Customer?action=logout"><b>Logout</b></a></li> 
-                                        </c:if> 
+                                    </c:if> 
+                                    <c:if test="${sessionScope.user == null}">
+                                        <li><a href="login.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
+                                        <li><a href="login.jsp"><b>Login</b></a></li> 
+                                    </c:if>
                                 </ul>
                             </div>
                         </div>
@@ -335,19 +330,13 @@
                                                         </a>
                                                         <h2>${bou.basePrice} đ</h2>
                                                         <p>${bou.templateName}</p>
-                                                        <c:if test="${sessionScope.user == null}">
-                                                            <a href="login.jsp" class="btn btn-default add-to-cart">
+                                                        <form action="${pageContext.request.contextPath}/add" method="get">
+                                                            <input type="hidden" name="templateId" value="${bou.templateId}" />
+                                                            <button type="submit"
+                                                                    class="btn btn-primary">
                                                                 <i class="fa fa-shopping-cart"></i> Add to cart
-                                                            </a>
-                                                        </c:if>
-                                                        <c:if test="${sessionScope.user != null}">
-                                                            <form action="add" method="GET">
-                                                                <input type="hidden" name="templateId" value="${bou.templateId}" />
-                                                                <button type="submit" class="btn btn-default add-to-cart">
-                                                                    <i class="fa fa-shopping-cart"></i> Add to cart
-                                                                </button>
-                                                            </form>
-                                                        </c:if>
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>

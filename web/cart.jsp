@@ -95,19 +95,14 @@
                                     <c:if test="${sessionScope.user != null}">
                                         <li><a href="profile"><i class="fa fa-user"></i> Account</a></li>
                                         <li><a href="checkout.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.user == null}">
-                                        <li><a href="login.jsp"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.user != null}">
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.user==null}">
-                                        <li><a href="login.jsp">Login</a></li> 
-                                        </c:if>
-                                        <c:if test="${sessionScope.user!=null}">
                                         <li><a href="Customer?action=logout"><b>Logout</b></a></li> 
                                         </c:if> 
+                                        <c:if test="${sessionScope.user == null}">
+                                        <li><a href="login.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
+                                        <li><a href="login.jsp"><b>Login</b></a></li> 
+                                        </c:if>
                                 </ul>
                             </div>
                         </div>
@@ -227,31 +222,31 @@
                                                 ${line.bouquetTemplate.basePrice} VNĐ
                                             </td>
                                             <td class="cart_quantity">
-                                                    <button type="button"
-                                                            onclick="decreaseQty('${line.bouquetTemplate.templateId}')"
-                                                            class="btn btn-xs btn-default">
-                                                        &minus;
-                                                    </button>
-                                                    <input type="number"
-                                                           id="qty_${line.bouquetTemplate.templateId}"
-                                                           name="quantity[]"
-                                                           value="${line.quantity}"
-                                                           min="1"
-                                                           data-base-price="${line.bouquetTemplate.basePrice}"
-                                                           readonly
-                                                           style="width:60px; text-align:center;"/>
+                                                <button type="button"
+                                                        onclick="decreaseQty('${line.bouquetTemplate.templateId}')"
+                                                        class="btn btn-xs btn-default">
+                                                    &minus;
+                                                </button>
+                                                <input type="number"
+                                                       id="qty_${line.bouquetTemplate.templateId}"
+                                                       name="quantity[]"
+                                                       value="${line.quantity}"
+                                                       min="1"
+                                                       data-base-price="${line.bouquetTemplate.basePrice}"
+                                                       readonly
+                                                       style="width:60px; text-align:center;"/>
 
-                                                    <!-- Nút tăng -->
-                                                    <button type="button"
-                                                            onclick="increaseQty('${line.bouquetTemplate.templateId}')"
-                                                            class="btn btn-xs btn-default">
-                                                        &#43;
-                                                    </button>
+                                                <!-- Nút tăng -->
+                                                <button type="button"
+                                                        onclick="increaseQty('${line.bouquetTemplate.templateId}')"
+                                                        class="btn btn-xs btn-default">
+                                                    &#43;
+                                                </button>
 
-                                                    <!-- Hidden input để gửi templateId lên server -->
-                                                    <input type="hidden"
-                                                           name="templateId[]"
-                                                           value="${line.bouquetTemplate.templateId}"/>
+                                                <!-- Hidden input để gửi templateId lên server -->
+                                                <input type="hidden"
+                                                       name="templateId[]"
+                                                       value="${line.bouquetTemplate.templateId}"/>
                                             </td>
                                             <td>
                                                 <span id="lineTotal_${line.bouquetTemplate.templateId}">
@@ -270,7 +265,7 @@
                                                     />
                                             </td>
                                             <td>
-                                                <a href="remove?cartId=${line.cartId}">
+                                                <a href="remove?templateId=${line.bouquetTemplate.templateId}">
                                                     <i class="fa fa-times"></i>
                                                 </a>
                                             </td>
@@ -285,9 +280,16 @@
                             </c:if>
                         </div>
                         <c:if test="${!sessionScope.isEmpty}">
-                            <div class="text-right" style="margin-top:20px;">
-                                <button type="submit" class="btn btn-success">Thanh Toán</button>
-                            </div>
+                            <c:if test="${sessionScope.user == null}">
+                                <div class="text-right" style="margin-top:20px;">
+                                    <a href="login.jsp" class="btn btn-success">Thanh Toán</a>
+                                </div>
+                            </c:if>
+                            <c:if test="${sessionScope.user != null}">
+                                <div class="text-right" style="margin-top:20px;">
+                                    <button type="submit" class="btn btn-success">Thanh Toán</button>
+                                </div>
+                            </c:if>
                         </c:if>
                     </form>
                 </c:if>
@@ -329,12 +331,12 @@
             </div>
         </div>
         <script>
-                                                                $(document).ready(function () {
-                                                                    $('.toast').toast({
-                                                                        delay: 3500 // 5 seconds delay before fade-out animation
-                                                                    });
-                                                                    $('.toast').toast('show');
+                                                            $(document).ready(function () {
+                                                                $('.toast').toast({
+                                                                    delay: 3500 // 5 seconds delay before fade-out animation
                                                                 });
+                                                                $('.toast').toast('show');
+                                                            });
 
         </script>
         <style>
