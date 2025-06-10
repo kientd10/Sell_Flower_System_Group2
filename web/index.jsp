@@ -67,7 +67,7 @@
                             <div class="btn-group pull-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        VIETNAM
+                                        HANOI
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
