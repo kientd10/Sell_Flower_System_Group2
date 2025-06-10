@@ -20,7 +20,15 @@ public class ShoppingCart {
         this.Quantity = Quantity;
         this.AddedAt = AddedAt;
     }
-
+    public ShoppingCart( BouquetTemplate BouquetTemplate, int Quantity) {
+        this.BouquetTemplate = BouquetTemplate;
+        this.Quantity = Quantity;
+    }
+      public ShoppingCart( int UserId, BouquetTemplate BouquetTemplate, int Quantity) {
+        this.UserId = UserId;
+        this.BouquetTemplate = BouquetTemplate;
+        this.Quantity = Quantity;
+    }
     public int getCartId() {
         return CartId;
     }
@@ -62,9 +70,6 @@ public class ShoppingCart {
     }
 
 
-    public void add(ShoppingCart line) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
      
 }

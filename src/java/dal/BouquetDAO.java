@@ -15,11 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import Model.BouquetTemplate;
 import Model.ShoppingCart;
-import Model.TemplateIngredient;
-import dal.DBcontext;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BouquetDAO {
 
@@ -228,6 +224,31 @@ public class BouquetDAO {
         return Item;
     }
 
+    public BouquetTemplate getBouquetByID(int templateId) {
+        BouquetTemplate p = new BouquetTemplate();
+        String sql
+                = "SELECT template_id, "
+                + "template_name,description, base_price, image_url "
+                + "FROM bouquet_templates "
+                + "WHERE  bt.template_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, templateId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    p.setTemplateId(rs.getInt("template_id"));
+                    p.setTemplateName(rs.getString("template_name"));
+                    p.setDescription(rs.getString("description"));
+                    p.setBasePrice(rs.getDouble("base_price"));
+                    p.setImageUrl(rs.getString("image_url"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return p;
+    }
+
     public void updateQuantity(int userId, int templateId, int newQuantity) throws Exception {
         String sql = "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND template_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -239,10 +260,11 @@ public class BouquetDAO {
         }
     }
 
-    public void deleteCartItemsByCartId(int CartId) {
-        String sql = "DELETE FROM shopping_cart WHERE cart_id = ?";
+    public void deleteCartItems(int templateId , int user_id) {
+        String sql = "DELETE FROM shopping_cart  WHERE user_id = ? and template_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, CartId);
+            stmt.setInt(1, user_id);
+            stmt.setInt(2, templateId);
             stmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -379,7 +401,6 @@ public class BouquetDAO {
         return bouquets;
     }
 
-    // Hàm đếm số lượng bản ghi phù hợp bộ lọc
     public int countFilteredBouquets(int categoryId, Double minPrice, Double maxPrice) {
         int count = 0;
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM bouquet_templates WHERE is_active = TRUE");
@@ -498,43 +519,46 @@ public class BouquetDAO {
 
         return recommendations;
     }
+
     public void addBouquet(BouquetTemplate b) {
-    String sql = "INSERT INTO bouquet_templates (template_name, description, base_price, image_url, is_active, category_id, created_by) "
-               + "VALUES (?, ?, ?, ?, TRUE, 1, 1)"; // category_id và created_by bạn có thể tùy chỉnh
+        String sql = "INSERT INTO bouquet_templates (template_name, description, base_price, image_url, is_active, category_id, created_by) "
+                + "VALUES (?, ?, ?, ?, TRUE, 1, 1)"; // category_id và created_by bạn có thể tùy chỉnh
 
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, b.getTemplateName());
-        ps.setString(2, b.getDescription());
-        ps.setDouble(3, b.getBasePrice());
-        ps.setString(4, b.getImageUrl());
-        ps.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, b.getTemplateName());
+            ps.setString(2, b.getDescription());
+            ps.setDouble(3, b.getBasePrice());
+            ps.setString(4, b.getImageUrl());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
+
     public void updateBouquet(BouquetTemplate b) {
-    String sql = "UPDATE bouquet_templates SET template_name = ?, description = ?, base_price = ?, image_url = ? "
-               + "WHERE template_id = ?";
+        String sql = "UPDATE bouquet_templates SET template_name = ?, description = ?, base_price = ?, image_url = ? "
+                + "WHERE template_id = ?";
 
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, b.getTemplateName());
-        ps.setString(2, b.getDescription());
-        ps.setDouble(3, b.getBasePrice());
-        ps.setString(4, b.getImageUrl());
-        ps.setInt(5, b.getTemplateId());
-        ps.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, b.getTemplateName());
+            ps.setString(2, b.getDescription());
+            ps.setDouble(3, b.getBasePrice());
+            ps.setString(4, b.getImageUrl());
+            ps.setInt(5, b.getTemplateId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
+
     public void softDeleteBouquet(int id) {
-    String sql = "UPDATE bouquet_templates SET is_active = FALSE WHERE template_id = ?";
+        String sql = "UPDATE bouquet_templates SET is_active = FALSE WHERE template_id = ?";
 
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, id);
-        ps.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
 }

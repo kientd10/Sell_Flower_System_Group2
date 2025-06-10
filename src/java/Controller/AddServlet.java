@@ -4,6 +4,8 @@
  */
 package Controller;
 
+import Model.BouquetTemplate;
+import Model.ShoppingCart;
 import Model.User;
 import dal.BouquetDAO;
 import java.io.IOException;
@@ -12,6 +14,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -36,7 +43,7 @@ public class AddServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddServlet</title>");            
+            out.println("<title>Servlet AddServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet AddServlet at " + request.getContextPath() + "</h1>");
@@ -57,13 +64,40 @@ public class AddServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         User user = (User) request.getSession().getAttribute("user");
-        int user_id = user.getUserId();
-        int template_id = Integer.parseInt(request.getParameter("templateId"));
-        int quantity = 1;
-        BouquetDAO c = new BouquetDAO();
-        c.addToCart(user_id, template_id, quantity);
-        response.sendRedirect("home");
+        if (user == null) {
+            List<ShoppingCart> sessionCart = (List<ShoppingCart>) session.getAttribute("cart");
+            if (sessionCart == null) {
+                sessionCart = new ArrayList<>();
+            }
+            BouquetDAO c = new BouquetDAO();
+            int template_id = Integer.parseInt(request.getParameter("templateId"));
+            BouquetTemplate b = c.getBouquetById(template_id);
+            int quantity = 1;
+            ShoppingCart e = new ShoppingCart( b, quantity);
+            boolean found = false;
+            for (ShoppingCart item : sessionCart) {
+                if (item.getBouquetTemplate().getTemplateId() == template_id) {
+                    item.setQuantity(item.getQuantity() + quantity);
+                    found = true;
+                    break;
+
+                }
+            }
+            if (!found) {
+                sessionCart.add(e);
+            }
+            session.setAttribute("cart", sessionCart);
+            response.sendRedirect("home");
+        } else {
+            int user_id = user.getUserId();
+            int template_id = Integer.parseInt(request.getParameter("templateId"));
+            int quantity = 1;
+            BouquetDAO c = new BouquetDAO();
+            c.addToCart(user_id, template_id, quantity);
+            response.sendRedirect("home");
+        }
     }
 
     /**

@@ -57,7 +57,6 @@ public class ResetPassword extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -88,90 +87,98 @@ public class ResetPassword extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       String code = request.getParameter("code");
-    String email = request.getParameter("email");
-    String password = request.getParameter("password");
-    String confirmPassword = request.getParameter("confirmPassword");
+        String code = request.getParameter("code");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
 
-    try {
-        // Kiểm tra nếu đây là yêu cầu xác nhận mã (từ verify-code.jsp)
-        if (password == null && confirmPassword == null) {
-            if (code == null || code.trim().isEmpty() || email == null || email.trim().isEmpty()) {
-                request.setAttribute("error", "Dữ liệu không hợp lệ. Vui lòng nhập mã và email.");
-                request.getRequestDispatcher("/verify-code.jsp?email=" + (email != null ? email : "")).forward(request, response);
-                return;
-            }
+        try {
+            // Kiểm tra nếu đây là yêu cầu xác nhận mã (từ verify-code.jsp)
+            if (password == null && confirmPassword == null) {
+                if (code == null || code.trim().isEmpty() || email == null || email.trim().isEmpty()) {
+                    request.setAttribute("error", "Dữ liệu không hợp lệ. Vui lòng nhập mã và email.");
+                    request.getRequestDispatcher("/verify-code.jsp?email=" + (email != null ? email : "")).forward(request, response);
+                    return;
+                }
 
-            // Validate code
-            String validEmail = passwordResetDAO.validateResetToken(code.trim());
-            if (validEmail == null || !validEmail.equals(email.trim())) {
-                request.setAttribute("error", "Mã xác nhận không hợp lệ hoặc email không khớp.");
-                request.getRequestDispatcher("/verify-code.jsp?email=" + email).forward(request, response);
-                return;
-            }
+                // Validate code
+                String validEmail = passwordResetDAO.validateResetToken(code.trim());
+                if (validEmail == null || !validEmail.equals(email.trim())) {
+                    request.setAttribute("error", "Mã xác nhận không hợp lệ hoặc email không khớp.");
+                    request.getRequestDispatcher("/verify-code.jsp?email=" + email).forward(request, response);
+                    return;
+                }
 
-            // Mã hợp lệ, chuyển sang reset-password.jsp
-            request.setAttribute("email", email);
-            request.setAttribute("code", code);
-            request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
-            return;
-        }
-
-        // Kiểm tra nếu đây là yêu cầu đặt lại mật khẩu (từ reset-password.jsp)
-        if (password != null && confirmPassword != null) {
-            if (code == null || code.trim().isEmpty() || email == null || email.trim().isEmpty()) {
-                request.setAttribute("error", "Dữ liệu không hợp lệ. Vui lòng thử lại.");
+                // Mã hợp lệ, chuyển sang reset-password.jsp
+                request.setAttribute("email", email);
+                request.setAttribute("code", code);
                 request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
                 return;
             }
 
-            // Validate code again for security
-            String validEmail = passwordResetDAO.validateResetToken(code.trim());
-            if (validEmail == null || !validEmail.equals(email.trim())) {
-                request.setAttribute("error", "Mã xác nhận không hợp lệ hoặc đã hết hạn.");
-                request.getRequestDispatcher("/verify-code.jsp?email=" + email).forward(request, response);
-                return;
-            }
+            // Kiểm tra nếu đây là yêu cầu đặt lại mật khẩu (từ reset-password.jsp)
+            if (password != null && confirmPassword != null) {
+                if (code == null || code.trim().isEmpty() || email == null || email.trim().isEmpty()) {
+                    request.setAttribute("error", "Dữ liệu không hợp lệ. Vui lòng thử lại.");
+                    request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+                    return;
+                }
 
-            // Validate passwords
-            if (!password.equals(confirmPassword)) {
-                request.setAttribute("error", "Mật khẩu không khớp.");
-                request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
-                return;
-            }
+                // Validate code again for security
+                String validEmail = passwordResetDAO.validateResetToken(code.trim());
+                if (validEmail == null || !validEmail.equals(email.trim())) {
+                    request.setAttribute("error", "Mã xác nhận không hợp lệ hoặc đã hết hạn.");
+                    request.getRequestDispatcher("/verify-code.jsp?email=" + email).forward(request, response);
+                    return;
+                }
 
-            // Update password
-            boolean success = userDAO.updatePassword(email, password);
-            if (success) {
-                if (passwordResetDAO.deleteToken(code)) {
-                    request.setAttribute("message", "Đặt lại mật khẩu thành công. Vui lòng đăng nhập.");
-                    request.getRequestDispatcher("/login.jsp").forward(request, response);
+                // Validate passwords
+                if (!password.equals(confirmPassword)) {
+                    request.setAttribute("error", "Mật khẩu không khớp.");
+                    request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+                    return;
+                }
+
+                // Kiểm tra mật khẩu mới có trùng với mật khẩu cũ không
+                String oldPassword = userDAO.getPassword(email);
+                if (oldPassword != null && password.equals(oldPassword)) {
+                    request.setAttribute("error", "Mật khẩu mới không được trùng với mật khẩu cũ.");
+                    request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+                    return;
+                }
+
+                // Update password
+                boolean success = userDAO.updatePassword(email, password);
+                if (success) {
+                    if (passwordResetDAO.deleteToken(code)) {
+                        request.setAttribute("message", "Đặt lại mật khẩu thành công. Vui lòng đăng nhập.");
+                        request.getRequestDispatcher("/login.jsp").forward(request, response);
+                    } else {
+                        request.setAttribute("error", "Lỗi khi xóa mã xác nhận. Vui lòng thử lại.");
+                        request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+                    }
                 } else {
-                    request.setAttribute("error", "Lỗi khi xóa mã xác nhận. Vui lòng thử lại.");
+                    request.setAttribute("error", "Không thể đặt lại mật khẩu. Vui lòng thử lại.");
                     request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
                 }
-            } else {
-                request.setAttribute("error", "Không thể đặt lại mật khẩu. Vui lòng thử lại.");
-                request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+                return;
             }
-            return;
+
+            // Trường hợp không xác định
+            request.setAttribute("error", "Yêu cầu không hợp lệ. Vui lòng thử lại.");
+            request.getRequestDispatcher("/verify-code.jsp?email=" + (email != null ? email : "")).forward(request, response);
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi SQL: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            request.getRequestDispatcher("/verify-code.jsp?email=" + (email != null ? email : "")).forward(request, response);
+        } catch (Exception e) {
+            System.err.println("Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi hệ thống. Vui lòng thử lại sau.");
+            request.getRequestDispatcher("/verify-code.jsp?email=" + (email != null ? email : "")).forward(request, response);
         }
-
-        // Trường hợp không xác định
-        request.setAttribute("error", "Yêu cầu không hợp lệ. Vui lòng thử lại.");
-        request.getRequestDispatcher("/verify-code.jsp?email=" + (email != null ? email : "")).forward(request, response);
-
-    } catch (SQLException e) {
-        System.err.println("Lỗi SQL: " + e.getMessage());
-        e.printStackTrace();
-        request.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());
-        request.getRequestDispatcher("/verify-code.jsp?email=" + (email != null ? email : "")).forward(request, response);
-    } catch (Exception e) {
-        System.err.println("Lỗi hệ thống: " + e.getMessage());
-        e.printStackTrace();
-        request.setAttribute("error", "Lỗi hệ thống. Vui lòng thử lại sau.");
-        request.getRequestDispatcher("/verify-code.jsp?email=" + (email != null ? email : "")).forward(request, response);
-    }
     }
 
     /**
@@ -181,7 +188,6 @@ public class ResetPassword extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Short description reset password";
+    }
 }
