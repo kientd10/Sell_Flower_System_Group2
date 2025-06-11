@@ -217,6 +217,13 @@
                                             <td>
                                                 <h4>${line.bouquetTemplate.templateName}</h4>
                                                 <p>Web ID: ${line.bouquetTemplate.templateId}</p>
+                                                <p>
+                                                    Quantity: 
+                                                    <input type="number" id="stk_${line.bouquetTemplate.templateId}" 
+                                                           value="${line.bouquetTemplate.stock}" 
+                                                           min="0" readonly style="border: none; background: transparent; width: 50px;">
+                                                </p>
+                                                <div id="notice_${line.bouquetTemplate.templateId}" style="margin-top: 5px;"></div>
                                             </td>
                                             <td>
                                                 ${line.bouquetTemplate.basePrice} VNĐ
@@ -225,7 +232,7 @@
                                                 <button type="button"
                                                         onclick="decreaseQty('${line.bouquetTemplate.templateId}')"
                                                         class="btn btn-xs btn-default">
-                                                    &minus;
+                                                    -
                                                 </button>
                                                 <input type="number"
                                                        id="qty_${line.bouquetTemplate.templateId}"
@@ -237,11 +244,15 @@
                                                        style="width:60px; text-align:center;"/>
 
                                                 <!-- Nút tăng -->
-                                                <button type="button"
-                                                        onclick="increaseQty('${line.bouquetTemplate.templateId}')"
-                                                        class="btn btn-xs btn-default">
-                                                    &#43;
+                                                <button
+                                                    type="button"
+                                                    id="btnPlus_${line.bouquetTemplate.templateId}"
+                                                    onclick="increaseQty('${line.bouquetTemplate.templateId}')"
+
+                                                    class="btn btn-xs btn-default">
+                                                    +
                                                 </button>
+
 
                                                 <!-- Hidden input để gửi templateId lên server -->
                                                 <input type="hidden"
@@ -331,12 +342,12 @@
             </div>
         </div>
         <script>
-                                                            $(document).ready(function () {
-                                                                $('.toast').toast({
-                                                                    delay: 3500 // 5 seconds delay before fade-out animation
-                                                                });
-                                                                $('.toast').toast('show');
+                                                        $(document).ready(function () {
+                                                            $('.toast').toast({
+                                                                delay: 3500 // 5 seconds delay before fade-out animation
                                                             });
+                                                            $('.toast').toast('show');
+                                                        });
 
         </script>
         <style>
@@ -349,28 +360,79 @@
     </c:if>>
     <script>
         function increaseQty(id) {
-            const input = document.getElementById('qty_' + id);
-            let current = parseInt(input.value);
-            input.value = current + 1;
+            const qtyInput = document.getElementById('qty_' + id);
+            let current = parseInt(qtyInput.value, 10);
+
+            // stockQty sẽ disable nút + và trả false nếu sẽ âm
+            if (!stockQty(id, 1)) {
+                return;
+            }
+
+            // Còn hàng mới tăng qty và cập nhật tổng tiền
+            qtyInput.value = current + 1;
             updateLineTotal(id);
         }
 
         function decreaseQty(id) {
-            const input = document.getElementById('qty_' + id);
-            let current = parseInt(input.value);
+            const qtyInput = document.getElementById('qty_' + id);
+            let current = parseInt(qtyInput.value, 10);
+
             if (current > 1) {
-                input.value = current - 1;
+                // Giảm qty trước
+                qtyInput.value = current - 1;
                 updateLineTotal(id);
+
+                // Trả hàng về kho, stockQty sẽ enable lại nút +
+                stockQty(id, -1);
             }
         }
 
-        function updateLineTotal(id) {
-            const input = document.getElementById('qty_' + id);
-            const qty = parseInt(input.value);
-            const basePrice = parseFloat(input.getAttribute('data-base-price'));
-            const lineTotalEl = document.getElementById('lineTotal_' + id);
-            lineTotalEl.textContent = (basePrice * qty);
+        function stockQty(id, delta) {
+            const stockInput = document.getElementById('stk_' + id);
+            const notice = document.getElementById('notice_' + id);
+            const btnPlus = document.getElementById('btnPlus_' + id);
+
+            let current = parseInt(stockInput.value, 10);
+            let next = current - delta;
+
+            // Nếu next < 0 thì hết hàng
+            if (next < 0) {
+                if (notice) {
+                    notice.textContent = "Sản phẩm đã hết hàng!";
+                    notice.style.color = 'red';
+                }
+                if (btnPlus) {
+                    btnPlus.disabled = true;
+                }
+                return false;
+            }
+
+            // Còn hàng → cập nhật stock và bật lại nút +
+            stockInput.value = next;
+            if (notice)
+                notice.textContent = "";
+            if (btnPlus)
+                btnPlus.disabled = false;
+
+            return true;
         }
+
+        function updateLineTotal(id) {
+            const qtyInput = document.getElementById('qty_' + id);
+            const qty = parseInt(qtyInput.value, 10);
+            const basePrice = parseFloat(qtyInput.getAttribute('data-base-price'));
+            const lineTotal = document.getElementById('lineTotal_' + id);
+
+            lineTotal.textContent = (basePrice * qty).toLocaleString('vi-VN') + ' ₫';
+        }
+
+        // Khởi tạo: đảm bảo nút + đang đúng trạng thái lúc load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input[id^="stk_"]').forEach(stkInput => {
+                const id = stkInput.id.replace('stk_', '');
+                stockQty(id, 0);
+            });
+        });
     </script>
 </body>
 </html>
