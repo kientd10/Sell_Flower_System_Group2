@@ -15,8 +15,18 @@ public class BouquetTemplate {
     private String description;
     private double basePrice;
     private String imageUrl;
+    private int Stock;
 
     public BouquetTemplate() {
+    }
+
+    public BouquetTemplate(int templateId, String templateName, String description, double basePrice, String imageUrl, int Stock) {
+        this.templateId = templateId;
+        this.templateName = templateName;
+        this.description = description;
+        this.basePrice = basePrice;
+        this.imageUrl = imageUrl;
+        this.Stock = Stock;
     }
 
     public BouquetTemplate(int templateId, String templateName, String description, double basePrice, String imageUrl) {
@@ -25,6 +35,14 @@ public class BouquetTemplate {
         this.description = description;
         this.basePrice = basePrice;
         this.imageUrl = imageUrl;
+    }
+
+    public int getStock() {
+        return Stock;
+    }
+
+    public void setStock(int Stock) {
+        this.Stock = Stock;
     }
 
     public int getTemplateId() {

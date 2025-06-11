@@ -91,6 +91,14 @@
         <servlet-name>Customer</servlet-name>
         <url-pattern>/Customer</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>PlaceOder</servlet-name>
+        <servlet-class>Controller.PlaceOder</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PlaceOder</servlet-name>
+        <url-pattern>/placeOrder</url-pattern>
+    </servlet-mapping>
     <filter>
         <filter-name>RoleFilter</filter-name>
         <filter-class>Controller.RoleFilter</filter-class>
