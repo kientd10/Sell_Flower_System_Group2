@@ -134,8 +134,8 @@ public class CartServlet extends HttpServlet {
 
         String[] templateIds = request.getParameterValues("templateId[]");
         String[] quantities = request.getParameterValues("quantity[]");
+        String[] cartIds = request.getParameterValues("cartId[]");
         String[] checkedCartIds = request.getParameterValues("isChecked[]");
-
         if (templateIds != null && quantities != null && templateIds.length == quantities.length) {
             try {
                 for (int i = 0; i < templateIds.length; i++) {
@@ -143,9 +143,6 @@ public class CartServlet extends HttpServlet {
                     int quantity = Integer.parseInt(quantities[i]);
                     c.updateQuantity(user_id, templateId, quantity);
                 }
-                List<ShoppingCart> updatedCart = c.getCartItemsByUserId(user_id);
-                session.setAttribute("cart", updatedCart);
-
             } catch (Exception ex) {
                 Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -159,11 +156,15 @@ public class CartServlet extends HttpServlet {
         if (selectedCartIds.isEmpty()) {
             session.setAttribute("error", "Chọn ít nhất 1 sản phẩm");
             response.sendRedirect("cart");
+            return;
         } else {
             session.removeAttribute("error");
-            session.setAttribute("selectedCartIds", selectedCartIds);
-            response.sendRedirect("checkout.jsp");
         }
+
+        session.setAttribute("selectedCartIds", selectedCartIds);
+        List<ShoppingCart> cart_items = c.getCartItemsByUserId(user_id);
+        session.setAttribute("cart", cart_items);
+        response.sendRedirect("checkout.jsp");
     }
 
     /**
