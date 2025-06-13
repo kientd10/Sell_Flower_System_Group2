@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controller;
 
 import Model.BouquetTemplate;
@@ -34,39 +33,42 @@ public class StaffBouquetServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        if (action == null) action = "view";
+        if (action == null) {
+            action = "view";
+        }
 
         switch (action) {
             case "add":
-request.getRequestDispatcher("editBouquet.jsp").forward(request, response);
+                request.getRequestDispatcher("editBouquet.jsp").forward(request, response);
                 break;
 
             case "edit":
                 try {
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    request.setAttribute("bouquet", bouquetDAO.getBouquetById(id));
-                    request.getRequestDispatcher("editBouquet.jsp").forward(request, response);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    response.sendRedirect("staffbouquetservlet");
-                }
-                break;
+                int id = Integer.parseInt(request.getParameter("id"));
+                request.setAttribute("bouquet", bouquetDAO.getBouquetById(id));
+                request.getRequestDispatcher("editBouquet.jsp").forward(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("staffbouquetservlet");
+            }
+            break;
 
             case "delete":
                 try {
-                    int deleteId = Integer.parseInt(request.getParameter("id"));
-                    bouquetDAO.softDeleteBouquet(deleteId); // xóa mềm
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                response.sendRedirect("staffbouquetservlet");
-                break;
+                int deleteId = Integer.parseInt(request.getParameter("id"));
+                bouquetDAO.softDeleteBouquet(deleteId); // xóa mềm
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            response.sendRedirect("staffbouquetservlet");
+            break;
 
             case "view":
             default:
-                List<BouquetTemplate> list = bouquetDAO.getAllBouquets(); // chỉ lấy is_active = TRUE
+                List<BouquetTemplate> list = bouquetDAO.getAllBouquets();
+                String mode = request.getParameter("mode");
                 request.setAttribute("bouquetList", list);
-                request.getRequestDispatcher("manageBouquets.jsp").forward(request, response);
+                request.getRequestDispatcher("staff.jsp").forward(request, response);
         }
     }
 
