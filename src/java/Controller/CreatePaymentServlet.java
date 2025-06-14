@@ -64,47 +64,51 @@ private static final String CLIENT_SECRET = "EEK8ktGc8VoewI02nk2AWsQuWl7ztKENoR7
     @Override
       protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            APIContext apiContext = new APIContext(
-                    new OAuthTokenCredential(CLIENT_ID, CLIENT_SECRET).getAccessToken());
-            apiContext.setConfigurationMap(new HashMap<String, String>() {{
-                put("mode", "sandbox");
-            }});
+           String amountValue = (String) request.getSession().getAttribute("amount");
+        String fullname = (String) request.getSession().getAttribute("fullname");
+         try {
+        // 👇 Cấu hình bắt buộc
+        Map<String, String> configMap = new HashMap<>();
+        configMap.put("mode", "sandbox");
 
-            Amount amount = new Amount();
-            amount.setCurrency("USD");
-            amount.setTotal("10.00");
+        OAuthTokenCredential tokenCredential = new OAuthTokenCredential(CLIENT_ID, CLIENT_SECRET, configMap);
+        APIContext apiContext = new APIContext(tokenCredential.getAccessToken());
+        apiContext.setConfigurationMap(configMap);
 
-            Transaction transaction = new Transaction();
-            transaction.setAmount(amount);
-            transaction.setDescription("Thanh toán đơn hàng hoa");
+        // 👇 Tạo thông tin thanh toán
+        Amount amount = new Amount();
+        amount.setCurrency("USD");
+ amount.setTotal(amountValue);  // test xem có hết lỗi không // test xem có hết lỗi không
+        Transaction transaction = new Transaction();
+        transaction.setAmount(amount);
+        transaction.setDescription("Thanh toán đơn hàng của: " + fullname);
 
-            Payer payer = new Payer();
-            payer.setPaymentMethod("paypal");
+        Payer payer = new Payer();
+        payer.setPaymentMethod("paypal");
 
-            RedirectUrls redirectUrls = new RedirectUrls();
-            redirectUrls.setCancelUrl("http://localhost:8080/FlowerSystem/cancel.jsp");
-            redirectUrls.setReturnUrl("http://localhost:8080/FlowerSystem/execute-payment");
+        RedirectUrls redirectUrls = new RedirectUrls();
+        redirectUrls.setCancelUrl("http://localhost:8080/FlowerSystem/cancel.jsp");
+        redirectUrls.setReturnUrl("http://localhost:8080/FlowerSystem/executepaymentservlet");
 
-            Payment payment = new Payment();
-            payment.setIntent("sale");
-            payment.setPayer(payer);
-            payment.setRedirectUrls(redirectUrls);
-            payment.setTransactions(Collections.singletonList(transaction));
+        Payment payment = new Payment();
+        payment.setIntent("sale");
+        payment.setPayer(payer);
+        payment.setRedirectUrls(redirectUrls);
+        payment.setTransactions(Collections.singletonList(transaction));
 
-            Payment createdPayment = payment.create(apiContext);
+        Payment createdPayment = payment.create(apiContext);
 
-            for (Links link : createdPayment.getLinks()) {
-                if (link.getRel().equals("approval_url")) {
-                    response.sendRedirect(link.getHref());
-                    return;
-                }
+        for (Links link : createdPayment.getLinks()) {
+            if (link.getRel().equals("approval_url")) {
+                response.sendRedirect(link.getHref());
+                return;
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().println("Lỗi tạo thanh toán: " + e.getMessage());
         }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        response.getWriter().println("Lỗi tạo thanh toán: " + e.getMessage());
+    }
     }
 
 

@@ -69,11 +69,12 @@ public class ExecutePaymentServlet extends HttpServlet {
             String paymentId = request.getParameter("paymentId");
             String payerId = request.getParameter("PayerID");
 
-            APIContext apiContext = new APIContext(
-                    new OAuthTokenCredential(CLIENT_ID, CLIENT_SECRET).getAccessToken());
-            apiContext.setConfigurationMap(new HashMap<String, String>() {{
-                put("mode", "sandbox");
-            }});
+            Map<String, String> configMap = new HashMap<>();
+configMap.put("mode", "sandbox");
+
+OAuthTokenCredential tokenCredential = new OAuthTokenCredential(CLIENT_ID, CLIENT_SECRET, configMap);
+APIContext apiContext = new APIContext(tokenCredential.getAccessToken());
+apiContext.setConfigurationMap(configMap);
 
             Payment payment = new Payment();
             payment.setId(paymentId);

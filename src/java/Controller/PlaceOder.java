@@ -4,6 +4,7 @@
  */
 package Controller;
 
+import Model.ShoppingCart;
 import java.sql.Timestamp;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -80,18 +81,52 @@ public class PlaceOder extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("user_id");
-        if (userId == null) {
-            userId = 1; // Giả lập nếu chưa có session đăng nhập
-        }
-
-        String receiverName = request.getParameter("receiverName");
-        String receiverPhone = request.getParameter("receiverPhone");
-        String receiverAddress = request.getParameter("receiverAddress");
-        String deliveryTime = request.getParameter("deliveryTime");  
+    HttpSession session = request.getSession();
+    Integer userId = (Integer) session.getAttribute("user_id");
+    if (userId == null) {
+        userId = 1; // Tạm thời giả lập nếu chưa đăng nhập
     }
+
+    String receiverName = request.getParameter("receiverName");
+    String receiverPhone = request.getParameter("receiverPhone");
+    String receiverAddress = request.getParameter("receiverAddress");
+    String deliveryTime = request.getParameter("deliveryTime");
+
+    session.setAttribute("fullname", receiverName);
+
+    List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
+    List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
+
+    double total = 0.0;
+    if (selectedCartIds != null && fullCart != null) {
+        for (ShoppingCart item : fullCart) {
+            String cartIdStr = String.valueOf(item.getCartId());
+
+            if (selectedCartIds.contains(cartIdStr)) {
+                if (item.getBouquetTemplate() == null) {
+                    System.out.println("⚠ BouquetTemplate bị null với cartId: " + item.getCartId());
+                    continue;
+                }
+
+                double price = item.getBouquetTemplate().getPrice();
+                int quantity = item.getQuantity();
+
+                System.out.println("✅ cartId: " + item.getCartId() + " | Price: " + price + " | Qty: " + quantity);
+                total += price * quantity;
+            }
+        }
+    }
+
+    System.out.println("===> Tổng tiền (total): " + total);
+
+    String amount = String.format("%.2f", total);
+    session.setAttribute("amount", amount);
+    System.out.println(">> Chuỗi amount: " + amount);
+
+    // ✅ CHUYỂN SAU KHI SET XONG
+    response.sendRedirect("createpaymentservlet");
+}
 }
