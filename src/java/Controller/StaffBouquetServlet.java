@@ -33,13 +33,16 @@ public class StaffBouquetServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        String mode = request.getParameter("mode");
         if (action == null) {
             action = "view";
         }
 
         switch (action) {
             case "add":
-                request.getRequestDispatcher("editBouquet.jsp").forward(request, response);
+                request.setAttribute("editMode", mode != null && mode.equals("edit"));
+                request.setAttribute("bouquetList", bouquetDAO.getAllBouquets()); // thêm dòng này
+                request.getRequestDispatcher("staff.jsp").forward(request, response);
                 break;
 
             case "edit":
@@ -65,8 +68,8 @@ public class StaffBouquetServlet extends HttpServlet {
 
             case "view":
             default:
+                request.setAttribute("editMode", mode != null && mode.equals("edit"));
                 List<BouquetTemplate> list = bouquetDAO.getAllBouquets();
-                String mode = request.getParameter("mode");
                 request.setAttribute("bouquetList", list);
                 request.getRequestDispatcher("staff.jsp").forward(request, response);
         }
