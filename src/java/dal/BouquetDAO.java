@@ -54,7 +54,7 @@ public class BouquetDAO {
 
     public List<BouquetTemplate> getAllBouquets() {
         List<BouquetTemplate> bouquets = new ArrayList<>();
-        String sql = "SELECT template_id, template_name, description, base_price, image_url "
+        String sql = "SELECT template_id, template_name, description, base_price, image_url , Stock"
                 + "FROM bouquet_templates WHERE is_active = TRUE";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
@@ -64,7 +64,8 @@ public class BouquetDAO {
                             rs.getString("template_name"),
                             rs.getString("description"),
                             rs.getDouble("base_price"),
-                            rs.getString("image_url")
+                            rs.getString("image_url"),
+                            rs.getInt("Stock")
                     ));
                 }
             }

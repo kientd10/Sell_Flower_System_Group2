@@ -161,33 +161,106 @@
 
             <div class="main-content">
                 <c:choose>
+                    <c:when test="${param.action == 'view' && editMode}">
+                        <h2>Danh sách sản phẩm</h2>
+                        <div class="table-responsive">
+                            <form action="staffbouquetservlet" method="post">
+                                <table class="table table-bordered table-fixed">
+                                    <thead>
+                                        <tr class="cart_menu">
+                                            <th class="text">ID</th>
+                                            <th class="text">Tên</th>
+                                            <th class="quantity">Số lượng</th>
+                                            <th class="description">Mô tả</th>
+                                            <th class="image" style="width: 200px;">Ảnh</th>
+                                            <th class="price">Giá:</th>
+                                            <th>Hành Động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                           List<BouquetTemplate> list = (List<BouquetTemplate>) request.getAttribute("bouquetList");
+                                           if (list != null) {
+                                               for (BouquetTemplate b : list) {
+                                        %>
+                                        <tr>
+                                            <td><%= b.getTemplateId() %></td>
+                                            <td><%= b.getTemplateName() %></td>
+                                            <td><%= b.getStock() %></td>
+                                            <td><%= b.getDescription() %></td>
+                                            <td>
+                                                <img
+                                                    class="image-wrapper"
+                                                    src="${pageContext.request.contextPath}/images/cart/${b.imageUrl}"
+                                                    alt="${b.templateName}" />
+                                            </td>
+                                            <td><%= b.getBasePrice() %> VNĐ</td>
+                                            <td>
+                                                <a href="staffbouquetservlet?action=edit&id=<%= b.getTemplateId() %>" class="btn btn-primary btn-sm">Sửa</a>
+                                                <a href="staffbouquetservlet?action=delete&id=<%= b.getTemplateId() %>" class="btn btn-danger btn-sm"
+                                                   onclick="return confirm('Bạn có chắc muốn xóa mềm sản phẩm này không?');">Xóa</a>
+                                            </td>
+                                        </tr>
+                                        <% } } else { %>
+                                        <tr><td colspan="7">Không có sản phẩm nào.</td></tr>
+                                        <% } %>
+                                        <tr>
+                                            <%
+                                             int nextId = 1;
+                                             if (list != null && !list.isEmpty()) {
+                                                nextId = list.get(list.size() - 1).getTemplateId() + 1;
+                                              }
+                                            %>
+                                            <td><%= nextId %></td>
+                                            <td><input type="text" name="name" class="form-control" required></td>
+                                            <td><input type="number" name="stock" class="form-control" required></td>
+                                            <td><input type="text" name="description" class="form-control" required></td>
+                                            <td><input type="text" name="imageUrl" class="form-control" required></td>
+                                            <td><input type="number" name="price" class="form-control" required></td>
+                                            <td>
+                                                <input type="hidden" name="action" value="saveAdd"/>
+                                                <button type="submit" class="btn btn-success btn-sm">💾 Lưu</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </c:when>
                     <c:when test="${param.action == 'view'}">
-                        <div class="container mt-4">
-                            <h2>Danh sách sản phẩm</h2>
-                            <a href="staffbouquetservlet?action=add" class="btn btn-success mb-3">➕ Thêm sản phẩm mới</a>
-                            <table class="table table-bordered">
+                        <h2>Danh sách sản phẩm</h2>
+                        <a href="staffbouquetservlet?action=view&mode=edit" class="btn btn-success">➕ Thêm sản phẩm mới</a>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-fixed">
                                 <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Tên</th>
-                                        <th>Mô tả</th>
-                                        <th>Giá</th>
-                                        <th>Ảnh</th>
-                                        <th>Hành động</th>
+                                    <tr class="cart_menu">
+                                        <th class="text">ID</th>
+                                        <th class="text">Tên</th>
+                                        <th class="quantity">Số lượng</th>
+                                        <th class="description">Mô tả</th>
+                                        <th class="image" style="width: 200px;">Ảnh</th>
+                                        <th class="price">Giá:</th>
+                                        <th>Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <%
-                                        List<BouquetTemplate> list = (List<BouquetTemplate>) request.getAttribute("bouquetList");
-                                        if (list != null) {
-                                            for (BouquetTemplate b : list) {
+                                       List<BouquetTemplate> list = (List<BouquetTemplate>) request.getAttribute("bouquetList");
+                                       if (list != null) {
+                                           for (BouquetTemplate b : list) {
                                     %>
                                     <tr>
                                         <td><%= b.getTemplateId() %></td>
                                         <td><%= b.getTemplateName() %></td>
+                                        <td><%= b.getStock() %></td>
                                         <td><%= b.getDescription() %></td>
-                                        <td><%= b.getBasePrice() %> đ</td>
-                                        <td><img src="<%= b.getImageUrl() %>" width="80"></td>
+                                        <td>
+                                            <img
+                                                class="image-wrapper"
+                                                src="${pageContext.request.contextPath}/images/cart/${b.imageUrl}"
+                                                alt="${b.templateName}" />
+                                        </td>
+                                        <td><%= b.getBasePrice() %> VNĐ</td>
                                         <td>
                                             <a href="staffbouquetservlet?action=edit&id=<%= b.getTemplateId() %>" class="btn btn-primary btn-sm">Sửa</a>
                                             <a href="staffbouquetservlet?action=delete&id=<%= b.getTemplateId() %>" class="btn btn-danger btn-sm"
@@ -195,7 +268,7 @@
                                         </td>
                                     </tr>
                                     <% } } else { %>
-                                    <tr><td colspan="6">Không có sản phẩm nào.</td></tr>
+                                    <tr><td colspan="7">Không có sản phẩm nào.</td></tr>
                                     <% } %>
                                 </tbody>
                             </table>
