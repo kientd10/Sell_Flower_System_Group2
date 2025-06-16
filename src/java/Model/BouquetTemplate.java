@@ -16,8 +16,7 @@ public class BouquetTemplate {
     private double basePrice;
     private String imageUrl;
     private int Stock;
-    private double price;
-
+   
     public BouquetTemplate() {
     }
 
@@ -85,11 +84,5 @@ public class BouquetTemplate {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    public double getPrice() {
-    return price;
-}
 
-public void setPrice(double price) {
-    this.price = price;
-}
 }

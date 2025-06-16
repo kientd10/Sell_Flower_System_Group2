@@ -111,7 +111,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                     continue;
                 }
 
-                double price = item.getBouquetTemplate().getPrice();
+                double price = item.getBouquetTemplate().getBasePrice();
                 int quantity = item.getQuantity();
 
                 System.out.println("✅ cartId: " + item.getCartId() + " | Price: " + price + " | Qty: " + quantity);

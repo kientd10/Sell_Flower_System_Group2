@@ -44,17 +44,19 @@ public class StaffBouquetServlet extends HttpServlet {
                 request.setAttribute("bouquetList", bouquetDAO.getAllBouquets()); // thêm dòng này
                 request.getRequestDispatcher("staff.jsp").forward(request, response);
                 break;
+            case "management":
+                
 
-            case "edit":
-                try {
-                int id = Integer.parseInt(request.getParameter("id"));
-                request.setAttribute("bouquet", bouquetDAO.getBouquetById(id));
-                request.getRequestDispatcher("editBouquet.jsp").forward(request, response);
-            } catch (Exception e) {
-                e.printStackTrace();
-                response.sendRedirect("staffbouquetservlet");
-            }
-            break;
+            case "update":
+                int id = Integer.parseInt(request.getParameter("templateId"));
+                String name = request.getParameter("templateName");
+                int stock = Integer.parseInt(request.getParameter("stock"));
+                String desc = request.getParameter("description");
+                double price = Double.parseDouble(request.getParameter("basePrice"));
+                BouquetDAO dao = new BouquetDAO();
+                dao.updateBouquet(id, name, desc, price, name, stock);
+                response.sendRedirect("staffbouquetservlet?action=view");
+                break;
 
             case "delete":
                 try {
@@ -67,7 +69,6 @@ public class StaffBouquetServlet extends HttpServlet {
             break;
 
             case "view":
-            default:
                 request.setAttribute("editMode", mode != null && mode.equals("edit"));
                 List<BouquetTemplate> list = bouquetDAO.getAllBouquets();
                 request.setAttribute("bouquetList", list);
@@ -88,7 +89,6 @@ public class StaffBouquetServlet extends HttpServlet {
         BouquetTemplate bouquet = new BouquetTemplate(id, name, description, price, imageUrl);
 
         if (id > 0) {
-            bouquetDAO.updateBouquet(bouquet);
         } else {
             bouquetDAO.addBouquet(bouquet);
         }
