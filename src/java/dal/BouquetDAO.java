@@ -262,7 +262,7 @@ public class BouquetDAO {
         }
     }
 
-    public void deleteCartItems(int templateId , int user_id) {
+    public void deleteCartItems(int templateId, int user_id) {
         String sql = "DELETE FROM shopping_cart  WHERE user_id = ? and template_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, user_id);
@@ -334,16 +334,19 @@ public class BouquetDAO {
 
     public List<BouquetTemplate> searchBouquetTemplates(String searchQuery) throws SQLException {
         List<BouquetTemplate> results = new ArrayList<>();
+
+        // Sửa SQL để chỉ tìm kiếm theo tên (template_name)
         String query = "SELECT template_id, template_name, description, base_price, image_url "
-                + "FROM bouquet_templates WHERE is_active = TRUE AND (template_name LIKE ? OR description LIKE ?)";
+                + "FROM bouquet_templates WHERE is_active = TRUE AND template_name LIKE ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            // Thêm ký tự % để tìm kiếm phần tên có chứa từ khóa tìm kiếm
             String searchPattern = "%" + searchQuery + "%";
             stmt.setString(1, searchPattern);
-            stmt.setString(2, searchPattern);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    // Lấy dữ liệu và thêm vào danh sách kết quả
                     BouquetTemplate template = new BouquetTemplate();
                     template.setTemplateId(rs.getInt("template_id"));
                     template.setTemplateName(rs.getString("template_name"));
