@@ -108,13 +108,13 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect("home");
                     break;
                 case 2: // Nhân viên (Staff)
-                    response.sendRedirect("staff.jsp");
+                    response.sendRedirect("management.jsp");
                     break;
                 case 3: // Quản lý (Manager)
                     response.sendRedirect("management.jsp");
                     break;
                 case 4: // Người giao hàng (Shipper)
-                    response.sendRedirect("shipper.jsp");
+                    response.sendRedirect("management.jsp");
                     break;
                 default:
                     request.setAttribute("error", "Vai trò không hợp lệ!");
