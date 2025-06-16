@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import Model.BouquetTemplate;
+import Model.RawFlower;
 import Model.ShoppingCart;
 import java.sql.SQLException;
 
@@ -54,7 +55,7 @@ public class BouquetDAO {
 
     public List<BouquetTemplate> getAllBouquets() {
         List<BouquetTemplate> bouquets = new ArrayList<>();
-        String sql = "SELECT template_id, template_name, description, base_price, image_url , Stock"
+        String sql = "SELECT template_id, template_name, description, base_price, image_url , stock "
                 + "FROM bouquet_templates WHERE is_active = TRUE";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
@@ -65,7 +66,7 @@ public class BouquetDAO {
                             rs.getString("description"),
                             rs.getDouble("base_price"),
                             rs.getString("image_url"),
-                            rs.getInt("Stock")
+                            rs.getInt("stock")
                     ));
                 }
             }
@@ -538,16 +539,17 @@ public class BouquetDAO {
         }
     }
 
-    public void updateBouquet(BouquetTemplate b) {
-        String sql = "UPDATE bouquet_templates SET template_name = ?, description = ?, base_price = ?, image_url = ? "
+    public void updateBouquet(int template_id, String template_name, String description, double baseprice, String imageUrl, int stock) {
+        String sql = "UPDATE bouquet_templates SET template_name = ?, description = ?, base_price = ?, image_url = ? , stock = ? "
                 + "WHERE template_id = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, b.getTemplateName());
-            ps.setString(2, b.getDescription());
-            ps.setDouble(3, b.getBasePrice());
-            ps.setString(4, b.getImageUrl());
-            ps.setInt(5, b.getTemplateId());
+            ps.setString(1, template_name);
+            ps.setString(2, description);
+            ps.setDouble(3, baseprice);
+            ps.setString(4, imageUrl);
+            ps.setInt(5, stock);
+            ps.setInt(6, template_id);
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -564,4 +566,56 @@ public class BouquetDAO {
             e.printStackTrace();
         }
     }
+
+    public List<RawFlower> getAllRawFlower() {
+        List<RawFlower> list = new ArrayList<>();
+        String sql
+                = "SELECT rf.type_id, ft.type_name, "
+                + "       rf.color_id, fc.color_name, rf.quantity, "
+                + "       rf.unit_price, rf.expiry_date "
+                + "FROM raw_flowers rf "
+                + "JOIN flower_types  ft ON rf.type_id  = ft.type_id "
+                + "JOIN flower_colors fc ON rf.color_id = fc.color_id";
+
+        try (Connection conn = DBcontext.getJDBCConnection(); PreparedStatement st = conn.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+
+            while (rs.next()) {
+                RawFlower rf = new RawFlower();
+                rf.setTypeId(rs.getInt("type_id"));
+                rf.setRawFlowerName(rs.getString("type_name") + " " + rs.getString("color_name"));
+                rf.setColorId(rs.getInt("color_id"));
+                rf.setQuantity(rs.getInt("quantity"));
+                rf.setUnitPrice(rs.getDouble("unit_price"));
+                rf.setExpiryDate(rs.getDate("expiry_date"));
+                list.add(rf);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<BouquetTemplate> getAllBouquetTemplate(){
+        List<BouquetTemplate> list = new ArrayList<>();
+        String sql
+                = "SELECT * "
+                + "FROM  bouquet_template ";
+        try (Connection conn = DBcontext.getJDBCConnection(); PreparedStatement st = conn.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+
+            while (rs.next()) {
+                BouquetTemplate rf = new BouquetTemplate();
+                rf.setTemplateId(rs.getInt("template_id"));
+                rf.setTemplateName(rs.getString("template_name"));
+                rf.setBasePrice(rs.getInt("base_price"));
+                rf.setStock(rs.getInt("Stock"));
+                rf.setImageUrl(rs.getString("image_url"));
+                rf.setDescription(rs.getString("description"));
+                list.add(rf);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+
 }
