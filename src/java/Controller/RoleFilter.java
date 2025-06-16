@@ -46,13 +46,13 @@ public class RoleFilter implements Filter{
         // Xác định quyền truy cập
         boolean isAuthorized = false;
 
-        if (requestURI.endsWith("manager.jsp")) {
+        if (requestURI.endsWith("management.jsp")) {
             // Chỉ Quản lý (role_id: 3) được truy cập manager.jsp
             isAuthorized = (roleId == 3);
-        } else if (requestURI.endsWith("staff.jsp")) {
+        } else if (requestURI.endsWith("management.jsp")) {
             // Chỉ Nhân viên (role_id: 2) được truy cập staff.jsp
             isAuthorized = (roleId == 2);
-        } else if (requestURI.endsWith("shipper.jsp")) {
+        } else if (requestURI.endsWith("management.jsp")) {
             // Chỉ Người giao hàng (role_id: 4) được truy cập shipper.jsp
             isAuthorized = (roleId == 4);
         } else {
