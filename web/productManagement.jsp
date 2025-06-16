@@ -231,19 +231,20 @@
 				</div>
 			</div>
 
-			<ul class="sidebar-nav">
-				<li class="sidebar-header">Menu</li>
-                                <li><a href="management.jsp" class="sidebar-link "><i class="fas fa-chart-bar"></i>Thống kê</a></li>
-				<li><a href="productManagement.jsp" class="sidebar-link"><i class="fas fa-boxes"></i>Quản lí sản phẩm</a></li>
-                                <li><a href="categoryManagement.jsp" class="sidebar-link"><i class="fas fa-boxes"></i>Quản lí danh mục sản phẩm</a></li>
-                                <li><a href="storageManagement.jsp" class="sidebar-link"><i class="fas fa-warehouse"></i>Quản lí kho hàng</a></li>
-				<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản lí đơn hàng</a></li>
-				<li><a href="invoiceManagement.jsp" class="sidebar-link "><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
-                                
-				<li class="sidebar-header">Hệ thống</li>
-				<li><a href="userManagement.jsp" class="sidebar-link"><i class="fas fa-user-shield"></i>Quản lí tài khoản</a></li>
-                                <li><a href="notificationManagement.jsp" class="sidebar-link"><i class="fas fa-bell"></i>Thông báo<span class="badge bg-danger ms-auto">4</span></a></li>
-			</ul>
+		<ul class="sidebar-nav">
+			<li class="sidebar-header">Menu Chính</li>
+			<li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
+			<li><a href="productManagement.jsp" class="sidebar-link" id="menu-productManagement"><i class="fas fa-boxes"></i>Quản Lí Sản Phẩm</a></li>
+			<li><a href="categoryManagement.jsp" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+			<li><a href="storageManagement.jsp" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+			<li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+			<li><a href="invoiceManagement.jsp" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
+			
+			<li class="sidebar-header">Hệ Thống</li>
+			<li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+                        <li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
+			<li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
+		</ul>
 		</nav>
 
 		<!-- ===== MAIN CONTENT AREA ===== -->
@@ -733,7 +734,7 @@
 			});
 		});
                 
-                // Tự động highlight menu item dựa trên URL hiện tại
+                        // Tự động highlight menu item dựa trên URL hiện tại
 document.addEventListener('DOMContentLoaded', function() {
     // Lấy tên file hiện tại từ URL
     var currentPage = window.location.pathname.split('/').pop();
@@ -752,6 +753,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'orderManagement.jsp': 'orderManagement.jsp',
         'invoiceManagement.jsp': 'invoiceManagement.jsp',
         'userManagement.jsp': 'userManagement.jsp',
+        'feedbackManagement.jsp': 'feedbackManagement.jsp',
         'notificationManagement.jsp': 'notificationManagement.jsp'
     };
     
