@@ -88,60 +88,68 @@
         </div>
     </header>
 
-    <section id="form">
+    <section id="form" style="padding: 30px 50px 100px 50px; margin-top: 0 ;margin-bottom: 0">
         <div class="container">
             <div class="row">
-                <div class="col-sm-4 col-sm-offset-1">
-                    <div class="login-form">
-                        <h2>Login to your account</h2>
-                        <form action="LoginServlet" method="post">
-                            <c:if test="${not empty requestScope.error}">
-                                <p style="color: red;">${requestScope.error}</p>
-                            </c:if>
-                            <input type="email" name="email" value="${cookie.email.value}" placeholder="Email Address" required />
-                            <input type="password" name="password" value="${cookie.password.value}" placeholder="Password" required />
-                            <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                <label style="display: flex; align-items: center;">
-                                    <input type="checkbox" name="remember" value="ON" class="checkbox" 
-                                           <c:if test="${cookie.remember.value eq 'ON'}">checked</c:if>> 
-                                           Remember me
-                                    </label>
-                                    <a href="forgot-password.jsp" style="color: black">Forgot password?</a>
-                                </span>
-                                <button type="submit" class="btn btn-default">Login</button>
-                            </form>
+                <c:choose>
+                    <%-- Nếu action không phải là signup thì hiện login --%>
+                    <c:when test="${param.action ne 'signup'}">
+                        <%-- FORM LOGIN --%>
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <div class="login-form">
+                                <h2>Login to your account</h2>
+                                <form action="LoginServlet" method="post">
+                                    <c:if test="${not empty requestScope.error}">
+                                        <p style="color: red;">${requestScope.error}</p>
+                                    </c:if>
+                                    <input type="email" name="email" value="${cookie.email.value}" placeholder="Email Address" required />
+                                    <input type="password" name="password" value="${cookie.password.value}" placeholder="Password" required />
+                                    <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                        <label style="display: flex; align-items: center;">
+                                            <input type="checkbox" name="remember" value="ON" class="checkbox" 
+                                                   <c:if test="${cookie.remember.value eq 'ON'}">checked</c:if>> 
+                                                   Remember me
+                                            </label>
+                                            <a href="forgot-password.jsp" style="color: black">Forgot password?</a>
+                                        </span>
+                                        <button type="submit" class="btn btn-default">Login</button>
+                                        <p>You do not have account ? <a href="login.jsp?action=signup">Register</a></p>
+                                    </form>
+                                </div>
+                            </div>
+                    </c:when>
+                    <%-- Nếu action là signup thì hiện signup --%>
+                    <c:otherwise>  
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <div class="signup-form">
+                                <h2>New User Signup!</h2>
+                                <form action="Customer?action=signup" method="post">
+                                    <c:if test="${not empty requestScope.done}">
+                                        <p style="color: green;">${requestScope.done}</p>
+                                    </c:if>
+                                    <c:if test="${not empty requestScope.emailavailable}">
+                                        <p style="color: red;">${requestScope.emailavailable}</p>
+                                    </c:if>
+                                    <c:if test="${not empty requestScope.errorname}">
+                                        <p style="color: red;">${requestScope.errorname}</p>
+                                    </c:if>
+                                    <c:if test="${not empty requestScope.errorpass}">
+                                        <p style="color: red;">${requestScope.errorpass}</p>
+                                    </c:if>
+                                    <input type="text" name="name" value="${username}" placeholder="Name" required />
+                                    <input type="email" name="Email" value="${email}" placeholder="Email Address" required />
+                                    <input type="password" name="Password" placeholder="Password" required />
+                                    <input type="password" name="CfPassword" placeholder="Confirm Password" required />
+                                    <input type="text" name="fullname" value="${fullname}" placeholder="Full Name" required />
+                                    <input type="text" name="phone" value="${phone}" placeholder="Phone" required />
+                                    <input type="text" name="address" value="${address}" placeholder="Address" required />
+                                    <button type="submit" class="btn btn-default">Signup</button>
+                                    <p>Had account ?<a href="login.jsp?action=login">Login</a></p>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-1">
-                        <h2 class="or">OR</h2>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="signup-form">
-                            <h2>New User Signup!</h2>
-                            <form action="Customer?action=signup" method="post">
-                            <c:if test="${not empty requestScope.done}">
-                                <p style="color: green;">${requestScope.done}</p>
-                            </c:if>
-                            <c:if test="${not empty requestScope.emailavailable}">
-                                <p style="color: red;">${requestScope.emailavailable}</p>
-                            </c:if>
-                            <c:if test="${not empty requestScope.errorname}">
-                                <p style="color: red;">${requestScope.errorname}</p>
-                            </c:if>
-                            <c:if test="${not empty requestScope.errorpass}">
-                                <p style="color: red;">${requestScope.errorpass}</p>
-                            </c:if>
-                            <input type="text" name="name" value="${username}" placeholder="Name" required />
-                            <input type="email" name="Email" value="${email}" placeholder="Email Address" required />
-                            <input type="password" name="Password" placeholder="Password" required />
-                            <input type="password" name="CfPassword" placeholder="Confirm Password" required />
-                            <input type="text" name="fullname" value="${fullname}" placeholder="Full Name" required />
-                            <input type="text" name="phone" value="${phone}" placeholder="Phone" required />
-                            <input type="text" name="address" value="${address}" placeholder="Address" required />
-                            <button type="submit" class="btn btn-default">Signup</button>
-                        </form>
-                    </div>
-                </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </section>
