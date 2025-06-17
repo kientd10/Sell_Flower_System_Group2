@@ -28,8 +28,8 @@ import java.util.*;
  */
 @WebServlet(urlPatterns={"/executepaymentservlet"})
 public class ExecutePaymentServlet extends HttpServlet {
-    private static final String CLIENT_ID = "Ab0JTQVS8jxSMPYwnh0q4mteBJJcuVF6CyjtnCUD5BaoigOzca7cc9drbkVMngu_-2OFJymF2ZL4mAkn";
-    private static final String CLIENT_SECRET = "EEK8ktGc8VoewI02nk2AWsQuWl7ztKENoR7Jyxf7-opB2pbldlIbei5PXEjRxe4JFghDFe7Fvmr2zQJ8";
+    private static final String CLIENT_ID = "AQVm8jRLqJ-HxX2a4hSE_Go8umQXyT2NSD3x3NHSLQkK2yY9_0ugWZKVALYbjbxM_tEFAVM351P8B1hn";
+    private static final String CLIENT_SECRET = "EAlFh3_UlerbXCT64x0wKnWkEZNXUriN1y9f2s3alR3NpsJV7qA8r_AzGuS1SpNLOW_xb-nKOQSuMDtA";
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
