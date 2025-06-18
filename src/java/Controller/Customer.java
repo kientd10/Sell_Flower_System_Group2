@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import Model.Category;
 import Model.BouquetTemplate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "Customer", urlPatterns = {"/Customer"})
 public class Customer extends HttpServlet {
@@ -93,46 +95,158 @@ public class Customer extends HttpServlet {
 
             boolean checkemail = dao.emailExists(email);
             boolean checkusername = dao.isUsernameExists(name);
-            if (checkusername == false) { // check user name exist
-                if (checkemail == false) { // check email exist
-                    if (pass.equals(cfPass)) { // pass equal confirm pass -> signup
-                        request.setAttribute("done", "Register successfull!");
-                        User user = new User();
-                        user.setUsername(name);
-                        user.setEmail(email);
-                        user.setPassword(pass);
-                        user.setPhone(phone);
-                        user.setAddress(address);
-                        user.setRoleId(1); // Mặc định là Khách hàng (role_id: 1)
-                        user.setIsActive(true);
-                        dao.registerUser(user);
-                        request.getRequestDispatcher("login.jsp").forward(request, response);
-                    } else {
-                        request.setAttribute("errorpass", "Confirm pass is not true!");
-                        request.setAttribute("username", name);
-                        request.setAttribute("email", email);
-                        request.setAttribute("phone", phone);
-                        request.setAttribute("address", address);
-                        request.getRequestDispatcher("login.jsp").forward(request, response);
-                    }
-                } else {
-                    request.setAttribute("username", name);
-                    request.setAttribute("phone", phone);
-                    request.setAttribute("address", address);
-                    request.setAttribute("emailavailable", "Email is existed!");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
-                }
-            } else {
+            // Kiểm tra username đã tồn tại chưa
+            if (checkusername) {
                 request.setAttribute("errorname", "Username is existed!");
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
                 request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
                 request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
             }
+            
+            if (name.isBlank()) {
+                request.setAttribute("errorpass", "User name is not valid!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+
+            // Kiểm tra email đã tồn tại chưa
+            if (checkemail) {
+                request.setAttribute("username", name);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("emailavailable", "Email is existed!");
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+            
+            if(!isValidEmail(email)){
+                request.setAttribute("username", name);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.setAttribute("emailavailable", "Email is not valid!");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+
+            // Kiểm tra mật khẩu và xác nhận mật khẩu
+            if (pass.isBlank()) {
+                request.setAttribute("errorpass", "Pass is not valid!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+             if(!cfPass.equals(pass)){
+                request.setAttribute("errorpass", "Confirm is not true!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+             }
+             
+             //số điện thoại
+             if (phone.isBlank()) {
+                request.setAttribute("errorpass", "Phone is not valid!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+             
+             if(!phone.matches("^0\\d{9}$")){
+                 request.setAttribute("errorpass", "Phone must start with 0 and have 10 characters!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+             }
+             
+             //địa chỉ
+             if (address.isBlank() ) {
+                request.setAttribute("errorpass", "Address is not valid!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+             
+             if (address.length()>30) {
+                request.setAttribute("errorpass", "Address is too long!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+             
+             
+
+            // Nếu qua được tất cả các bước kiểm tra thì thực hiện đăng ký
+            User user = new User();
+            user.setUsername(name);
+            user.setEmail(email);
+            user.setPassword(pass);
+            user.setPhone(phone);
+            user.setAddress(address);
+            user.setRoleId(1); // Mặc định là Khách hàng
+            user.setIsActive(true);
+
+            dao.registerUser(user);
+
+            request.setAttribute("done", "Register successful!");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
 
         }
 
     }
+    
+    public boolean isValidEmail(String email) {
+        // Biểu thức chính quy cho định dạng email
+        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$";
+
+        // Tạo đối tượng Pattern
+        Pattern pattern = Pattern.compile(emailRegex);
+
+        // Tạo đối tượng Matcher
+        Matcher matcher = pattern.matcher(email);
+
+        // Kiểm tra chuỗi với biểu thức chính quy
+        return matcher.matches();
+    }
+
 
     @Override
     public String getServletInfo() {
