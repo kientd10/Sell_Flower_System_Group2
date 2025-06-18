@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import Model.BouquetTemplate;
 import Model.ShoppingCart;
 import Model.User;
+import dal.OrderDAO;
 import java.util.Arrays;
 
 /**
@@ -64,52 +65,59 @@ public class CartServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
-            List<ShoppingCart> sessionCart = (List<ShoppingCart>) session.getAttribute("cart");
-            if (sessionCart == null) {
-                sessionCart = new ArrayList<>();
-                session.setAttribute("cart", sessionCart);
-            }
-            request.setAttribute("cart", sessionCart);
-            request.getRequestDispatcher("cart.jsp").forward(request, response);
-        } else {
-            boolean merged = session.getAttribute("cartMerged") != null;
-            List<ShoppingCart> cart_session = (List<ShoppingCart>) session.getAttribute("cart");
-            int user_id = user.getUserId();
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    HttpSession session = request.getSession();
+    User user = (User) session.getAttribute("user");
 
-            BouquetDAO c = new BouquetDAO();
-            List<ShoppingCart> cart_db = c.getCartItemsByUserId(user_id);
-            if (cart_db == null) {
-                cart_db = new ArrayList<>();
-            }
+    List<ShoppingCart> cartList;
 
-            if (!merged && cart_session != null) {
-                for (ShoppingCart sessionItem : cart_session) {
-                    boolean found = false;
-                    for (ShoppingCart cartItems : cart_db) {
-                        if (sessionItem.getBouquetTemplate().getTemplateId() == cartItems.getBouquetTemplate().getTemplateId()) {
-                            cartItems.setQuantity(cartItems.getQuantity() + sessionItem.getQuantity());
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        cart_db.add(new ShoppingCart(user_id, sessionItem.getBouquetTemplate(), sessionItem.getQuantity()));
+    if (user == null) {
+        cartList = (List<ShoppingCart>) session.getAttribute("cart");
+        if (cartList == null) {
+            cartList = new ArrayList<>();
+            session.setAttribute("cart", cartList);
+        }
+    } else {
+        boolean merged = session.getAttribute("cartMerged") != null;
+        List<ShoppingCart> cart_session = (List<ShoppingCart>) session.getAttribute("cart");
+        int user_id = user.getUserId();
+
+        BouquetDAO c = new BouquetDAO();
+        cartList = c.getCartItemsByUserId(user_id);
+        if (cartList == null) {
+            cartList = new ArrayList<>();
+        }
+
+        if (!merged && cart_session != null) {
+            for (ShoppingCart sessionItem : cart_session) {
+                boolean found = false;
+                for (ShoppingCart cartItems : cartList) {
+                    if (sessionItem.getBouquetTemplate().getTemplateId() == cartItems.getBouquetTemplate().getTemplateId()) {
+                        cartItems.setQuantity(cartItems.getQuantity() + sessionItem.getQuantity());
+                        found = true;
+                        break;
                     }
                 }
-                session.setAttribute("cartMerged", true);
+                if (!found) {
+                    cartList.add(new ShoppingCart(user_id, sessionItem.getBouquetTemplate(), sessionItem.getQuantity()));
+                }
             }
-
-            session.setAttribute("cart", cart_db);
-            request.setAttribute("cart", cart_db);
-            request.getRequestDispatcher("cart.jsp").forward(request, response);
+            session.setAttribute("cartMerged", true);
         }
+
+        session.setAttribute("cart", cartList);
+
+        // ✅ THÊM: luôn set purchasedProducts nếu đã đăng nhập
+        OrderDAO orderDAO = new OrderDAO();
+        List<BouquetTemplate> purchasedProducts = orderDAO.getPurchasedProductsByUser(user_id);
+        request.setAttribute("purchasedProducts", purchasedProducts);
     }
 
+    // ✅ luôn set cart và forward sau cùng
+    request.setAttribute("cart", cartList);
+    request.getRequestDispatcher("cart.jsp").forward(request, response);
+}
     /**
      * Handles the HTTP <code>POST</code> method.
      *
