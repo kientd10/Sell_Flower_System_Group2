@@ -28,7 +28,7 @@ public class UserDAO {
 
     // Đăng ký người dùng mới
     public boolean registerUser(User user) {
-        String sql = "INSERT INTO users (username, email, password, full_name, phone, address, role_id, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, email, password, phone, address, role_id, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -38,11 +38,10 @@ public class UserDAO {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPassword()); // Lưu mật khẩu trực tiếp
-            stmt.setString(4, user.getFullName());
-            stmt.setString(5, user.getPhone());
-            stmt.setString(6, user.getAddress());
-            stmt.setInt(7, user.getRoleId()); // Sử dụng roleId từ User
-            stmt.setBoolean(8, user.isIsActive());
+            stmt.setString(4, user.getPhone());
+            stmt.setString(5, user.getAddress());
+            stmt.setInt(6, user.getRoleId()); // Sử dụng roleId từ User
+            stmt.setBoolean(7, user.isIsActive());
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

@@ -88,7 +88,6 @@ public class Customer extends HttpServlet {
             String email = request.getParameter("Email");
             String pass = request.getParameter("Password");
             String cfPass = request.getParameter("CfPassword");
-            String fullname = request.getParameter("fullname");
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
 
@@ -102,7 +101,6 @@ public class Customer extends HttpServlet {
                         user.setUsername(name);
                         user.setEmail(email);
                         user.setPassword(pass);
-                        user.setFullName(fullname);
                         user.setPhone(phone);
                         user.setAddress(address);
                         user.setRoleId(1); // Mặc định là Khách hàng (role_id: 1)
@@ -112,7 +110,6 @@ public class Customer extends HttpServlet {
                     } else {
                         request.setAttribute("errorpass", "Confirm pass is not true!");
                         request.setAttribute("username", name);
-                        request.setAttribute("fullname", fullname);
                         request.setAttribute("email", email);
                         request.setAttribute("phone", phone);
                         request.setAttribute("address", address);
@@ -120,7 +117,6 @@ public class Customer extends HttpServlet {
                     }
                 } else {
                     request.setAttribute("username", name);
-                    request.setAttribute("fullname", fullname);
                     request.setAttribute("phone", phone);
                     request.setAttribute("address", address);
                     request.setAttribute("emailavailable", "Email is existed!");
@@ -128,7 +124,6 @@ public class Customer extends HttpServlet {
                 }
             } else {
                 request.setAttribute("errorname", "Username is existed!");
-                request.setAttribute("fullname", fullname);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
                 request.setAttribute("address", address);
