@@ -140,7 +140,6 @@
                                     <input type="email" name="Email" value="${email}" placeholder="Email Address" required />
                                     <input type="password" name="Password" placeholder="Password" required />
                                     <input type="password" name="CfPassword" placeholder="Confirm Password" required />
-                                    <input type="text" name="fullname" value="${fullname}" placeholder="Full Name" required />
                                     <input type="text" name="phone" value="${phone}" placeholder="Phone" required />
                                     <input type="text" name="address" value="${address}" placeholder="Address" required />
                                     <button type="submit" class="btn btn-default">Signup</button>
