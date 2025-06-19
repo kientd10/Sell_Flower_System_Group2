@@ -40,7 +40,7 @@ body::before {
 
 .form-header .header-icon {
     font-size: 40px;
-    color: #ff6f61;
+    color: #c44d58;
     margin-bottom: 10px;
 }
 
@@ -78,9 +78,9 @@ body::before {
 .form-container input[type="password"]:focus,
 .form-container select:focus {
     outline: none;
-    border-color: #ff6f61;
+    border-color: #c44d58;
     background: #fff;
-    box-shadow: 0 0 5px rgba(255, 111, 97, 0.3);
+    box-shadow: 0 0 5px rgba(196, 77, 88, 0.3);
 }
 
 .form-container input[type="submit"] {
@@ -89,7 +89,7 @@ body::before {
     margin: 20px 0;
     border: none;
     border-radius: 8px;
-    background: #ff6f61;
+    background: #c44d58;
     color: #fff;
     font-size: 16px;
     font-weight: 600;
@@ -98,19 +98,19 @@ body::before {
 }
 
 .form-container input[type="submit"]:hover {
-    background: #e65b50;
+    background: #a63f4a;
     transform: scale(1.02);
 }
 
 .form-container a {
-    color: #ff6f61;
+    color: #c44d58;
     text-decoration: none;
     font-size: 14px;
     transition: color 0.3s ease;
 }
 
 .form-container a:hover {
-    color: #e65b50;
+    color: #a63f4a;
     text-decoration: underline;
 }
 
@@ -136,7 +136,7 @@ body::before {
 }
 
 .form-container .social-login a:hover {
-    color: #ff6f61;
+    color: #c44d58;
 }
 
 .form-container .error-message,
@@ -158,7 +158,7 @@ body::before {
 }
 
 .form-container .error-message {
-    color: #e65b50;
+    color: #a63f4a;
     background: #ffe6e6;
 }
 

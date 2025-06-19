@@ -10,6 +10,8 @@ package dal;
  * @author PC
  */
 import Model.BouquetTemplate;
+import Model.Order;
+import Model.OrderItem;
 import Model.ShoppingCart;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
@@ -128,4 +130,83 @@ public class OrderDAO {
         }
         return orderId;
     }
+
+    public List<Order> getOrdersByUserId(int userId) throws Exception {
+        List<Order> orders = new ArrayList<>();
+
+        String sql = """
+            SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address,
+            os.status_name
+            FROM orders o
+            JOIN order_status os ON o.status_id = os.status_id
+            WHERE o.customer_id = ?
+            """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setOrderCode(rs.getString("order_code"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setDeliveryAddress(rs.getString("delivery_address"));
+                order.setStatus(rs.getString("status_name"));
+
+                // Load danh sách sản phẩm trong đơn hàng
+                order.setItems(getItemsByOrderId(order.getOrderId(), conn));
+                orders.add(order);
+            }
+        } finally {
+            // Đóng kết nối
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close(); // hoặc DBcontext().closeConnection(conn);
+        }
+
+        return orders;
+    }
+
+    private List<OrderItem> getItemsByOrderId(int orderId, Connection conn) throws Exception {
+        List<OrderItem> items = new ArrayList<>();
+
+        String sql = """
+            SELECT od.quantity, od.unit_price, bt.template_name, bt.image_url
+            FROM order_details od
+            JOIN bouquet_templates bt ON od.template_id = bt.template_id
+            WHERE od.order_id = ?
+            """;
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderItem item = new OrderItem();
+                item.setProductName(rs.getString("template_name"));
+                item.setImageUrl(rs.getString("image_url"));
+                item.setQuantity(rs.getInt("quantity"));
+                item.setUnitPrice(rs.getDouble("unit_price"));
+                items.add(item);
+            }
+
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+        }
+
+        return items;
+    }
+    
 }

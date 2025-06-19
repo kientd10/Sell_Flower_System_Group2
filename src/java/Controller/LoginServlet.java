@@ -92,6 +92,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("role", user.getRoleId());
+            session.setAttribute("userId", user.getUserId());
             if ("ON".equals(remember)) {
                 setCookie(response, "email", email, 7 * 24 * 60 * 60);
                 setCookie(response, "password", password, 7 * 24 * 60 * 60);

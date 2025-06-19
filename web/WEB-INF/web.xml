@@ -36,6 +36,10 @@
         <servlet-name>BouquetDetailServlet</servlet-name>
         <servlet-class>Controller.BouquetDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderServlet</servlet-name>
+        <servlet-class>Controller.OrderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CategoryServlet</servlet-name>
         <url-pattern>/category</url-pattern>
@@ -71,6 +75,10 @@
     <servlet-mapping>
         <servlet-name>BouquetDetailServlet</servlet-name>
         <url-pattern>/bouquet-detail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderServlet</servlet-name>
+        <url-pattern>/orders</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>home</welcome-file>
