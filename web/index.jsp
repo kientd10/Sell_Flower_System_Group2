@@ -64,27 +64,6 @@
                             <div class="logo pull-left">
                                 <a href="index.jsp"><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
                             </div>
-                            <div class="btn-group pull-right">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        HANOI
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">HANOI</a></li>
-                                    </ul>
-                                </div>
-
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        VND
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">VND</a></li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="col-sm-8">
@@ -92,13 +71,11 @@
                                 <ul class="nav navbar-nav">
                                     <c:if test="${sessionScope.user != null}">
                                         <li><a href="profile"><i class="fa fa-user"></i> Account</a></li>
-                                        <li><a href="checkout.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
+                                        <li><a href="order.jsp"><i class="fa fa-truck"></i> Order</a></li>
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        <li><a href="purchasehistoryservlet">Sản phẩm đã mua</a></li>
                                         <li><a href="Customer?action=logout"><b>Logout</b></a></li> 
                                         </c:if> 
                                         <c:if test="${sessionScope.user == null}">
-                                        <li><a href="login.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
                                         <li><a href="login.jsp"><b>Login</b></a></li> 
                                         </c:if>
