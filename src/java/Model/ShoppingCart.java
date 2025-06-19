@@ -29,6 +29,13 @@ public class ShoppingCart {
         this.BouquetTemplate = BouquetTemplate;
         this.Quantity = Quantity;
     }
+      public int getTemplateId() {
+    return BouquetTemplate.getTemplateId();
+}
+
+public double getPrice() {
+    return BouquetTemplate.getBasePrice();
+}
     public int getCartId() {
         return CartId;
     }
