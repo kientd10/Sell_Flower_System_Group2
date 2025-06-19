@@ -30,7 +30,7 @@ public class OrderDAO {
         }
     }
 
-    // ✅ Tính tổng tiền giỏ hàng
+    //  Tính tổng tiền giỏ hàng
     public double TotalPrice(int user_id) {
         double total = 0;
         String sql = "SELECT d.quantity, bt.base_price "
@@ -52,7 +52,7 @@ public class OrderDAO {
         return total;
     }
 
-    // ✅ Lấy sản phẩm đã mua thành công (đã giao hàng)
+    // Lấy sản phẩm đã mua thành công (đã giao hàng)
     public List<BouquetTemplate> getPurchasedProductsByUser(int userId) {
         List<BouquetTemplate> list = new ArrayList<>();
         String sql = "SELECT DISTINCT od.template_id, bt.template_name "
@@ -76,7 +76,7 @@ public class OrderDAO {
         return list;
     }
 
-    // ✅ Thêm đơn hàng mới và chi tiết sản phẩm
+    // Thêm đơn hàng mới và chi tiết sản phẩm
     public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmount) {
         int orderId = -1;
         try {

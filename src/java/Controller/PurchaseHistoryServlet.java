@@ -68,7 +68,7 @@ public class PurchaseHistoryServlet extends HttpServlet {
         List<BouquetTemplate> list = dao.getPurchasedProductsByUser(user.getUserId());
 
         request.setAttribute("purchasedList", list);
-        request.getRequestDispatcher("purchase-history.jsp").forward(request, response);
+        request.getRequestDispatcher("order.jsp").forward(request, response);
     }
 
     /** 
