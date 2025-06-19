@@ -15,61 +15,27 @@ import java.util.*;
 import java.lang.*;
 
 public class Order {
-    private String name;
+
     private int orderId;
-    private int customerId;
     private String orderCode;
-    private BigDecimal totalAmount;
-    private int statusId;
+    private String customerName;
+    private double totalAmount;
+    private String status;
+    private String paymentStatus;
+    private String createdAt;
     private String deliveryAddress;
-    private String deliveryPhone;
-    private LocalDate deliveryDate;
-    private String specialNotes;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private List<OrderItem> items;
 
     public Order() {
+        this.items = new ArrayList<>();
     }
 
-    public Order( String name , int orderId, int customerId, String orderCode, BigDecimal totalAmount,
-            int statusId, String deliveryAddress, String deliveryPhone,
-            LocalDate deliveryDate, String specialNotes,
-            Timestamp createdAt, Timestamp updatedAt) {
-        this.orderId = orderId;
-        this.name = name;
-        this.customerId = customerId;
-        this.orderCode = orderCode;
-        this.totalAmount = totalAmount;
-        this.statusId = statusId;
-        this.deliveryAddress = deliveryAddress;
-        this.deliveryPhone = deliveryPhone;
-        this.deliveryDate = deliveryDate;
-        this.specialNotes = specialNotes;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
     public int getOrderId() {
         return orderId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    
     public void setOrderId(int orderId) {
         this.orderId = orderId;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
     }
 
     public String getOrderCode() {
@@ -80,20 +46,44 @@ public class Order {
         this.orderCode = orderCode;
     }
 
-    public BigDecimal getTotalAmount() {
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public double getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(BigDecimal totalAmount) {
+    public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public int getStatusId() {
-        return statusId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getDeliveryAddress() {
@@ -104,43 +94,11 @@ public class Order {
         this.deliveryAddress = deliveryAddress;
     }
 
-    public String getDeliveryPhone() {
-        return deliveryPhone;
+    public List<OrderItem> getItems() {
+        return items;
     }
 
-    public void setDeliveryPhone(String deliveryPhone) {
-        this.deliveryPhone = deliveryPhone;
-    }
-
-    public LocalDate getDeliveryDate() {
-        return deliveryDate;
-    }
-
-    public void setDeliveryDate(LocalDate deliveryDate) {
-        this.deliveryDate = deliveryDate;
-    }
-
-    public String getSpecialNotes() {
-        return specialNotes;
-    }
-
-    public void setSpecialNotes(String specialNotes) {
-        this.specialNotes = specialNotes;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 }

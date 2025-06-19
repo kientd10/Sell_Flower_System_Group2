@@ -32,7 +32,6 @@
     <body>
 
         <header id="header"><!--header-->
-
             <div class="header_top"><!--header_top-->
                 <div class="container">
                     <div class="row">
@@ -40,7 +39,7 @@
                             <div class="contactinfo">
                                 <ul class="nav nav-pills">
                                     <li><a href="#"><i class="fa fa-phone"></i> 0123456789</a></li>
-                                    <li><a href="#"><i class="fa fa-envelope"></i> kientdhe186194@fpt.edu.vn</a></li>
+                                    <li><a href="#"><i class="fa fa-envelope"></i> Group2@fpt.edu.vn</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -62,30 +61,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="logo pull-left">
-                                <a href="index.jsp"><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
-                            </div>
-                            <div class="btn-group pull-right">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        VIETNAM
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">VIETNAM</a></li>
-                                        <li><a href="#">UK</a></li>
-                                    </ul>
-                                </div>
-
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        VND
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Dollar</a></li>
-                                        <li><a href="#">VND</a></li>
-                                    </ul>
-                                </div>
+                                <a href="${pageContext.request.contextPath}/home?pageNum=1" ><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
                             </div>
                         </div>
 
@@ -93,15 +69,14 @@
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
                                     <c:if test="${sessionScope.user != null}">
-                                        <li><a href="profile"><i class="fa fa-user"></i> Account</a></li>
-                                        <li><a href="checkout.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
-                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        <li><a href="Customer?action=logout"><b>Logout</b></a></li> 
+                                        <li><a href="profile"><i class="fa fa-user"></i> Hồ sơ</a></li>
+                                        <li><a href="orders"><i class="fa fa-truck"></i> Đơn mua</a></li>
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
                                         </c:if> 
                                         <c:if test="${sessionScope.user == null}">
-                                        <li><a href="login.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
-                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        <li><a href="login.jsp"><b>Login</b></a></li> 
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+                                        <li><a href="login.jsp"><b>Đăng nhập</b></a></li> 
                                         </c:if>
                                 </ul>
                             </div>
@@ -109,7 +84,6 @@
                     </div>
                 </div>
             </div><!--/header-middle-->
-
 
             <div class="header-bottom"><!--header-bottom-->
                 <div class="container">
@@ -125,41 +99,16 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="${pageContext.request.contextPath}/home" class="active">Home</a></li>
-                                    <li class="dropdown"><a href="#">Category<i class="fa fa-angle-down"></i></a>
-                                        <ul role="menu" class="sub-menu">
-                                            <c:if test="${empty categories}">
-                                                <li><a href="#">Không có danh mục nào</a></li>
-                                                </c:if>
-                                                <c:forEach var="category" items="${categories}">
-                                                <li><a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}">
-                                                        ${category.categoryName}</a></li>
-                                                    </c:forEach>
-                                        </ul>
-                                    </li>
-                                    <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
-                                        <ul role="menu" class="sub-menu">
-                                            <li><a href="blog.jsp">Blog List</a></li>
-                                            <li><a href="blog-single.jsp">Blog Single</a></li>
-                                        </ul>
-                                    </li>                              
-                                    <li><a href="contact-us.jsp">Contact</a></li>
-                                    <li><a href="404.jsp">404</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Trang chủ</a></li>                            
+                                    <li><a href="contact-us.jsp">Liên hệ</a></li>
                                 </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="search_box pull-right">
-                                <input type="text" placeholder="Search"/>
-                                <button type="submit">
-                                    <i class="fa fa-eye" style="border: none; height: 29px; line-height: 29px;"></i>
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div><!--/header-bottom-->        
-        </header><!--/header-->
+        </header><!--/header-->        
+        
         <style>
             .table-fixed {
                 table-layout: fixed;
@@ -184,8 +133,13 @@
                 display: block;
             }
         </style>
+        
         <section id="cart_items">
-            <div class="container">
+            <div class="container" style="margin-bottom: 40px;" >
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <h2><i class="fa fa-shopping-bag"></i> Giỏ hàng </h2>
+                    <p class="text-muted">Theo dõi và quản lý giỏ hàng của bạn</p>
+                </div>
                 <h2>Giỏ hàng</h2>
                 <c:if test="${cart.isEmpty()}">
                     <div class="alert alert-danger">Chưa chọn sản phẩm nào vào giỏ hàng </div>
@@ -321,18 +275,55 @@
                 </c:if>
             </div>
         </section>
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="row">
-                    <p class="pull-left">Copyright © 2025  Flower Shop. All rights reserved</p>
-                    <p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Group 2</a></span></p>
+
+        <footer id="footer"><!--Footer-->
+            <div class="footer-widget">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="single-widget">
+                                <h2>Dịch vụ</h2>
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="orders">Xem đơn mua</a></li>
+                                    <li><a href="profile">Thay đổi hồ sơ</a></li>
+                                    <li><a href="#">Giỏ hoa theo yêu cầu</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1">Tiếp tục mua sắm</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="single-widget">
+                                <h2>Liên hệ </h2>
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="https://www.facebook.com/tran.uc.kien.588942">Facebook</a></li>
+                                    <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2">Github</a></li>
+                                    <li><a href="https://accounts.google.com/v3/signin/identifier?ifkv=AdBytiMmsOAuql232UmLNKelOUNWSkE5R7zTjDiG1c2Eh9s_g4WpAUxqvRqKj9gMYsdypUFg84Mr&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S1730468177%3A1750350775108616">kientdhe186194@fpt.edu.vn</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-sm-offset-1">
+                            <div class="single-widget">
+                                <h2>Về chúng tôi</h2>
+                                <form action="#" class="searchform">
+                                    <input type="text" placeholder="Nhập email" />
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
+                                    <p>Đăng kí để nhận được các thông báo <br />Ưu đãi và sản phẩm mới nhất...</p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </footer><!--/Footer-->
-
-
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <p class="pull-left">Copyright © 2025  Flower Shop. All rights reserved</p>
+                        <p class="pull-right">Designed by <span><a target="_blank" href="https://github.com/kientd10/Sell_Flower_System_Group2">Group 2</a></span></p>
+                    </div>
+                </div>
+            </div>
+        </footer><!--/Footer-->
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -346,14 +337,14 @@
                 <!--                     <img src="assets/img/logo/guitar.png" class="rounded me-2" alt="iconlmao" style= "  max-width: 100%;
                     height: auto;
                     max-height: 20px;">-->
-                <strong class="mr-auto">Notification</strong>
-                <small>just now</small>
+                <strong class="mr-auto">Thông báo</strong>
+                <small>...</small>
                 <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="toast-body">
-                Login successfully
+                Chào mừng bạn đến với trang giỏ hàng
             </div>
         </div>
         <script>

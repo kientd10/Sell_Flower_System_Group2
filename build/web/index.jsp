@@ -32,7 +32,6 @@
     <body>
 
         <header id="header"><!--header-->
-
             <div class="header_top"><!--header_top-->
                 <div class="container">
                     <div class="row">
@@ -62,7 +61,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="logo pull-left">
-                                <a href="index.jsp"><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
+                                <a href="${pageContext.request.contextPath}/home?pageNum=1" ><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
                             </div>
                         </div>
 
@@ -70,14 +69,14 @@
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
                                     <c:if test="${sessionScope.user != null}">
-                                        <li><a href="profile"><i class="fa fa-user"></i> Account</a></li>
-                                        <li><a href="order.jsp"><i class="fa fa-truck"></i> Order</a></li>
-                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        <li><a href="Customer?action=logout"><b>Logout</b></a></li> 
+                                        <li><a href="profile"><i class="fa fa-user"></i> Hồ sơ</a></li>
+                                        <li><a href="orders"><i class="fa fa-truck"></i> Đơn hàng</a></li>
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
                                         </c:if> 
                                         <c:if test="${sessionScope.user == null}">
-                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-                                        <li><a href="login.jsp"><b>Login</b></a></li> 
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+                                        <li><a href="login.jsp"><b>Đăng nhập</b></a></li> 
                                         </c:if>
                                 </ul>
                             </div>
@@ -100,8 +99,8 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Home</a></li>
-                                    <li class="dropdown"><a href="#">Category<i class="fa fa-angle-down"></i></a>
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Trang chủ</a></li>
+                                    <li class="dropdown"><a href="#">Danh mục hoa<i class="fa fa-angle-down"></i></a>
                                         <ul role="menu" class="sub-menu">
                                             <c:if test="${empty categories}">
                                                 <li><a href="#">Không có danh mục nào</a></li>
@@ -111,14 +110,8 @@
                                                         ${category.categoryName}</a></li>
                                                     </c:forEach>
                                         </ul>
-                                    </li>
-                                    <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
-                                        <ul role="menu" class="sub-menu">
-                                            <li><a href="blog.jsp">Blog List</a></li>
-                                        </ul>
-                                    </li>                              
-                                    <li><a href="contact-us.jsp">Contact</a></li>
-                                    <li><a href="404.jsp">404</a></li>
+                                    </li>                             
+                                    <li><a href="contact-us.jsp">Liên hệ</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -367,148 +360,40 @@
         </section>
 
         <footer id="footer"><!--Footer-->
-            <div class="footer-top">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <div class="companyinfo">
-                                <h2> Flower Shop</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,sed do eiusmod tempor</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-7">
-                            <div class="col-sm-3">
-                                <div class="video-gallery text-center">
-                                    <a href="#">
-                                        <div class="iframe-img">
-                                            <img src="images/home/iframe1.png" alt="" />
-                                        </div>
-                                        <div class="overlay-icon">
-                                            <i class="fa fa-play-circle-o"></i>
-                                        </div>
-                                    </a>
-                                    <p>Circle of Hands</p>
-                                    <h2>24 DEC 2014</h2>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-3">
-                                <div class="video-gallery text-center">
-                                    <a href="#">
-                                        <div class="iframe-img">
-                                            <img src="images/home/iframe2.png" alt="" />
-                                        </div>
-                                        <div class="overlay-icon">
-                                            <i class="fa fa-play-circle-o"></i>
-                                        </div>
-                                    </a>
-                                    <p>Circle of Hands</p>
-                                    <h2>24 DEC 2014</h2>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-3">
-                                <div class="video-gallery text-center">
-                                    <a href="#">
-                                        <div class="iframe-img">
-                                            <img src="images/home/iframe3.png" alt="" />
-                                        </div>
-                                        <div class="overlay-icon">
-                                            <i class="fa fa-play-circle-o"></i>
-                                        </div>
-                                    </a>
-                                    <p>Circle of Hands</p>
-                                    <h2>24 DEC 2014</h2>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-3">
-                                <div class="video-gallery text-center">
-                                    <a href="#">
-                                        <div class="iframe-img">
-                                            <img src="images/home/iframe4.png" alt="" />
-                                        </div>
-                                        <div class="overlay-icon">
-                                            <i class="fa fa-play-circle-o"></i>
-                                        </div>
-                                    </a>
-                                    <p>Circle of Hands</p>
-                                    <h2>24 DEC 2014</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="address">
-                                <img src="images/home/map.png" alt="" />
-                                <p>Khu CNC Hòa Lạc, Km29 Đại lộ Thăng Long, Thạch Thất, Hà Nội</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="footer-widget">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="single-widget">
-                                <h2>Service</h2>
+                                <h2>Dịch vụ</h2>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#">Online Help</a></li>
-                                    <li><a href="#">Contact Us</a></li>
-                                    <li><a href="#">Order Status</a></li>
-                                    <li><a href="#">Change Location</a></li>
-                                    <li><a href="#">FAQ’s</a></li>
+                                    <li><a href="orders">Xem đơn mua</a></li>
+                                    <li><a href="profile">Thay đổi hồ sơ</a></li>
+                                    <li><a href="#">Giỏ hoa theo yêu cầu</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1">Tiếp tục mua sắm</a></li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                             <div class="single-widget">
-                                <h2>Quock Shop</h2>
+                                <h2>Liên hệ </h2>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#">T-Shirt</a></li>
-                                    <li><a href="#">Mens</a></li>
-                                    <li><a href="#">Womens</a></li>
-                                    <li><a href="#">Gift Cards</a></li>
-                                    <li><a href="#">Shoes</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="single-widget">
-                                <h2>Policies</h2>
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#">Terms of Use</a></li>
-                                    <li><a href="#">Privecy Policy</a></li>
-                                    <li><a href="#">Refund Policy</a></li>
-                                    <li><a href="#">Billing System</a></li>
-                                    <li><a href="#">Ticket System</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="single-widget">
-                                <h2>About Flower Shop</h2>
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#">Company Information</a></li>
-                                    <li><a href="#">Careers</a></li>
-                                    <li><a href="#">Store Location</a></li>
-                                    <li><a href="#">Affillate Program</a></li>
-                                    <li><a href="#">Copyright</a></li>
+                                    <li><a href="https://www.facebook.com/tran.uc.kien.588942">Facebook</a></li>
+                                    <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2">Github</a></li>
+                                    <li><a href="https://accounts.google.com/v3/signin/identifier?ifkv=AdBytiMmsOAuql232UmLNKelOUNWSkE5R7zTjDiG1c2Eh9s_g4WpAUxqvRqKj9gMYsdypUFg84Mr&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S1730468177%3A1750350775108616">kientdhe186194@fpt.edu.vn</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-3 col-sm-offset-1">
                             <div class="single-widget">
-                                <h2>About Flower Shop</h2>
+                                <h2>Về chúng tôi</h2>
                                 <form action="#" class="searchform">
-                                    <input type="text" placeholder="Your email address" />
+                                    <input type="text" placeholder="Nhập email" />
                                     <button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
-                                    <p>Get the most recent updates from <br />our site and be updated your self...</p>
+                                    <p>Đăng kí để nhận được các thông báo <br />Ưu đãi và sản phẩm mới nhất...</p>
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -517,11 +402,10 @@
                 <div class="container">
                     <div class="row">
                         <p class="pull-left">Copyright © 2025  Flower Shop. All rights reserved</p>
-                        <p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Group 2</a></span></p>
+                        <p class="pull-right">Designed by <span><a target="_blank" href="https://github.com/kientd10/Sell_Flower_System_Group2">Group 2</a></span></p>
                     </div>
                 </div>
             </div>
-
         </footer><!--/Footer-->
 
 
@@ -538,14 +422,14 @@
                     <!--<img src="assets/img/logo/guitar.png" class="rounded me-2" alt="iconlmao" style= "  max-width: 100%;
                         height: auto;
                         max-height: 20px;">-->
-                    <strong class="mr-auto">Notification</strong>
-                    <small>just now</small>
+                    <strong class="mr-auto">Thông báo</strong>
+                    <small>...</small>
                     <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="toast-body">
-                    Login successfully
+                    Xin chào! Đăng nhập thành công
                 </div>
             </div>
             <script>
