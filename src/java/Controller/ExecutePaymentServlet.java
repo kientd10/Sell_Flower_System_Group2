@@ -62,41 +62,65 @@ public class ExecutePaymentServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            String paymentId = request.getParameter("paymentId");
-            String payerId = request.getParameter("PayerID");
+   @Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    try {
+        String paymentId = request.getParameter("paymentId");
+        String payerId = request.getParameter("PayerID");
 
-            Map<String, String> configMap = new HashMap<>();
-configMap.put("mode", "sandbox");
+        Map<String, String> configMap = new HashMap<>();
+        configMap.put("mode", "sandbox");
 
-OAuthTokenCredential tokenCredential = new OAuthTokenCredential(CLIENT_ID, CLIENT_SECRET, configMap);
-APIContext apiContext = new APIContext(tokenCredential.getAccessToken());
-apiContext.setConfigurationMap(configMap);
+        OAuthTokenCredential tokenCredential = new OAuthTokenCredential(CLIENT_ID, CLIENT_SECRET, configMap);
+        APIContext apiContext = new APIContext(tokenCredential.getAccessToken());
+        apiContext.setConfigurationMap(configMap);
 
-            Payment payment = new Payment();
-            payment.setId(paymentId);
+        Payment payment = new Payment();
+        payment.setId(paymentId);
 
-            PaymentExecution paymentExecute = new PaymentExecution();
-            paymentExecute.setPayerId(payerId);
+        PaymentExecution paymentExecute = new PaymentExecution();
+        paymentExecute.setPayerId(payerId);
 
-            Payment executedPayment = payment.execute(apiContext, paymentExecute);
+        Payment executedPayment = payment.execute(apiContext, paymentExecute);
 
-            if ("approved".equalsIgnoreCase(executedPayment.getState())) {
-                request.setAttribute("message", "Thanh toán thành công!");
-                request.getRequestDispatcher("success.jsp").forward(request, response);
-            } else {
-                request.getRequestDispatcher("cancel.jsp").forward(request, response);
-            }
+        if ("approved".equalsIgnoreCase(executedPayment.getState())) {
+            // Lấy thông tin thanh toán từ PayPal
+            String transactionId = executedPayment.getTransactions().get(0).getRelatedResources().get(0).getSale().getId();
+            double amount = Double.parseDouble(executedPayment.getTransactions().get(0).getAmount().getTotal());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().println("Lỗi xác nhận thanh toán: " + e.getMessage());
+            // Lấy user & cart từ session
+            HttpSession session = request.getSession();
+            Model.User user = (Model.User) session.getAttribute("user"); // thay đổi nếu bạn dùng tên khác
+            int userId = user.getUserId();
+            List<Model.ShoppingCart> cartItems = (List<Model.ShoppingCart>) session.getAttribute("cart");
+
+            // Tạo đơn hàng
+            dal.OrderDAO orderDao = new dal.OrderDAO();
+            int orderId = orderDao.insertOrder(userId, cartItems, amount);
+
+            // Lưu giao dịch PayPal vào bảng payments
+            dal.PaymentDAO paymentDao = new dal.PaymentDAO();
+            paymentDao.insertPaypalPayment(orderId, transactionId, amount, "Success");
+
+            // Xóa giỏ hàng
+            session.removeAttribute("cart");
+
+            // Gửi dữ liệu tới success.jsp
+            request.setAttribute("transactionId", transactionId);
+            request.setAttribute("amount", amount);
+            request.setAttribute("orderId", orderId);
+            request.getRequestDispatcher("success.jsp").forward(request, response);
+
+        } else {
+            request.getRequestDispatcher("cancel.jsp").forward(request, response);
         }
-    }
 
+    } catch (Exception e) {
+        e.printStackTrace();
+        response.getWriter().println("Lỗi xác nhận thanh toán: " + e.getMessage());
+    }
+}
 
     /** 
      * Handles the HTTP <code>POST</code> method.

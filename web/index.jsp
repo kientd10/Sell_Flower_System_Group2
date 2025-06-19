@@ -94,13 +94,14 @@
                                         <li><a href="profile"><i class="fa fa-user"></i> Account</a></li>
                                         <li><a href="checkout.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
+                                        <li><a href="purchasehistoryservlet">Sản phẩm đã mua</a></li>
                                         <li><a href="Customer?action=logout"><b>Logout</b></a></li> 
-                                    </c:if> 
-                                    <c:if test="${sessionScope.user == null}">
+                                        </c:if> 
+                                        <c:if test="${sessionScope.user == null}">
                                         <li><a href="login.jsp"><i class="fa fa-credit-card"></i> Payment</a></li>
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
                                         <li><a href="login.jsp"><b>Login</b></a></li> 
-                                    </c:if>
+                                        </c:if>
                                 </ul>
                             </div>
                         </div>
