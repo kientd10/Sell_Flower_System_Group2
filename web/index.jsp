@@ -189,13 +189,13 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="left-sidebar">
-                            <h2 style="font-size: 20px; padding: 5px 10px;" >Category</h2>
-                            <div class="panel-group category-products" id="accordian"><!--category-product--> 
+                            <h2>DANH MỤC HOA</h2>
+                            <div class="panel-group category-products" id="accordian" style=" padding: 10px; border: 2px solid #aeafb0; border-radius: 5px; max-width: 250px; margin: auto;"><!--category-product--> 
                                 <c:forEach var="category" items="${categories}">
-                                    <div class="panel panel-default">
+                                    <div class="panel panel-default" >
                                         <div class="panel-heading">
                                             <h4 class="panel-title">
-                                                <a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}">
+                                                <a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}" style="color: #324d7a">
                                                     <span class="badge pull-right"><i class="fa fa-plus"></i></span>
                                                         ${category.categoryName}
                                                 </a>
@@ -206,16 +206,16 @@
                             </div><!--/category-products-->
 
                             <div class="price-range"><!--/Filter-->
-                                <h2 style="text-align: center; color: #ff9900;">PRICE RANGE</h2>
-                                <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #f0f0f0; border-radius: 5px; max-width: 250px; margin: auto;">
+                                <h2 style="text-align: center; color: #c44d58;">KHOẢNG GIÁ</h2>
+                                <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 2px solid #aeafb0; border-radius: 5px; max-width: 250px; margin: auto;">
                                     <input type="number" id="minPrice" placeholder="Giá từ (vnđ)"
                                            value="${minPrice != null ? minPrice : ''}"
-                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
+                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #aeafb0; border-radius: 3px;" />
                                     <input type="number" id="maxPrice" placeholder="Giá đến (vnđ)"
                                            value="${maxPrice != null ? maxPrice : ''}"
-                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 3px;" />
+                                           style="width: 100%; padding: 6px 10px; margin-bottom: 10px; border: 1px solid #aeafb0; border-radius: 3px;" />
                                     <button id="priceFilterBtn"
-                                            style="background-color: #ff9900; color: white; border: none; padding: 8px 18px; border-radius: 3px; cursor: pointer;">
+                                            style="background-color: #c44d58; color: white; border: none; padding: 8px 18px; border-radius: 3px; cursor: pointer;">
                                         Lọc giá
                                     </button>
                                 </div>
@@ -250,14 +250,12 @@
                                 });
                             </script>
 
-
-                            <div class="shipping text-center"><!--shipping-->
-                                <img src="images/home/shipping.jpg" alt="" />
+                            <div ><!--shipping-->
+                                <img style="width:264px ; height: 430px ; margin-top:40px; border-radius: 5px " src="https://4kwallpapers.com/images/wallpapers/teddy-bear-rose-cute-toy-gift-valentines-day-5k-2160x3840-441.jpg" alt="" />
                             </div><!--/shipping-->
-
                         </div>
+                                           
                     </div>
-
                     <div class="col-sm-9 padding-right">                       
                         <div class="features_items"> <!--features_items-->
                             <h2 class="title text-center st" style="font-size: 20px; padding: 5px 10px;">

@@ -20,8 +20,8 @@
 <style>
 	/* ===== SHARED STYLES ===== */
 	:root {
-		--primary-red: #dc3545;
-		--primary-red-dark: #b02a37;
+		--primary-red: #c44d58;
+		--primary-red-dark: #a03d4a;
 		--secondary-gray: #6c757d;
 		--dark-gray: #343a40;
 		--light-gray: #f8f9fa;
@@ -110,7 +110,7 @@
 	.priority-indicator {
 		width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 0.5rem;
 	}
-	.priority-indicator.high { background: #dc3545; }
+	.priority-indicator.high { background: var(--primary-red); }
 	.priority-indicator.medium { background: #ffc107; }
 	.priority-indicator.low { background: #28a745; }
 	
@@ -130,6 +130,8 @@
 		.content-area { padding: 1rem; }
 	}
 </style>
+
+
 </head>
 
 <body>

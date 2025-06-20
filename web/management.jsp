@@ -18,112 +18,113 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	
-	<style>
-		/* ===== SHARED STYLES ===== */
-		:root {
-			--primary-red: #dc3545;
-			--primary-red-dark: #b02a37;
-			--secondary-gray: #6c757d;
-			--dark-gray: #343a40;
-			--light-gray: #f8f9fa;
-			--sidebar-width: 280px;
-		}
-		
-		body { font-family: 'Inter', sans-serif; background: var(--light-gray); margin: 0; padding: 0; }
-		.wrapper { display: flex; min-height: 100vh; }
-		
-		/* ===== SIDEBAR STYLES ===== */
-		.sidebar {
-			width: var(--sidebar-width);
-			background: linear-gradient(135deg, var(--dark-gray) 0%, #495057 100%);
-			position: fixed; height: 100vh; overflow-y: auto; z-index: 1000;
-			box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-		}
-		.sidebar-brand { padding: 1.5rem; color: white; text-decoration: none; font-weight: 700; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: block; text-align: center; }
-		.sidebar-user { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; }
-		.sidebar-nav { list-style: none; padding: 1rem 0; margin: 0; }
-		.sidebar-header { padding: 1rem 1.5rem 0.5rem; color: rgba(255,255,255,0.6); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
-		.sidebar-link { display: flex; align-items: center; padding: 0.8rem 1.5rem; color: rgba(255,255,255,0.8); text-decoration: none; transition: all 0.3s ease; }
-		.sidebar-link:hover, .sidebar-link.active { background: var(--primary-red); color: white; transform: translateX(5px); }
-		.sidebar-link i { margin-right: 0.8rem; width: 18px; }
-		
-		/* ===== MAIN CONTENT STYLES ===== */
-		.main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); min-height: 100vh; }
-		.top-navbar { background: white; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-		.content-area { padding: 2rem; }
-		.page-title { color: var(--dark-gray); font-weight: 700; margin-bottom: 0.5rem; }
-		.card { border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-radius: 10px; margin-bottom: 1.5rem; }
-		.card-header { background: var(--primary-red); color: white; border-radius: 10px 10px 0 0 !important; padding: 1.2rem 1.5rem; }
-		.btn-primary { background: var(--primary-red); border-color: var(--primary-red); border-radius: 6px; }
-		.btn-primary:hover { background: var(--primary-red-dark); transform: translateY(-1px); }
-		.table th { background: var(--light-gray); font-weight: 600; border-top: none; }
-		
-		/* ===== REPORTS SPECIFIC STYLES ===== */
-		.metric-card {
-			background: white; border-radius: 10px; padding: 1.5rem;
-			box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 1.5rem;
-			transition: transform 0.3s ease;
-		}
-		.metric-card:hover { transform: translateY(-3px); }
-		
-		.metric-value {
-			font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;
-		}
-		
-		.metric-change {
-			font-size: 0.9rem; font-weight: 600;
-		}
-		.metric-change.positive { color: #28a745; }
-		.metric-change.negative { color: #dc3545; }
-		.metric-change.neutral { color: #6c757d; }
-		
-		.chart-container {
-			position: relative; height: 400px; margin: 1rem 0;
-		}
-		
-		.report-filter {
-			background: white; border-radius: 10px; padding: 1.5rem;
-			box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 1.5rem;
-		}
-		
-		.period-selector {
-			display: flex; gap: 0.5rem; margin-bottom: 1rem;
-		}
-		.period-btn {
-			padding: 0.5rem 1rem; border: 1px solid #dee2e6; background: white;
-			border-radius: 6px; cursor: pointer; transition: all 0.3s ease;
-		}
-		.period-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
-		.period-btn:hover { background: var(--light-gray); }
-		
-		.top-products {
-			max-height: 400px; overflow-y: auto;
-		}
-		
-		.product-item {
-			display: flex; justify-content: space-between; align-items: center;
-			padding: 1rem; border-bottom: 1px solid #e9ecef;
-		}
-		.product-item:last-child { border-bottom: none; }
-		
-		.product-rank {
-			width: 30px; height: 30px; border-radius: 50%;
-			display: flex; align-items: center; justify-content: center;
-			font-weight: 700; color: white; margin-right: 1rem;
-		}
-		.product-rank.rank-1 { background: #ffd700; color: #2f3542; }
-		.product-rank.rank-2 { background: #c0c0c0; color: #2f3542; }
-		.product-rank.rank-3 { background: #cd7f32; color: white; }
-		.product-rank.rank-other { background: var(--secondary-gray); }
-		
-		/* ===== RESPONSIVE DESIGN ===== */
-		@media (max-width: 768px) {
-			.sidebar { width: 250px; }
-			.main-content { margin-left: 250px; width: calc(100% - 250px); }
-			.content-area { padding: 1rem; }
-			.chart-container { height: 300px; }
-		}
-	</style>
+<style>
+	/* ===== SHARED STYLES ===== */
+	:root {
+		--primary-red: #c44d58;
+		--primary-red-dark: #a03d4a;
+		--secondary-gray: #6c757d;
+		--dark-gray: #343a40;
+		--light-gray: #f8f9fa;
+		--sidebar-width: 280px;
+	}
+	
+	body { font-family: 'Inter', sans-serif; background: var(--light-gray); margin: 0; padding: 0; }
+	.wrapper { display: flex; min-height: 100vh; }
+	
+	/* ===== SIDEBAR STYLES ===== */
+	.sidebar {
+		width: var(--sidebar-width);
+		background: linear-gradient(135deg, var(--dark-gray) 0%, #495057 100%);
+		position: fixed; height: 100vh; overflow-y: auto; z-index: 1000;
+		box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+	}
+	.sidebar-brand { padding: 1.5rem; color: white; text-decoration: none; font-weight: 700; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: block; text-align: center; }
+	.sidebar-user { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; }
+	.sidebar-nav { list-style: none; padding: 1rem 0; margin: 0; }
+	.sidebar-header { padding: 1rem 1.5rem 0.5rem; color: rgba(255,255,255,0.6); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+	.sidebar-link { display: flex; align-items: center; padding: 0.8rem 1.5rem; color: rgba(255,255,255,0.8); text-decoration: none; transition: all 0.3s ease; }
+	.sidebar-link:hover, .sidebar-link.active { background: var(--primary-red); color: white; transform: translateX(5px); }
+	.sidebar-link i { margin-right: 0.8rem; width: 18px; }
+	
+	/* ===== MAIN CONTENT STYLES ===== */
+	.main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); min-height: 100vh; }
+	.top-navbar { background: white; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+	.content-area { padding: 2rem; }
+	.page-title { color: var(--dark-gray); font-weight: 700; margin-bottom: 0.5rem; }
+	.card { border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-radius: 10px; margin-bottom: 1.5rem; }
+	.card-header { background: var(--primary-red); color: white; border-radius: 10px 10px 0 0 !important; padding: 1.2rem 1.5rem; }
+	.btn-primary { background: var(--primary-red); border-color: var(--primary-red); border-radius: 6px; }
+	.btn-primary:hover { background: var(--primary-red-dark); transform: translateY(-1px); }
+	.table th { background: var(--light-gray); font-weight: 600; border-top: none; }
+	
+	/* ===== REPORTS SPECIFIC STYLES ===== */
+	.metric-card {
+		background: white; border-radius: 10px; padding: 1.5rem;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 1.5rem;
+		transition: transform 0.3s ease;
+	}
+	.metric-card:hover { transform: translateY(-3px); }
+	
+	.metric-value {
+		font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;
+	}
+	
+	.metric-change {
+		font-size: 0.9rem; font-weight: 600;
+	}
+	.metric-change.positive { color: #28a745; }
+	.metric-change.negative { color: #c44d58; }
+	.metric-change.neutral { color: #6c757d; }
+	
+	.chart-container {
+		position: relative; height: 400px; margin: 1rem 0;
+	}
+	
+	.report-filter {
+		background: white; border-radius: 10px; padding: 1.5rem;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 1.5rem;
+	}
+	
+	.period-selector {
+		display: flex; gap: 0.5rem; margin-bottom: 1rem;
+	}
+	.period-btn {
+		padding: 0.5rem 1rem; border: 1px solid #dee2e6; background: white;
+		border-radius: 6px; cursor: pointer; transition: all 0.3s ease;
+	}
+	.period-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
+	.period-btn:hover { background: var(--light-gray); }
+	
+	.top-products {
+		max-height: 400px; overflow-y: auto;
+	}
+	
+	.product-item {
+		display: flex; justify-content: space-between; align-items: center;
+		padding: 1rem; border-bottom: 1px solid #e9ecef;
+	}
+	.product-item:last-child { border-bottom: none; }
+	
+	.product-rank {
+		width: 30px; height: 30px; border-radius: 50%;
+		display: flex; align-items: center; justify-content: center;
+		font-weight: 700; color: white; margin-right: 1rem;
+	}
+	.product-rank.rank-1 { background: #ffd700; color: #2f3542; }
+	.product-rank.rank-2 { background: #c0c0c0; color: #2f3542; }
+	.product-rank.rank-3 { background: #cd7f32; color: white; }
+	.product-rank.rank-other { background: var(--secondary-gray); }
+	
+	/* ===== RESPONSIVE DESIGN ===== */
+	@media (max-width: 768px) {
+		.sidebar { width: 250px; }
+		.main-content { margin-left: 250px; width: calc(100% - 250px); }
+		.content-area { padding: 1rem; }
+		.chart-container { height: 300px; }
+	}
+</style>
+
               
 </head>
 
@@ -162,8 +163,8 @@
             <% } %>
 		<!-- ===== SIDEBAR NAVIGATION ===== -->
 		<nav class="sidebar">
-			<a href="home" class="sidebar-brand">
-				<i class="fas fa-seedling me-2"></i>Flower Management
+			<a href="home" class="sidebar-brand" style="font-size:25px ; color: #f595a8">
+				<i class="fas fa-seedling me-2" style="color: #f595a8;" ></i>Menu quản lý
 			</a>
 
 			<div class="sidebar-user">
