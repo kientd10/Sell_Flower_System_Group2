@@ -19,15 +19,15 @@
 	
 	<style>
 		/* ===== SHARED STYLES ===== */
-		:root {
-			--primary-red: #dc3545;
-			--primary-red-dark: #b02a37;
-			--secondary-gray: #6c757d;
-			--dark-gray: #343a40;
-			--light-gray: #f8f9fa;
-			--sidebar-width: 280px;
-		}
-		
+                :root {
+                        --primary-red: #c44d58;        /* màu đỏ mới */
+                        --primary-red-dark: #a03d4a;   /* đỏ đậm tương ứng */
+                        --secondary-gray: #6c757d;
+                        --dark-gray: #343a40;
+                        --light-gray: #f8f9fa;
+                        --sidebar-width: 280px;
+                }
+	
 		body { font-family: 'Inter', sans-serif; background: var(--light-gray); margin: 0; padding: 0; }
 		.wrapper { display: flex; min-height: 100vh; }
 		
@@ -112,6 +112,15 @@
 		.stat-number {
 			font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;
 		}
+                
+                		/* ===== PAGINATION STYLES ===== */
+		.pagination { justify-content: center; margin-top: 1.5rem; }
+		.page-link {
+			color: var(--primary-red); border-color: #dee2e6; padding: 0.6rem 0.8rem;
+			margin: 0 2px; border-radius: 4px; font-weight: 500; transition: all 0.3s ease;
+		}
+		.page-link:hover { color: white; background-color: var(--primary-red); border-color: var(--primary-red); transform: translateY(-1px); }
+		.page-item.active .page-link { background-color: var(--primary-red); border-color: var(--primary-red); }
 		
 		/* ===== RESPONSIVE DESIGN ===== */
 		@media (max-width: 768px) {

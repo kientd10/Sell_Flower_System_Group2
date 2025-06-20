@@ -13,14 +13,15 @@
 	
 	<style>
 		/* ===== SHARED STYLES (Same as index.jsp) ===== */
-		:root {
-			--primary-red: #dc3545;
-			--primary-red-dark: #b02a37;
-			--secondary-gray: #6c757d;
-			--dark-gray: #343a40;
-			--light-gray: #f8f9fa;
-			--sidebar-width: 280px;
-		}
+                :root {
+                    --primary-red: #c44d58;
+                    --primary-red-dark: #a03d4a;
+                    --secondary-gray: #6c757d;
+                    --dark-gray: #343a40;
+                    --light-gray: #f8f9fa;
+                    --sidebar-width: 280px;
+                }
+
 		
 		body {
 			font-family: 'Inter', sans-serif;
@@ -248,7 +249,7 @@
             <% } %>
 		<!-- ===== SIDEBAR NAVIGATION (Same as index.jsp) ===== -->
 		<nav class="sidebar">
-			<a href="home" class="sidebar-brand">
+			<a href="home" class="sidebar-brand" >
 				<i class="fas fa-seedling me-2"></i>Flower Management
 			</a>
 

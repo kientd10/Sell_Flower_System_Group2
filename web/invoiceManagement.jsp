@@ -19,14 +19,14 @@
 	
 	<style>
 		/* ===== SHARED STYLES ===== */
-		:root {
-			--primary-red: #dc3545;
-			--primary-red-dark: #b02a37;
-			--secondary-gray: #6c757d;
-			--dark-gray: #343a40;
-			--light-gray: #f8f9fa;
-			--sidebar-width: 280px;
-		}
+	:root {
+		--primary-red: #c44d58;
+		--primary-red-dark: #a03d4a;
+		--secondary-gray: #6c757d;
+		--dark-gray: #343a40;
+		--light-gray: #f8f9fa;
+		--sidebar-width: 280px;
+	}
 		
 		body { 
 			font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
@@ -123,7 +123,8 @@
 			.main-content { margin-left: 250px; width: calc(100% - 250px); }
 			.content-area { padding: 1rem; }
 		}
-	</style>
+</style>
+        
 </head>
 
 <body>
