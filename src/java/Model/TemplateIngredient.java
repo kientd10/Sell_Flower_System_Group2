@@ -13,7 +13,7 @@ public class TemplateIngredient {
     private int templateId;
     private int typeId;
     private int requiredQuantity;
-    private String typeName;
+    private String Name;
 
     // Getters và Setters
     public int getIngredientId() {
@@ -48,11 +48,13 @@ public class TemplateIngredient {
         this.requiredQuantity = requiredQuantity;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public String getName() {
+        return Name;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setName(String Name) {
+        this.Name = Name;
     }
+
+    
 }

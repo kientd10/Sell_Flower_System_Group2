@@ -14,14 +14,14 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <style>
             /* ===== SHARED STYLES ===== */
-                :root {
-                    --primary-red: #c44d58;
-                    --primary-red-dark: #a03d4a;
-                    --secondary-gray: #6c757d;
-                    --dark-gray: #343a40;
-                    --light-gray: #f8f9fa;
-                    --sidebar-width: 280px;
-                }
+            :root {
+                --primary-red: #c44d58;
+                --primary-red-dark: #a03d4a;
+                --secondary-gray: #6c757d;
+                --dark-gray: #343a40;
+                --light-gray: #f8f9fa;
+                --sidebar-width: 280px;
+            }
 
 
             body {
@@ -34,62 +34,21 @@
                 display: flex;
                 min-height: 100vh;
             }
+            <ul class="sidebar-nav">
+            <li class="sidebar-header">Menu Chính</li>
+            <li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
+            <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+            <li><a href="categoryManagement.jsp" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+            <li><a href="storageManagement.jsp" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+            <li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+            <li><a href="invoiceManagement.jsp" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
 
-            /* ===== SIDEBAR STYLES ===== */
-            .sidebar {
-                width: var(--sidebar-width);
-                background: linear-gradient(135deg, var(--dark-gray) 0%, #495057 100%);
-                position: fixed;
-                height: 100vh;
-                overflow-y: auto;
-                z-index: 1000;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            }
-            .sidebar-brand {
-                padding: 1.5rem;
-                color: white;
-                text-decoration: none;
-                font-weight: 700;
-                font-size: 1.2rem;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                display: block;
-                text-align: center;
-            }
-            .sidebar-user {
-                padding: 1.5rem;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                color: white;
-            }
-            .sidebar-nav {
-                list-style: none;
-                padding: 1rem 0;
-                margin: 0;
-            }
-            .sidebar-header {
-                padding: 1rem 1.5rem 0.5rem;
-                color: rgba(255,255,255,0.6);
-                font-size: 0.85rem;
-                font-weight: 600;
-                text-transform: uppercase;
-            }
-            .sidebar-link {
-                display: flex;
-                align-items: center;
-                padding: 0.8rem 1.5rem;
-                color: rgba(255,255,255,0.8);
-                text-decoration: none;
-                transition: all 0.3s ease;
-            }
-            .sidebar-link:hover, .sidebar-link.active {
-                background: var(--primary-red);
-                color: white;
-                transform: translateX(5px);
-            }
-            .sidebar-link i {
-                margin-right: 0.8rem;
-                width: 18px;
-            }
-
+            <li class="sidebar-header">Hệ Thống</li>
+            <li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+            <li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
+            <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
+            </ul>
+            </nav>
             /* ===== MAIN CONTENT STYLES ===== */
             .main-content {
                 margin-left: var(--sidebar-width);
@@ -200,9 +159,9 @@
                     <!-- Chỉ hiển thị nếu là Manager -->
                     <% if (role == 3) { %>
                     <li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
-                    <li><a href="productManagement.jsp" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lý Sản Phẩm</a></li>
+                    <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lý Sản Phẩm</a></li>
                     <li><a href="categoryManagement.jsp" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lý Danh Mục Sản Phẩm</a></li>
-                    <li><a href="storageManagement.jsp" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lý Kho Hàng</a></li>
+                    <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lý Kho Hàng</a></li>
                     <li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lý Đơn Hàng</a></li>
                     <li><a href="invoiceManagement.jsp" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
 
