@@ -23,17 +23,17 @@ public class PaymentDAO {
         }
     }
 
-    public void insertPaypalPayment(int orderId, String transactionId, double amount, String status) {
-        String sql = "INSERT INTO payments (order_id, payment_method, amount, transaction_id, payment_status, payment_date) "
-                   + "VALUES (?, 'Card', ?, ?, ?, NOW())";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, orderId);
-            ps.setDouble(2, amount);
-            ps.setString(3, transactionId);
-            ps.setString(4, status); // "Success", "Pending", v.v.
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+   public void insertPaypalPayment(int orderId, String transactionId, double amount, String status) {
+    String sql = "INSERT INTO payments (order_id, payment_method, amount, transaction_id, payment_status, payment_date) "
+               + "VALUES (?, ?, ?, ?, ?, NOW())";
+   try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    ps.setInt(1, orderId);
+    ps.setDouble(2, amount);
+    ps.setString(3, transactionId);
+    ps.setString(4, status);  // Thứ tự đúng là 4 chứ không phải 5
+    ps.executeUpdate();
+} catch (Exception e) {
+        e.printStackTrace();
     }
+}
 }
