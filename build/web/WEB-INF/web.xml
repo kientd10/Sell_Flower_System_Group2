@@ -39,6 +39,8 @@
     <servlet>
         <servlet-name>OrderServlet</servlet-name>
         <servlet-class>Controller.OrderServlet</servlet-class>
+    </servlet>
+    <servlet>        
         <servlet-name>ProductManagementServlet</servlet-name>
         <servlet-class>Controller.ProductManagementServlet</servlet-class>
     </servlet>
@@ -85,6 +87,8 @@
     <servlet-mapping>
         <servlet-name>OrderServlet</servlet-name>
         <url-pattern>/orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ProductManagementServlet</servlet-name>
         <url-pattern>/productmanagement</url-pattern>
     </servlet-mapping>
