@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import Model.BouquetTemplate;
+import Model.Category;
 import Model.RawFlower;
 import Model.ShoppingCart;
 import java.sql.SQLException;
@@ -192,7 +193,47 @@ public class BouquetDAO {
         }
         return cartItems;
     }
+    public String getCategoryNameById(int templateId) {
+        String p = new String();
+        String sql
+                = "SELECT d.category_name "
+                + "FROM categories d "
+                + "JOIN bouquet_templates bt ON d.category_id = bt.category_id "
+                + "WHERE bt.template_id = ?";
 
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, templateId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    p = rs.getString("category_name");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return p;
+    }
+
+
+    public List<Category> getAllCategory() {
+        List<Category> C = new ArrayList<>();
+        String sql
+                = "SELECT  * FROM  categories ";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Category p = new Category();
+                    p.setCategoryId(rs.getInt("category_id"));
+                    p.setCategoryName(rs.getString("category_name"));
+                    C.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return C;
+    }
     public ShoppingCart getItems(int userId, int templateId) {
         ShoppingCart Item = new ShoppingCart();
         String sql
@@ -567,34 +608,7 @@ public class BouquetDAO {
         }
     }
 
-    public List<RawFlower> getAllRawFlower() {
-        List<RawFlower> list = new ArrayList<>();
-        String sql
-                = "SELECT rf.type_id, ft.type_name, "
-                + "       rf.color_id, fc.color_name, rf.quantity, "
-                + "       rf.unit_price, rf.expiry_date "
-                + "FROM raw_flowers rf "
-                + "JOIN flower_types  ft ON rf.type_id  = ft.type_id "
-                + "JOIN flower_colors fc ON rf.color_id = fc.color_id";
-
-        try (Connection conn = DBcontext.getJDBCConnection(); PreparedStatement st = conn.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
-
-            while (rs.next()) {
-                RawFlower rf = new RawFlower();
-                rf.setTypeId(rs.getInt("type_id"));
-                rf.setRawFlowerName(rs.getString("type_name") + " " + rs.getString("color_name"));
-                rf.setColorId(rs.getInt("color_id"));
-                rf.setQuantity(rs.getInt("quantity"));
-                rf.setUnitPrice(rs.getDouble("unit_price"));
-                rf.setExpiryDate(rs.getDate("expiry_date"));
-                list.add(rf);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-    public List<BouquetTemplate> getAllBouquetTemplate(){
+    public List<BouquetTemplate> getAllBouquetTemplate() {
         List<BouquetTemplate> list = new ArrayList<>();
         String sql
                 = "SELECT * "
@@ -616,6 +630,5 @@ public class BouquetDAO {
         }
         return list;
     }
-    
 
 }

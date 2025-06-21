@@ -292,6 +292,7 @@
                     <li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                         <% } %>
                 </ul>
+
 		</nav>
 
 		<!-- ===== MAIN CONTENT AREA ===== -->

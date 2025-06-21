@@ -37,8 +37,17 @@
         <servlet-class>Controller.BouquetDetailServlet</servlet-class>
     </servlet>
     <servlet>
+<<<<<<< Updated upstream
         <servlet-name>OrderServlet</servlet-name>
         <servlet-class>Controller.OrderServlet</servlet-class>
+=======
+        <servlet-name>ProductManagementServlet</servlet-name>
+        <servlet-class>Controller.ProductManagementServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StorageManagement</servlet-name>
+        <servlet-class>Controller.StorageManagement</servlet-class>
+>>>>>>> Stashed changes
     </servlet>
     <servlet-mapping>
         <servlet-name>CategoryServlet</servlet-name>
@@ -77,8 +86,17 @@
         <url-pattern>/bouquet-detail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+<<<<<<< Updated upstream
         <servlet-name>OrderServlet</servlet-name>
         <url-pattern>/orders</url-pattern>
+=======
+        <servlet-name>ProductManagementServlet</servlet-name>
+        <url-pattern>/productmanagement</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StorageManagement</servlet-name>
+        <url-pattern>/storagemanagement</url-pattern>
+>>>>>>> Stashed changes
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>home</welcome-file>

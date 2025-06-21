@@ -4,6 +4,8 @@
  */
 package Model;
 
+import java.util.List;
+
 /**
  *
  * @author ADMIN
@@ -16,7 +18,9 @@ public class BouquetTemplate {
     private double basePrice;
     private String imageUrl;
     private int Stock;
-   
+    private String categoryName;
+    private List<TemplateIngredient> ingredients;
+
     public BouquetTemplate() {
     }
 
@@ -36,7 +40,7 @@ public class BouquetTemplate {
         this.basePrice = basePrice;
         this.imageUrl = imageUrl;
     }
-
+    
     public int getStock() {
         return Stock;
     }
@@ -85,4 +89,17 @@ public class BouquetTemplate {
         this.imageUrl = imageUrl;
     }
 
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+    public List<TemplateIngredient> getIngredients() {
+        return ingredients;
+    }
+    public void setIngredients(List<TemplateIngredient> ingredients) {
+        this.ingredients = ingredients;
+    }
 }
