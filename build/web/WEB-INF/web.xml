@@ -37,6 +37,8 @@
         <servlet-class>Controller.BouquetDetailServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>OrderServlet</servlet-name>
+        <servlet-class>Controller.OrderServlet</servlet-class>
         <servlet-name>ProductManagementServlet</servlet-name>
         <servlet-class>Controller.ProductManagementServlet</servlet-class>
     </servlet>
@@ -81,6 +83,8 @@
         <url-pattern>/bouquet-detail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>OrderServlet</servlet-name>
+        <url-pattern>/orders</url-pattern>
         <servlet-name>ProductManagementServlet</servlet-name>
         <url-pattern>/productmanagement</url-pattern>
     </servlet-mapping>
