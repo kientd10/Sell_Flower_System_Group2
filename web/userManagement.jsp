@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="dal.UserDAO" %>
 <%@page import="Model.User" %>
@@ -504,76 +505,52 @@
             User userToEdit = (User) request.getAttribute("user");
             String error = request.getParameter("error");
         %>
-        
-        <!-- ===== SIDEBAR NAVIGATION ===== -->
-        <nav class="sidebar">
-            <a href="home" class="sidebar-brand">
-                <i class="fas fa-seedling"></i>
-                Flower Management
-            </a>
+		<!-- ===== SIDEBAR NAVIGATION ===== -->
+		<nav class="sidebar">
+			<a href="home" class="sidebar-brand" style="font-size:27px ; color: #d4d4d4">
+				<i class="fas fa-seedling me-2" style="color: #dc3545;" ></i>Menu quản lý
+			</a>
 
-            <div class="sidebar-user">
-                <div class="d-flex align-items-center">
-                    <img src="https://via.placeholder.com/45/e11d48/ffffff?text=A" class="me-3" alt="Admin">
-                    <div>
-                        <div style="font-weight: 600; font-size: 0.95rem;">Admin User</div>
-                        <small style="opacity: 0.8; font-size: 0.8rem;">System Manager</small>
-                    </div>
-                </div>
-            </div>
+			<div class="sidebar-user">
+				<div class="d-flex align-items-center">
+					<img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
+					<div>
+						<div style="font-weight: 600;">Admin User</div>
+						<small style="opacity: 0.8;">System Manager</small>
+					</div>
+				</div>
+			</div>
+                    
+			<ul class="sidebar-nav">
+				<li class="sidebar-header">Menu Chính</li>
+				<!-- Chỉ hiển thị nếu là Staff -->
+                                <c:if test="${sessionScope.user.roleId == 2}">                                             
+					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+					<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+				</c:if> 
 
-            <ul class="sidebar-nav">
-                <li class="sidebar-header">Menu Chính</li>
-
-                <!-- Chỉ hiển thị nếu là Staff -->
-                <% if (role == 2) { %>
-                <li><a href="productManagement.jsp" class="sidebar-link">
-                    <i class="fas fa-list"></i>Quản Lý Sản Phẩm
-                </a></li>
-                <% } %>
-
-                <!-- Chỉ hiển thị nếu là Manager -->
-                <% if (role == 3) { %>
-                <li><a href="management.jsp" class="sidebar-link">
-                    <i class="fas fa-chart-bar"></i>Thống Kê
-                </a></li>
-                <li><a href="productmanagement?action=view" class="sidebar-link">
-                    <i class="fas fa-list"></i>Quản Lý Sản Phẩm
-                </a></li>
-                <li><a href="categoryManagement.jsp" class="sidebar-link">
-                    <i class="fas fa-boxes"></i>Quản Lý Danh Mục
-                </a></li>
-                <li><a href="storagemanagement?action=view" class="sidebar-link">
-                    <i class="fas fa-warehouse"></i>Quản Lý Kho Hàng
-                </a></li>
-                <li><a href="orderManagement.jsp" class="sidebar-link">
-                    <i class="fas fa-shopping-cart"></i>Quản Lý Đơn Hàng
-                </a></li>
-                <li><a href="invoiceManagement.jsp" class="sidebar-link">
-                    <i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn
-                </a></li>
-
-                <li class="sidebar-header">Hệ Thống</li>
-                <li><a href="userManagement.jsp" class="sidebar-link active">
-                    <i class="fas fa-user-shield"></i>Quản Lý Người Dùng
-                </a></li>
-                <li><a href="feedbackManagement.jsp" class="sidebar-link">
-                    <i class="fas fa-comments"></i>Quản Lý Phản Hồi
-                </a></li>
-                <li><a href="notificationManagement.jsp" class="sidebar-link">
-                    <i class="fas fa-bell"></i>Thông Báo
-                    <span class="badge bg-danger ms-auto">4</span>
-                </a></li>
-                <% } %>
-
-                <!-- Chỉ hiển thị nếu là Shipper -->
-                <% if (role == 4) { %>
-                <li><a href="orderManagement.jsp" class="sidebar-link">
-                    <i class="fas fa-shopping-cart"></i>Quản Lý Đơn Hàng
-                </a></li>
-                <% } %>
-            </ul>
-        </nav>
+				<!-- Chỉ hiển thị nếu là Manager -->
+				<c:if test="${sessionScope.user.roleId == 3}"> 
+					<li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
+					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+					<li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+					<li><a href="invoiceManagement.jsp" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
+					<li class="sidebar-header">Hệ Thống</li>
+					<li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+					<li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
+					<li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
+				</c:if> 
+                    
+				<!-- Chỉ hiển thị nếu là Shipper -->                        
+				<c:if test="${sessionScope.user.roleId == 4}">
+					<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+				</c:if>                   
+			</ul>
+		</nav>
 
         <!-- ===== MAIN CONTENT AREA ===== -->
         <% if (role != null && (role == 2 || role == 3)) { %>

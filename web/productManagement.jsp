@@ -15,12 +15,12 @@
         <style>
             /* ===== SHARED STYLES (Same as index.jsp) ===== */
             :root {
-                --primary-red: #dc3545;
-                --primary-red-dark: #b02a37;
-                --secondary-gray: #6c757d;
-                --dark-gray: #343a40;
-                --light-gray: #f8f9fa;
-                --sidebar-width: 280px;
+		--primary-red: #c44d58;
+		--primary-red-dark: #a03d4a;
+		--secondary-gray: #6c757d;
+		--dark-gray: #343a40;
+		--light-gray: #f8f9fa;
+		--sidebar-width: 280px;
             }
             body {
                 font-family: 'Inter', sans-serif;
@@ -239,81 +239,52 @@
 
     <body>
         <div class="wrapper">
-            <% 
-            // Lấy thông tin vai trò từ session
-            Integer role = (Integer) request.getSession().getAttribute("role"); 
-            %>
-            <!-- Kiểm tra vai trò người dùng và hiển thị các chức năng tương ứng -->
-            <% if (role != null) { %>
-            <% if (role == 1) { %>  <!-- Khách hàng (Customer) -->
-            <div class="content-area">
-                <!-- Các chức năng của khách hàng -->
-            </div>
-            <% } else if (role == 2) { %>  <!-- Nhân viên (Staff) -->
-            <div class="content-area">
+		<!-- ===== SIDEBAR NAVIGATION ===== -->
+		<nav class="sidebar">
+			<a href="home" class="sidebar-brand" style="font-size:27px ; color: #d4d4d4">
+				<i class="fas fa-seedling me-2" style="color: #dc3545;" ></i>Menu quản lý
+			</a>
 
-                <!-- Các chức năng của nhân viên -->
-            </div>
-            <% } else if (role == 3) { %>  <!-- Quản lý (Manager) -->
-            <div class="content-area">
+			<div class="sidebar-user">
+				<div class="d-flex align-items-center">
+					<img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
+					<div>
+						<div style="font-weight: 600;">Admin User</div>
+						<small style="opacity: 0.8;">System Manager</small>
+					</div>
+				</div>
+			</div>
+                    
+			<ul class="sidebar-nav">
+				<li class="sidebar-header">Menu Chính</li>
+				<!-- Chỉ hiển thị nếu là Staff -->
+				<c:if test="${sessionScope.user.roleId == 2}">                                             
+					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+					<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+				</c:if> 
 
-                <!-- Các chức năng của quản lý -->
-            </div>
-            <% } else if (role == 4) { %>  <!-- Người giao hàng (Shipper) -->
-            <div class="content-area">
-
-                <!-- Các chức năng của người giao hàng -->
-            </div>
-            <% } else { %>
-            <h2>Vai trò không hợp lệ</h2>
-            <% } %>
-            <% } else { %>
-            <h2>Vui lòng đăng nhập để tiếp tục</h2>
-            <% } %>
-            <!-- ===== SIDEBAR NAVIGATION (Same as index.jsp) ===== -->
-            <nav class="sidebar">
-                <a href="home" class="sidebar-brand">
-                    <i class="fas fa-seedling me-2"></i>Quản lí
-                </a>
-
-                <div class="sidebar-user">
-                    <div class="d-flex align-items-center">
-                        <img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
-                        <div>
-                            <div style="font-weight: 600;">Admin User</div>
-                            <small style="opacity: 0.8;">System Manager</small>
-                        </div>
-                    </div>
-                </div>
-
-                <ul class="sidebar-nav">
-                    <li class="sidebar-header">Menu Chính</li>
-                    <!-- Chỉ hiển thị nếu là Manager hoặc Staff -->
-                    <% if (role == 2) { %>
-                    <li><a href="productManagement.jsp" class="sidebar-link"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
-                        <% } %>
-
-                    <!-- Chỉ hiển thị nếu là Manager -->
-                    <% if (role == 3) { %>
-                    <li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
-                    <li><a href="productManagement.jsp" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
-                    <li><a href="categoryManagement.jsp" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
-                    <li><a href="storageManagement.jsp" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-                    <li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-                    <li><a href="invoiceManagement.jsp" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
-
-                    <li class="sidebar-header">Hệ Thống</li>
-                    <li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-                    <li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
-                    <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
-                        <% } %>
-
-                    <!-- Chỉ hiển thị nếu là Shipper -->
-                    <% if (role == 4) { %>
-                    <li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-                        <% } %>
-                </ul>
-            </nav>
+				<!-- Chỉ hiển thị nếu là Manager -->
+				<c:if test="${sessionScope.user.roleId == 3}"> 
+					<li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
+					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+					<li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+					<li><a href="invoiceManagement.jsp" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
+					<li class="sidebar-header">Hệ Thống</li>
+					<li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+					<li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
+					<li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
+				</c:if> 
+                    
+				<!-- Chỉ hiển thị nếu là Shipper -->                        
+				<c:if test="${sessionScope.user.roleId == 4}">
+					<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+				</c:if>                   
+			</ul>
+		</nav>
 
             <!-- ===== MAIN CONTENT AREA ===== -->
             <div class="main-content">
