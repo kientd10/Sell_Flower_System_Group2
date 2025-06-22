@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import dal.DBcontext;
+import dal.OrderDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -81,52 +82,70 @@ public class PlaceOder extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    HttpSession session = request.getSession();
-    Integer userId = (Integer) session.getAttribute("user_id");
-    if (userId == null) {
-        userId = 1; // Tạm thời giả lập nếu chưa đăng nhập
-    }
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId == null) {
+            userId = 1; // Tạm thời giả lập nếu chưa đăng nhập
+        }
 
-    String receiverName = request.getParameter("receiverName");
-    String receiverPhone = request.getParameter("receiverPhone");
-    String receiverAddress = request.getParameter("receiverAddress");
-    String deliveryTime = request.getParameter("deliveryTime");
+        String receiverName = request.getParameter("receiverName");
+        String receiverPhone = request.getParameter("receiverPhone");
+        String receiverAddress = request.getParameter("receiverAddress");
+        String deliveryTime = request.getParameter("deliveryTime");
 
-    session.setAttribute("fullname", receiverName);
+        session.setAttribute("fullname", receiverName);
 
-    List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
-    List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
+        List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
+        List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
 
-    double total = 0.0;
-    if (selectedCartIds != null && fullCart != null) {
-        for (ShoppingCart item : fullCart) {
-            String cartIdStr = String.valueOf(item.getCartId());
+        double total = 0.0;
+        if (selectedCartIds != null && fullCart != null) {
+            for (ShoppingCart item : fullCart) {
+                String cartIdStr = String.valueOf(item.getCartId());
 
-            if (selectedCartIds.contains(cartIdStr)) {
-                if (item.getBouquetTemplate() == null) {
-                    System.out.println("⚠ BouquetTemplate bị null với cartId: " + item.getCartId());
-                    continue;
+                if (selectedCartIds.contains(cartIdStr)) {
+                    if (item.getBouquetTemplate() == null) {
+                        System.out.println("⚠ BouquetTemplate bị null với cartId: " + item.getCartId());
+                        continue;
+                    }
+
+                    double price = item.getBouquetTemplate().getBasePrice();
+                    int quantity = item.getQuantity();
+
+                    System.out.println("✅ cartId: " + item.getCartId() + " | Price: " + price + " | Qty: " + quantity);
+                    total += price * quantity;
                 }
-
-                double price = item.getBouquetTemplate().getBasePrice();
-                int quantity = item.getQuantity();
-
-                System.out.println("✅ cartId: " + item.getCartId() + " | Price: " + price + " | Qty: " + quantity);
-                total += price * quantity;
             }
         }
+
+        System.out.println("===> Tổng tiền (total): " + total);
+
+        String amount = String.format("%.2f", total);
+        session.setAttribute("amount", amount);
+        System.out.println(">> Chuỗi amount: " + amount);
+        List<ShoppingCart> selectedItems = new ArrayList<>();
+        for (ShoppingCart item : fullCart) {
+            if (selectedCartIds.contains(String.valueOf(item.getCartId()))) {
+                selectedItems.add(item);
+            }
+        }
+
+// ✅ Lưu đơn hàng
+        OrderDAO dao = new OrderDAO();
+        int orderId = dao.insertOrder(userId, selectedItems, total);
+        System.out.println("===> Đã tạo đơn hàng với ID: " + orderId);
+
+// ✅ Xóa giỏ hàng khỏi session sau khi lưu đơn
+        session.removeAttribute("cart");
+        session.removeAttribute("selectedCartIds");
+
+// ✅ Điều hướng đến bước thanh toán tiếp theo
+        session.setAttribute("orderId", orderId); // Nếu cần
+ 
+        // ✅ CHUYỂN SAU KHI SET XONG
+        response.sendRedirect("createpaymentservlet");
     }
-
-    System.out.println("===> Tổng tiền (total): " + total);
-
-    String amount = String.format("%.2f", total);
-    session.setAttribute("amount", amount);
-    System.out.println(">> Chuỗi amount: " + amount);
-
-    // ✅ CHUYỂN SAU KHI SET XONG
-    response.sendRedirect("createpaymentservlet");
-}
 }
