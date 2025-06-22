@@ -28,8 +28,8 @@
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
     </head><!--/head-->
 
-<body>
-    
+    <body>
+
         <header id="header"><!--header-->
             <div class="header_top"><!--header_top-->
                 <div class="container">
@@ -107,7 +107,7 @@
                 </div>
             </div><!--/header-bottom-->        
         </header><!--/header-->   
-        
+
         <section>
             <div class="container" style="margin-bottom: 40px" >
                 <div class="checkout-information">
@@ -125,15 +125,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="province">Tỉnh / Thành phố:</label>
-                                    <select id="province" class="form-control" required></select>
+                                    <select id="province" name="province" class="form-control" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label for="district">Quận / Huyện:</label>
-                                    <select id="district" class="form-control" required></select>
+                                    <select id="district" name="district" class="form-control" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label for="ward">Phường / Xã:</label>
-                                    <select id="ward" class="form-control" required></select>
+                                    <select id="ward" name="ward" class="form-control" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label for="receiverAddress">Địa chỉ cụ thể (Số nhà, tên đường...):</label>
@@ -186,7 +186,7 @@
                 </div>
             </div>
         </section>
-               
+
         <footer id="footer"><!--Footer-->
             <div class="footer-widget">
                 <div class="container">
@@ -236,116 +236,103 @@
             </div>
         </footer><!--/Footer-->
 
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.scrollUp.min.js"></script>
-    <script src="js/price-range.js"></script>
-    <script src="js/jquery.prettyPhoto.js"></script>
-    <script src="js/main.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery.scrollUp.min.js"></script>
+        <script src="js/price-range.js"></script>
+        <script src="js/jquery.prettyPhoto.js"></script>
+        <script src="js/main.js"></script>
 
-    <c:if test="${sessionScope.user != null}">
-        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="width: 300px; z-index: 500000">
-            <div class="toast-header">
-                <strong class="mr-auto">Thông báo</strong>
-                <small>...</small>
-                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+        <c:if test="${sessionScope.user != null}">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="width: 300px; z-index: 500000">
+                <div class="toast-header">
+                    <strong class="mr-auto">Thông báo</strong>
+                    <small>...</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    Chào mừng bạn đến với trang giỏ hàng
+                </div>
             </div>
-            <div class="toast-body">
-                Chào mừng bạn đến với trang giỏ hàng
-            </div>
-        </div>
+            <script>
+                                $(document).ready(function () {
+                                    $('.toast').toast({
+                                        delay: 3500
+                                    });
+                                    $('.toast').toast('show');
+                                });
+            </script>
+            <style>
+                .toast {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                }
+            </style>
+        </c:if>
+
         <script>
-            $(document).ready(function () {
-                $('.toast').toast({
-                    delay: 3500
-                });
-                $('.toast').toast('show');
-            });
-        </script>
-        <style>
-            .toast {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
+    let treeData = {};
+    fetch('json/tree.json')
+        .then(res => res.json())
+        .then(data => {
+            treeData = data;
+            const provinceSelect = document.getElementById('province');
+            provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>';
+            for (const [code, province] of Object.entries(data)) {
+                const option = document.createElement('option');
+                option.value = province.name;       // Gửi tên tỉnh về server
+                option.text = province.name;
+                option.dataset.code = code;         // Lưu code để truy dữ liệu
+                provinceSelect.appendChild(option);
             }
-        </style>
-    </c:if>
-        
-               <script>
-               let treeData = {};
-               fetch('json/tree.json')
-                       .then(res => res.json())
-                       .then(data => {
-                           treeData = data;
-                           const provinceSelect = document.getElementById('province');
-                           provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>';
-                           for (const [code, province] of Object.entries(data)) {
-                               const option = document.createElement('option');
-                               option.value = code;
-                               option.text = province.name;
-                               provinceSelect.appendChild(option);
-                           }
-                       });
+        });
 
-               document.getElementById('province').addEventListener('change', function () {
-                   const provinceCode = this.value;
-                   const districtSelect = document.getElementById('district');
-                   const wardSelect = document.getElementById('ward');
-                   districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-                   wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+    document.getElementById('province').addEventListener('change', function () {
+        const selectedProvince = this.options[this.selectedIndex];
+        const provinceCode = selectedProvince.dataset.code; // Lấy lại code gốc
 
-                   if (provinceCode && treeData[provinceCode]) {
-                       const districts = treeData[provinceCode]['quan-huyen'];
-                       for (const [code, district] of Object.entries(districts)) {
-                           const option = document.createElement('option');
-                           option.value = code;
-                           option.text = district.name;
-                           districtSelect.appendChild(option);
-                       }
-                   }
-               });
+        const districtSelect = document.getElementById('district');
+        const wardSelect = document.getElementById('ward');
+        districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
 
-               document.getElementById('district').addEventListener('change', function () {
-                   const provinceCode = document.getElementById('province').value;
-                   const districtCode = this.value;
-                   const wardSelect = document.getElementById('ward');
-                   wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+        if (provinceCode && treeData[provinceCode]) {
+            const districts = treeData[provinceCode]['quan-huyen'];
+            for (const [code, district] of Object.entries(districts)) {
+                const option = document.createElement('option');
+                option.value = district.name;       // Gửi tên quận/huyện
+                option.text = district.name;
+                option.dataset.code = code;         // Lưu lại code để tra phường
+                districtSelect.appendChild(option);
+            }
+        }
+    });
 
-                   if (provinceCode && districtCode && treeData[provinceCode]['quan-huyen'][districtCode]) {
-                       const wards = treeData[provinceCode]['quan-huyen'][districtCode]['xa-phuong'];
-                       for (const [code, ward] of Object.entries(wards)) {
-                           const option = document.createElement('option');
-                           option.value = code;
-                           option.text = ward.name;
-                           wardSelect.appendChild(option);
-                       }
-                   }
-               });
-                </script> 
+    document.getElementById('district').addEventListener('change', function () {
+        const provinceSelect = document.getElementById('province');
+        const selectedProvince = provinceSelect.options[provinceSelect.selectedIndex];
+        const provinceCode = selectedProvince.dataset.code;
 
-                <script>
-                    document.querySelector('form').addEventListener('submit', function (e) {
-                        const deliveryInput = document.getElementById('deliveryTime');
-                        const deliveryTime = new Date(deliveryInput.value);
-                        const now = new Date();
+        const selectedDistrict = this.options[this.selectedIndex];
+        const districtCode = selectedDistrict.dataset.code;
 
-                        if (deliveryTime < now) {
-                            alert("❗ Vui lòng kiểm tra lại: Thời gian giao hàng không được ở quá khứ.");
-                            e.preventDefault(); // Ngăn form submit
-                            return;
-                        }
+        const wardSelect = document.getElementById('ward');
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
 
-                        const phone = document.getElementById("receiverPhone").value;
-                        const phoneRegex = /^0\d{9}$/;
-                        if (!phoneRegex.test(phone)) {
-                            alert("❗ Số điện thoại không hợp lệ! Phải bắt đầu bằng 0 và có đúng 10 chữ số.");
-                            e.preventDefault(); // Ngăn submit
-                            return;
-                        }
-                    });
-                </script>
-        
-</body>
+        if (provinceCode && districtCode && treeData[provinceCode]['quan-huyen'][districtCode]) {
+            const wards = treeData[provinceCode]['quan-huyen'][districtCode]['xa-phuong'];
+            for (const [code, ward] of Object.entries(wards)) {
+                const option = document.createElement('option');
+                option.value = ward.name;           // Gửi tên phường/xã
+                option.text = ward.name;
+                wardSelect.appendChild(option);
+            }
+        }
+    });
+</script>
+
+    </body>
 </html>

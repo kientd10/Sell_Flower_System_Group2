@@ -91,16 +91,29 @@ public class PlaceOder extends HttpServlet {
             userId = 1; // Tạm thời giả lập nếu chưa đăng nhập
         }
 
-        String receiverName = request.getParameter("receiverName");
-        String receiverPhone = request.getParameter("receiverPhone");
-        String receiverAddress = request.getParameter("receiverAddress");
-        String deliveryTime = request.getParameter("deliveryTime");
+String receiverName = request.getParameter("receiverName");
+String receiverPhone = request.getParameter("receiverPhone");
+String receiverAddress = request.getParameter("receiverAddress");
+String deliveryTime = request.getParameter("deliveryTime");
+// ❗️ THÊM dòng này để tránh lỗi
+String province = request.getParameter("province"); 
 
-        session.setAttribute("fullname", receiverName);
+String district = request.getParameter("district");
+String ward = request.getParameter("ward");
 
-        List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
-        List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
+String fullDeliveryAddress = receiverAddress + ", " + ward + ", " + district + ", " + province;
+System.out.println("📦 fullDeliveryAddress = " + fullDeliveryAddress);
 
+// Lưu vào session nếu cần dùng ở trang tiếp theo
+session.setAttribute("receiverName", receiverName);
+session.setAttribute("receiverPhone", receiverPhone);
+session.setAttribute("receiverAddress", fullDeliveryAddress);  // ✅ địa chỉ đầy đủ
+session.setAttribute("deliveryTime", deliveryTime);
+session.setAttribute("fullname", receiverName);
+
+// Lấy giỏ hàng từ session
+List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
+List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
         double total = 0.0;
         if (selectedCartIds != null && fullCart != null) {
             for (ShoppingCart item : fullCart) {
@@ -135,7 +148,7 @@ public class PlaceOder extends HttpServlet {
 
 // ✅ Lưu đơn hàng
         OrderDAO dao = new OrderDAO();
-        int orderId = dao.insertOrder(userId, selectedItems, total);
+int orderId = dao.insertOrder(userId, selectedItems, total, fullDeliveryAddress, receiverPhone);
         System.out.println("===> Đã tạo đơn hàng với ID: " + orderId);
 
 // ✅ Xóa giỏ hàng khỏi session sau khi lưu đơn
@@ -144,7 +157,7 @@ public class PlaceOder extends HttpServlet {
 
 // ✅ Điều hướng đến bước thanh toán tiếp theo
         session.setAttribute("orderId", orderId); // Nếu cần
- 
+
         // ✅ CHUYỂN SAU KHI SET XONG
         response.sendRedirect("createpaymentservlet");
     }
