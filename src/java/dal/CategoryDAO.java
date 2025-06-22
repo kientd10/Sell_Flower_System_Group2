@@ -40,6 +40,74 @@ public class CategoryDAO {
         }
         return categories;
     }
+    
+        // Create a new category
+    public boolean createCategory(Category category) throws Exception {
+    String sql = "INSERT INTO categories (category_name) VALUES (?)";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, category.getCategoryName());
+        return stmt.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw e;
+    }
+    }
+    
+        // Read category by ID
+    public Category getCategoryById(int categoryId) throws Exception {
+        String sql = "SELECT * FROM categories WHERE category_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Category category = new Category();
+                    category.setCategoryId(rs.getInt("category_id"));
+                    category.setCategoryName(rs.getString("category_name"));
+                    return category;
+                }
+            }
+        }
+        return null;
+    }
+    
+        // Update a category
+    public boolean updateCategory(Category category) throws Exception {
+    String sql = "UPDATE categories SET category_name = ? WHERE category_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, category.getCategoryName());
+        stmt.setInt(2, category.getCategoryId());
+        return stmt.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw e;
+    }
+    }
+    
+        // Delete a category
+    public boolean deleteCategory(int categoryId) throws Exception {
+    if (isCategoryInUse(categoryId)) {
+        throw new Exception("Category is used in bouquet templates!");
+    }
+    String sql = "DELETE FROM categories WHERE category_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, categoryId);
+        return stmt.executeUpdate() > 0;
+    }
+    }
+    
+        // Check if category is used in bouquet_templates
+    public boolean isCategoryInUse(int categoryId) throws Exception {
+        String sql = "SELECT COUNT(*) FROM bouquet_templates WHERE category_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
         CategoryDAO dao = new CategoryDAO();
