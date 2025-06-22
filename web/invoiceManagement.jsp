@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -349,7 +350,6 @@
 										<th>Mã Hóa Đơn</th>
 										<th>Khách Hàng</th>
 										<th>Ngày Tạo</th>
-										<th>Hạn Thanh Toán</th>
 										<th>Tổng Tiền</th>
 										<th>Trạng Thái</th>
 										<th>Phương Thức</th>
@@ -357,40 +357,35 @@
 									</tr>
 								</thead>
 								<tbody>
+                                                                <form>
+                                                                    
+                                                                    <c:forEach var="list" items="${listInvoice}">
 									<!-- Invoice 1: Paid -->
 									<tr>
 										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="1"></td>
 										<td>
 											<div>
-												<strong>HD-2024-001</strong>
-												<div class="text-muted small">Đơn hàng: #ORD-2024-001</div>
+												<strong></strong>
+												<div class="text-muted small">Đơn hàng: </div>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong>Nguyễn Thị Mai</strong>
-												<div class="text-muted small">mai.nguyen@email.com</div>
-												<div class="text-muted small">0901234567</div>
+												<strong></strong>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong>15/01/2024</strong>
-												<div class="text-muted small">09:30 AM</div>
+												<strong></strong>
 											</div>
 										</td>
+										
 										<td>
-											<div>
-												<strong>22/01/2024</strong>
-												<div class="text-success small">Còn 7 ngày</div>
-											</div>
+											<div class="invoice-amount paid"></div>
+											<div class="text-muted small"></div>
 										</td>
-										<td>
-											<div class="invoice-amount paid">1.200.000₫</div>
-											<div class="text-muted small">Đã thanh toán</div>
-										</td>
-										<td><span class="invoice-status paid">Đã Thanh Toán</span></td>
-										<td><span class="payment-method card">Thẻ Tín Dụng</span></td>
+										<td><span class="invoice-status paid"></span></td>
+										<td><span class="payment-method card"></span></td>
 										<td>
 											<div class="invoice-actions">
 												<a href="invoice-details.jsp?id=1" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
@@ -408,7 +403,8 @@
 											</div>
 										</td>
 									</tr>
-
+                                                                    </c:forEach>
+                                                                        </form>
 									
 
 						<!-- ===== BULK ACTIONS ===== -->
