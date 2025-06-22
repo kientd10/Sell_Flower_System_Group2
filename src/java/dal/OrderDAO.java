@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package dal;
 
 /**
@@ -20,8 +19,8 @@ import java.lang.*;
 import java.sql.Connection;
 import java.sql.Statement;
 
-
 public class OrderDAO {
+
     private Connection conn;
 
     public OrderDAO() {
@@ -36,9 +35,9 @@ public class OrderDAO {
     public double TotalPrice(int user_id) {
         double total = 0;
         String sql = "SELECT d.quantity, bt.base_price "
-                   + "FROM shopping_cart d "
-                   + "JOIN bouquet_templates bt ON d.template_id = bt.template_id "
-                   + "WHERE d.user_id = ?";
+                + "FROM shopping_cart d "
+                + "JOIN bouquet_templates bt ON d.template_id = bt.template_id "
+                + "WHERE d.user_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, user_id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -58,11 +57,11 @@ public class OrderDAO {
     public List<BouquetTemplate> getPurchasedProductsByUser(int userId) {
         List<BouquetTemplate> list = new ArrayList<>();
         String sql = "SELECT DISTINCT od.template_id, bt.template_name "
-                   + "FROM orders o "
-                   + "JOIN order_status s ON o.status_id = s.status_id "
-                   + "JOIN order_details od ON o.order_id = od.order_id "
-                   + "JOIN bouquet_templates bt ON od.template_id = bt.template_id "
-                   + "WHERE o.customer_id = ? AND s.status_name = 'Delivered'";
+                + "FROM orders o "
+                + "JOIN order_status s ON o.status_id = s.status_id "
+                + "JOIN order_details od ON o.order_id = od.order_id "
+                + "JOIN bouquet_templates bt ON od.template_id = bt.template_id "
+                + "WHERE o.customer_id = ? AND s.status_name = 'Delivered'";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -78,65 +77,66 @@ public class OrderDAO {
         return list;
     }
 
-    // Thêm đơn hàng mới và chi tiết sản phẩm
-public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmount) {
-    int orderId = -1;
-    try {
-        conn.setAutoCommit(false);
-
-        // 1. Thêm đơn hàng vào bảng orders (SỬA: total_price → total_amount)
-        String insertOrderSQL = "INSERT INTO orders (customer_id, total_amount, status_id, order_date, delivery_address, delivery_phone) " +
-                                "VALUES (?, ?, ?, NOW(), ?, ?)";
-
-        try (PreparedStatement ps = conn.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, userId);
-            ps.setDouble(2, totalAmount);
-            ps.setInt(3, 2); // status_id = 2 → "Paid"
-
-            // Bạn cần truyền địa chỉ và số điện thoại thật, ví dụ tạm:
-            ps.setString(4, "Địa chỉ mặc định");
-            ps.setString(5, "0123456789");
-
-            ps.executeUpdate();
-
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                orderId = rs.getInt(1);
-            }
-        }
-
-        // 2. Thêm chi tiết sản phẩm vào bảng order_details (SỬA: thêm unit_price và subtotal)
-        String insertDetailSQL = "INSERT INTO order_details (order_id, template_id, quantity, unit_price, subtotal) " +
-                                 "VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(insertDetailSQL)) {
-            for (ShoppingCart item : cartItems) {
-                ps.setInt(1, orderId);
-                ps.setInt(2, item.getTemplateId());
-                ps.setInt(3, item.getQuantity());
-                ps.setDouble(4, item.getPrice()); // unit_price
-                ps.setDouble(5, item.getQuantity() * item.getPrice()); // subtotal
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        }
-
-        conn.commit();
-    } catch (Exception e) {
-        e.printStackTrace();
+    public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmount, String deliveryAddress, String deliveryPhone) {
+        int orderId = -1;
+        Connection conn = null;
         try {
-            conn.rollback();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    } finally {
-        try {
-            conn.setAutoCommit(true);
+            conn = new DBcontext().getConnection();
+            conn.setAutoCommit(false);
+
+            // 1. Thêm vào bảng orders
+            String orderCode = "ORD" + System.currentTimeMillis();
+            String insertOrderSQL = "INSERT INTO orders (order_code, customer_id, total_amount, status_id, delivery_address, delivery_phone) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, orderCode);
+                ps.setInt(2, userId);
+                ps.setDouble(3, totalAmount);
+                ps.setInt(4, 2); // status_id = 2 = đã thanh toán
+                ps.setString(5, deliveryAddress);
+                ps.setString(6, deliveryPhone);
+                ps.executeUpdate();
+
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    orderId = rs.getInt(1);
+                }
+            }
+
+            // 2. Thêm vào order_details
+            String insertDetailSQL = "INSERT INTO order_details (order_id, template_id, quantity, unit_price, subtotal) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(insertDetailSQL)) {
+                for (ShoppingCart item : cartItems) {
+                    ps.setInt(1, orderId);
+                    ps.setInt(2, item.getTemplateId());
+                    ps.setInt(3, item.getQuantity());
+                    ps.setDouble(4, item.getPrice());
+                    ps.setDouble(5, item.getQuantity() * item.getPrice());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+
+            conn.commit();
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return orderId;
     }
-    return orderId;
-}
 
     public List<Order> getOrdersByUserId(int userId) throws Exception {
         List<Order> orders = new ArrayList<>();
@@ -173,9 +173,15 @@ public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmo
             }
         } finally {
             // Đóng kết nối
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            if (conn != null) conn.close(); // hoặc DBcontext().closeConnection(conn);
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (conn != null) {
+                conn.close(); // hoặc DBcontext().closeConnection(conn);
+            }
         }
 
         return orders;
@@ -209,11 +215,15 @@ public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmo
             }
 
         } finally {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
         }
 
         return items;
     }
-    
+
 }

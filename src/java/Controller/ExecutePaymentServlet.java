@@ -69,11 +69,13 @@ public class ExecutePaymentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("==> Servlet đã được gọi");
+        System.out.println("==> ExecutePaymentServlet được gọi");
+
         try {
             String paymentId = request.getParameter("paymentId");
             String payerId = request.getParameter("PayerID");
 
+            // PayPal API context
             Map<String, String> configMap = new HashMap<>();
             configMap.put("mode", "sandbox");
 
@@ -90,26 +92,24 @@ public class ExecutePaymentServlet extends HttpServlet {
             Payment executedPayment = payment.execute(apiContext, paymentExecute);
 
             if ("approved".equalsIgnoreCase(executedPayment.getState())) {
-                // Lấy thông tin thanh toán từ PayPal
+                // Lấy thông tin thanh toán
                 String transactionId = executedPayment.getTransactions().get(0).getRelatedResources().get(0).getSale().getId();
                 double amount = Double.parseDouble(executedPayment.getTransactions().get(0).getAmount().getTotal());
 
-                // Lấy user & cart từ session
+                // Lấy user và orderId từ session
                 HttpSession session = request.getSession();
-                Model.User user = (Model.User) session.getAttribute("user"); // thay đổi nếu bạn dùng tên khác
+                Model.User user = (Model.User) session.getAttribute("user");
                 int userId = user.getUserId();
-                // 👇 THÊM DÒNG NÀY để kiểm tra giỏ hàng còn hay không
-Object cartObj = session.getAttribute("cart");
-System.out.println("==> cart trong session: " + cartObj);
-                List<Model.ShoppingCart> cartItems = (List<Model.ShoppingCart>) session.getAttribute("cart");
-System.out.println("==> cartItems size: " + (cartItems != null ? cartItems.size() : "null"));
 
-                // Tạo đơn hàng
-                dal.OrderDAO orderDao = new dal.OrderDAO();
-                int orderId = orderDao.insertOrder(userId, cartItems, amount);
-                System.out.println("==> Đã insert đơn hàng với orderId: " + orderId);
+                Integer orderId = (Integer) session.getAttribute("orderId");
 
-                // Lưu giao dịch PayPal vào bảng payments
+                if (orderId == null) {
+                    System.out.println("❌ orderId bị null trong session!");
+                    request.getRequestDispatcher("cancel.jsp").forward(request, response);
+                    return;
+                }
+
+                // ✅ Chỉ insert thanh toán (không insert lại đơn hàng)
                 dal.PaymentDAO paymentDao = new dal.PaymentDAO();
                 paymentDao.insertPaypalPayment(orderId, transactionId, amount, "Success");
                 System.out.println("==> Đã insert thanh toán thành công vào bảng payments");
@@ -132,7 +132,6 @@ System.out.println("==> cartItems size: " + (cartItems != null ? cartItems.size(
             response.getWriter().println("Lỗi xác nhận thanh toán: " + e.getMessage());
         }
     }
-
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -144,17 +143,11 @@ System.out.println("==> cartItems size: " + (cartItems != null ? cartItems.size(
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Xử lý xác nhận thanh toán PayPal và ghi nhận giao dịch";
+    }
 }
