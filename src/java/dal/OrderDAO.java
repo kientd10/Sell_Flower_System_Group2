@@ -79,57 +79,64 @@ public class OrderDAO {
     }
 
     // Thêm đơn hàng mới và chi tiết sản phẩm
-    public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmount) {
-        int orderId = -1;
-        try {
-            conn.setAutoCommit(false);
+public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmount) {
+    int orderId = -1;
+    try {
+        conn.setAutoCommit(false);
 
-            // 1. Thêm đơn hàng vào bảng orders
-            String insertOrderSQL = "INSERT INTO orders (customer_id, total_price, status_id, order_date) "
-                                  + "VALUES (?, ?, ?, NOW())";
-            try (PreparedStatement ps = conn.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setInt(1, userId);
-                ps.setDouble(2, totalAmount);
-                ps.setInt(3, 2); // status_id = 2 → "Paid"
-                ps.executeUpdate();
+        // 1. Thêm đơn hàng vào bảng orders (SỬA: total_price → total_amount)
+        String insertOrderSQL = "INSERT INTO orders (customer_id, total_amount, status_id, order_date, delivery_address, delivery_phone) " +
+                                "VALUES (?, ?, ?, NOW(), ?, ?)";
 
-                ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    orderId = rs.getInt(1);
-                }
-            }
+        try (PreparedStatement ps = conn.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, userId);
+            ps.setDouble(2, totalAmount);
+            ps.setInt(3, 2); // status_id = 2 → "Paid"
 
-            // 2. Thêm chi tiết sản phẩm vào bảng order_details
-            String insertDetailSQL = "INSERT INTO order_details (order_id, template_id, quantity, price) "
-                                   + "VALUES (?, ?, ?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(insertDetailSQL)) {
-                for (ShoppingCart item : cartItems) {
-                    ps.setInt(1, orderId);
-                    ps.setInt(2, item.getTemplateId());
-                    ps.setInt(3, item.getQuantity());
-                    ps.setDouble(4, item.getPrice());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-            }
+            // Bạn cần truyền địa chỉ và số điện thoại thật, ví dụ tạm:
+            ps.setString(4, "Địa chỉ mặc định");
+            ps.setString(5, "0123456789");
 
-            conn.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                conn.rollback();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        } finally {
-            try {
-                conn.setAutoCommit(true);
-            } catch (Exception e) {
-                e.printStackTrace();
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                orderId = rs.getInt(1);
             }
         }
-        return orderId;
+
+        // 2. Thêm chi tiết sản phẩm vào bảng order_details (SỬA: thêm unit_price và subtotal)
+        String insertDetailSQL = "INSERT INTO order_details (order_id, template_id, quantity, unit_price, subtotal) " +
+                                 "VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(insertDetailSQL)) {
+            for (ShoppingCart item : cartItems) {
+                ps.setInt(1, orderId);
+                ps.setInt(2, item.getTemplateId());
+                ps.setInt(3, item.getQuantity());
+                ps.setDouble(4, item.getPrice()); // unit_price
+                ps.setDouble(5, item.getQuantity() * item.getPrice()); // subtotal
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+
+        conn.commit();
+    } catch (Exception e) {
+        e.printStackTrace();
+        try {
+            conn.rollback();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    } finally {
+        try {
+            conn.setAutoCommit(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    return orderId;
+}
 
     public List<Order> getOrdersByUserId(int userId) throws Exception {
         List<Order> orders = new ArrayList<>();

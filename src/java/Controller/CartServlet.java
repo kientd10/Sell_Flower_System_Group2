@@ -170,9 +170,17 @@ public class CartServlet extends HttpServlet {
         }
 
         session.setAttribute("selectedCartIds", selectedCartIds);
-        List<ShoppingCart> cart_items = c.getCartItemsByUserId(user_id);
-        session.setAttribute("cart", cart_items);
-        response.sendRedirect("checkout.jsp");
+        List<ShoppingCart> allCartItems = c.getCartItemsByUserId(user_id);
+List<ShoppingCart> selectedItems = new ArrayList<>();
+
+for (ShoppingCart item : allCartItems) {
+    if (selectedCartIds.contains(String.valueOf(item.getCartId()))) {
+        selectedItems.add(item);
+    }
+}
+
+session.setAttribute("cart", selectedItems); // ✅ chỉ lưu sản phẩm được chọn
+response.sendRedirect("checkout.jsp");
     }
 
     /**
