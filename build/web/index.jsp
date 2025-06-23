@@ -446,6 +446,6 @@
                     right: 20px;
                 }
             </style>
-        </c:if>>
+        </c:if>
     </body>
 </html>

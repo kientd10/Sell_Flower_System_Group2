@@ -1,13 +1,7 @@
-<%-- 
-    Document   : invoiceManagement
-    Created on : Jun 16, 2025, 9:46:37 AM
-    Author     : ADMIN
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,14 +14,14 @@
 	
 	<style>
 		/* ===== SHARED STYLES ===== */
-	:root {
+		:root {
 		--primary-red: #c44d58;
 		--primary-red-dark: #a03d4a;
 		--secondary-gray: #6c757d;
 		--dark-gray: #343a40;
 		--light-gray: #f8f9fa;
 		--sidebar-width: 280px;
-	}
+		}
 		
 		body { 
 			font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
@@ -124,8 +118,7 @@
 			.main-content { margin-left: 250px; width: calc(100% - 250px); }
 			.content-area { padding: 1rem; }
 		}
-</style>
-        
+	</style>
 </head>
 
 <body>
@@ -138,10 +131,9 @@
 
 			<div class="sidebar-user">
 				<div class="d-flex align-items-center">
-					<img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
 					<div>
-						<div style="font-weight: 600;">Admin User</div>
-						<small style="opacity: 0.8;">System Manager</small>
+						<div style="font-weight: 600;">Quản lý</div>
+						<small style="opacity: 0.8;">Chào mừng bạn đến trang quản lý!</small>
 					</div>
 				</div>
 			</div>
@@ -149,7 +141,7 @@
 			<ul class="sidebar-nav">
 				<li class="sidebar-header">Menu Chính</li>
 				<!-- Chỉ hiển thị nếu là Staff -->
-                                <c:if test="${sessionScope.user.roleId == 2}">                                            
+				<c:if test="${sessionScope.user.roleId == 2}">                                             
 					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
 					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
 					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
@@ -157,7 +149,7 @@
 				</c:if> 
 
 				<!-- Chỉ hiển thị nếu là Manager -->
-				<c:if test="${sessionScope.user.roleId == 3}"> 
+                                <c:if test="${sessionScope.user.roleId == 3}">
 					<li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
 					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
 					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
@@ -176,6 +168,30 @@
 				</c:if>                   
 			</ul>
 		</nav>
+
+		<!-- ===== MAIN CONTENT AREA ===== -->
+		<div class="main-content">
+			<!-- Top Navigation Bar -->
+			<div class="top-navbar">
+				<div class="d-flex justify-content-between align-items-center">
+					<div class="input-group" style="width: 300px;">
+						<input type="text" class="form-control" placeholder="Tìm kiếm hóa đơn..." id="invoiceSearch">
+						<button class="btn btn-outline-secondary" onclick="searchInvoices()"><i class="fas fa-search"></i></button>
+					</div>
+					
+					<div class="d-flex align-items-center gap-3">
+						<a href="create-invoice.jsp" class="btn btn-primary">
+							<i class="fas fa-plus me-2"></i>Tạo Hóa Đơn Mới
+						</a>
+						<button class="btn btn-success" onclick="exportInvoices()">
+							<i class="fas fa-file-export me-2"></i>Xuất Excel
+						</button>
+						<button class="btn btn-outline-secondary" onclick="printInvoices()">
+							<i class="fas fa-print me-2"></i>In Hóa Đơn
+						</button>
+					</div>
+				</div>
+			</div>
 
 			<!-- Main Content -->
 			<div class="content-area">
@@ -296,6 +312,7 @@
 										<th>Mã Hóa Đơn</th>
 										<th>Khách Hàng</th>
 										<th>Ngày Tạo</th>
+										<th>Hạn Thanh Toán</th>
 										<th>Tổng Tiền</th>
 										<th>Trạng Thái</th>
 										<th>Phương Thức</th>
@@ -303,35 +320,40 @@
 									</tr>
 								</thead>
 								<tbody>
-                                                                <form>
-                                                                    
-                                                                    <c:forEach var="list" items="${listInvoice}">
 									<!-- Invoice 1: Paid -->
 									<tr>
 										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="1"></td>
 										<td>
 											<div>
-												<strong></strong>
-												<div class="text-muted small">Đơn hàng: </div>
+												<strong>HD-2024-001</strong>
+												<div class="text-muted small">Đơn hàng: #ORD-2024-001</div>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong></strong>
+												<strong>Nguyễn Thị Mai</strong>
+												<div class="text-muted small">mai.nguyen@email.com</div>
+												<div class="text-muted small">0901234567</div>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong></strong>
+												<strong>15/01/2024</strong>
+												<div class="text-muted small">09:30 AM</div>
 											</div>
 										</td>
-										
 										<td>
-											<div class="invoice-amount paid"></div>
-											<div class="text-muted small"></div>
+											<div>
+												<strong>22/01/2024</strong>
+												<div class="text-success small">Còn 7 ngày</div>
+											</div>
 										</td>
-										<td><span class="invoice-status paid"></span></td>
-										<td><span class="payment-method card"></span></td>
+										<td>
+											<div class="invoice-amount paid">1.200.000₫</div>
+											<div class="text-muted small">Đã thanh toán</div>
+										</td>
+										<td><span class="invoice-status paid">Đã Thanh Toán</span></td>
+										<td><span class="payment-method card">Thẻ Tín Dụng</span></td>
 										<td>
 											<div class="invoice-actions">
 												<a href="invoice-details.jsp?id=1" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
@@ -349,9 +371,209 @@
 											</div>
 										</td>
 									</tr>
-                                                                    </c:forEach>
-                                                                        </form>
-									
+
+									<!-- Invoice 2: Pending -->
+									<tr>
+										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="2"></td>
+										<td>
+											<div>
+												<strong>HD-2024-002</strong>
+												<div class="text-muted small">Đơn hàng: #ORD-2024-002</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>Trần Văn Hùng</strong>
+												<div class="text-muted small">hung.tran@email.com</div>
+												<div class="text-muted small">0912345678</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>14/01/2024</strong>
+												<div class="text-muted small">02:15 PM</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>21/01/2024</strong>
+												<div class="text-warning small">Còn 6 ngày</div>
+											</div>
+										</td>
+										<td>
+											<div class="invoice-amount pending">850.000₫</div>
+											<div class="text-muted small">Chờ thanh toán</div>
+										</td>
+										<td><span class="invoice-status pending">Chờ Thanh Toán</span></td>
+										<td><span class="payment-method transfer">Chuyển Khoản</span></td>
+										<td>
+											<div class="invoice-actions">
+												<a href="invoice-details.jsp?id=2" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
+													<i class="fas fa-eye"></i>
+												</a>
+												<button class="btn btn-sm btn-success" onclick="markAsPaid(2)" title="Đánh Dấu Đã Thanh Toán">
+													<i class="fas fa-check"></i>
+												</button>
+												<button class="btn btn-sm btn-outline-info" onclick="sendReminder(2)" title="Gửi Nhắc Nhở">
+													<i class="fas fa-bell"></i>
+												</button>
+												<a href="edit-invoice.jsp?id=2" class="btn btn-sm btn-outline-warning" title="Chỉnh Sửa">
+													<i class="fas fa-edit"></i>
+												</a>
+											</div>
+										</td>
+									</tr>
+
+									<!-- Invoice 3: Overdue -->
+									<tr class="table-warning">
+										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="3"></td>
+										<td>
+											<div>
+												<strong>HD-2024-003</strong>
+												<div class="text-muted small">Đơn hàng: #ORD-2024-003</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>Lê Thị Hoa</strong>
+												<div class="text-muted small">hoa.le@email.com</div>
+												<div class="text-muted small">0923456789</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>10/01/2024</strong>
+												<div class="text-muted small">11:45 AM</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>17/01/2024</strong>
+												<div class="text-danger small">Quá hạn 2 ngày</div>
+											</div>
+										</td>
+										<td>
+											<div class="invoice-amount overdue">1.500.000₫</div>
+											<div class="text-muted small">Quá hạn thanh toán</div>
+										</td>
+										<td><span class="invoice-status overdue">Quá Hạn</span></td>
+										<td><span class="payment-method cash">Tiền Mặt</span></td>
+										<td>
+											<div class="invoice-actions">
+												<a href="invoice-details.jsp?id=3" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
+													<i class="fas fa-eye"></i>
+												</a>
+												<button class="btn btn-sm btn-success" onclick="markAsPaid(3)" title="Đánh Dấu Đã Thanh Toán">
+													<i class="fas fa-check"></i>
+												</button>
+												<button class="btn btn-sm btn-danger" onclick="sendUrgentReminder(3)" title="Gửi Nhắc Nhở Khẩn">
+													<i class="fas fa-exclamation-triangle"></i>
+												</button>
+												<button class="btn btn-sm btn-outline-secondary" onclick="negotiatePayment(3)" title="Thương Lượng">
+													<i class="fas fa-handshake"></i>
+												</button>
+											</div>
+										</td>
+									</tr>
+
+									<!-- Invoice 4: Draft -->
+									<tr class="table-light">
+										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="4"></td>
+										<td>
+											<div>
+												<strong>HD-2024-004</strong>
+												<div class="text-muted small">Đơn hàng: #ORD-2024-004</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>Phạm Minh Tuấn</strong>
+												<div class="text-muted small">tuan.pham@email.com</div>
+												<div class="text-muted small">0934567890</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>15/01/2024</strong>
+												<div class="text-muted small">04:20 PM</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<span class="text-muted">Chưa xác định</span>
+											</div>
+										</td>
+										<td>
+											<div class="invoice-amount">675.000₫</div>
+											<div class="text-muted small">Bản nháp</div>
+										</td>
+										<td><span class="invoice-status draft">Bản Nháp</span></td>
+										<td><span class="text-muted">Chưa chọn</span></td>
+										<td>
+											<div class="invoice-actions">
+												<a href="edit-invoice.jsp?id=4" class="btn btn-sm btn-primary" title="Hoàn Thành">
+													<i class="fas fa-edit"></i>
+												</a>
+												<button class="btn btn-sm btn-success" onclick="finalizeInvoice(4)" title="Hoàn Tất">
+													<i class="fas fa-check-circle"></i>
+												</button>
+												<button class="btn btn-sm btn-outline-danger" onclick="deleteInvoice(4)" title="Xóa">
+													<i class="fas fa-trash"></i>
+												</button>
+											</div>
+										</td>
+									</tr>
+
+									<!-- Invoice 5: Cancelled -->
+									<tr class="table-secondary">
+										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="5"></td>
+										<td>
+											<div>
+												<strong>HD-2024-005</strong>
+												<div class="text-muted small">Đơn hàng: #ORD-2024-005</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>Võ Thị Lan</strong>
+												<div class="text-muted small">lan.vo@email.com</div>
+												<div class="text-muted small">0945678901</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>12/01/2024</strong>
+												<div class="text-muted small">10:30 AM</div>
+											</div>
+										</td>
+										<td>
+											<div>
+												<span class="text-muted">Đã hủy</span>
+											</div>
+										</td>
+										<td>
+											<div class="text-muted">950.000₫</div>
+											<div class="text-muted small">Đã hủy</div>
+										</td>
+										<td><span class="invoice-status cancelled">Đã Hủy</span></td>
+										<td><span class="text-muted">N/A</span></td>
+										<td>
+											<div class="invoice-actions">
+												<a href="invoice-details.jsp?id=5" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
+													<i class="fas fa-eye"></i>
+												</a>
+												<button class="btn btn-sm btn-outline-info" onclick="viewCancelReason(5)" title="Lý Do Hủy">
+													<i class="fas fa-info-circle"></i>
+												</button>
+												<button class="btn btn-sm btn-outline-success" onclick="recreateInvoice(5)" title="Tạo Lại">
+													<i class="fas fa-redo"></i>
+												</button>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 
 						<!-- ===== BULK ACTIONS ===== -->
 						<div class="d-flex justify-content-between align-items-center mt-3">
@@ -560,39 +782,45 @@
 			});
 			
 			console.log('Trang quản lý hóa đơn đã được khởi tạo');
-		});  
+		});
                 
-                        // Tự động highlight menu item dựa trên URL hiện tại
-document.addEventListener('DOMContentLoaded', function() {
-    // Lấy tên file hiện tại từ URL
-    var currentPage = window.location.pathname.split('/').pop();
-    
-    // Xóa tất cả class active
-    document.querySelectorAll('.sidebar-link').forEach(function(link) {
-        link.classList.remove('active');
-    });
-    
-    // Thêm class active cho menu item tương ứng
-    var menuMap = {
-        'management.jsp': 'management.jsp',
-        'productManagement.jsp': 'productManagement.jsp',
-        'categoryManagement.jsp': 'categoryManagement.jsp',
-        'storageManagement.jsp': 'storageManagement.jsp',
-        'orderManagement.jsp': 'orderManagement.jsp',
-        'invoiceManagement.jsp': 'invoiceManagement.jsp',
-        'userManagement.jsp': 'userManagement.jsp',
-        'feedbackManagement.jsp': 'feedbackManagement.jsp',
-        'notificationManagement.jsp': 'notificationManagement.jsp'
-    };
-    
-    // Tìm và highlight menu item hiện tại
-    if (menuMap[currentPage]) {
-        var activeLink = document.querySelector('a[href="' + menuMap[currentPage] + '"]');
-        if (activeLink) {
-            activeLink.classList.add('active');
-        }
-    }
-});
+                		// Initialize page
+		document.addEventListener('DOMContentLoaded', function() {
+			// Add event listeners to product checkboxes
+			document.querySelectorAll('.product-checkbox').forEach(checkbox => {
+				checkbox.addEventListener('change', updateBulkActionButtons);
+			});
+			
+			// Enable real-time search
+			document.getElementById('productSearch').addEventListener('keyup', function(e) {
+				if (e.key === 'Enter') {
+					searchProducts();
+				}
+			});
+
+			// Tự động highlight menu item dựa trên URL hiện tại
+			var currentPage = window.location.pathname.split('/').pop();
+			document.querySelectorAll('.sidebar-link').forEach(function(link) {
+				link.classList.remove('active');
+			});
+			var menuMap = {
+				'management.jsp': 'management.jsp',
+				'productManagement.jsp': 'productManagement.jsp',
+				'categoryManagement.jsp': 'categoryManagement.jsp',
+				'storageManagement.jsp': 'storageManagement.jsp',
+				'orderManagement.jsp': 'orderManagement.jsp',
+				'invoiceManagement.jsp': 'invoiceManagement.jsp',
+				'userManagement.jsp': 'userManagement.jsp',
+				'feedbackManagement.jsp': 'feedbackManagement.jsp',
+				'notificationManagement.jsp': 'notificationManagement.jsp'
+			};
+			if (menuMap[currentPage]) {
+				var activeLink = document.querySelector('a[href="' + menuMap[currentPage] + '"]');
+				if (activeLink) {
+					activeLink.classList.add('active');
+				}
+			}
+		});
                 
 	</script>
 </body>

@@ -223,10 +223,9 @@
 
 			<div class="sidebar-user">
 				<div class="d-flex align-items-center">
-					<img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
 					<div>
-						<div style="font-weight: 600;">Admin User</div>
-						<small style="opacity: 0.8;">System Manager</small>
+						<div style="font-weight: 600;">Quản lý</div>
+						<small style="opacity: 0.8;">Chào mừng bạn đến trang quản lý!</small>
 					</div>
 				</div>
 			</div>
