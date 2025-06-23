@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -202,43 +203,11 @@
 						<p class="text-muted">Quản lý và theo dõi tất cả hóa đơn bán hàng</p>
 					</div>
 					<div class="text-muted">
-						Tổng số hóa đơn: <strong>156</strong> | Hôm nay: <strong>12</strong>
+						Tổng số hóa đơn: <strong>${fn:length(listInvoice)}</strong> | Hôm nay: <strong>12</strong>
 					</div>
 				</div>
 
-				<!-- ===== INVOICE STATISTICS ===== -->
-				<div class="invoice-summary">
-					<div class="row">
-						<div class="col-md-3">
-							<div class="summary-item">
-								<div class="summary-number text-success">89</div>
-								<div class="text-muted">Đã Thanh Toán</div>
-								<div class="text-success small">+12 hôm nay</div>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="summary-item">
-								<div class="summary-number text-warning">34</div>
-								<div class="text-muted">Chờ Thanh Toán</div>
-								<div class="text-warning small">+3 hôm nay</div>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="summary-item">
-								<div class="summary-number text-danger">18</div>
-								<div class="text-muted">Quá Hạn</div>
-								<div class="text-danger small">+2 hôm nay</div>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="summary-item">
-								<div class="summary-number text-info">15</div>
-								<div class="text-muted">Bản Nháp</div>
-								<div class="text-info small">+1 hôm nay</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				
 
 				<!-- ===== FILTER SECTION ===== -->
 				<div class="card mb-4">
@@ -268,7 +237,7 @@
 							<div class="col-md-3">
 								<label class="form-label">Khoảng Thời Gian:</label>
 								<select class="form-select" onchange="filterByDateRange(this.value)">
-									<option value="">Tất Cả Thời Gian</option>
+									<option value="all">Tất Cả Thời Gian</option>
 									<option value="today">Hôm Nay</option>
 									<option value="yesterday">Hôm Qua</option>
 									<option value="week">Tuần Này</option>
@@ -294,13 +263,6 @@
 					<div class="card-header d-flex justify-content-between align-items-center">
 						<h5 class="mb-0">Danh Sách Hóa Đơn</h5>
 						<div class="d-flex align-items-center gap-3">
-							<span class="text-light">Hiển thị:</span>
-							<select class="form-select form-select-sm" style="width: auto;">
-								<option value="25" selected>25</option>
-								<option value="50">50</option>
-								<option value="100">100</option>
-							</select>
-							<span class="text-light">mục</span>
 						</div>
 					</div>
 					<div class="card-body">
@@ -388,7 +350,7 @@
 								</button>
 							</div>
 							<div class="text-muted">
-								Hiển thị 1 đến 5 trong tổng số 156 hóa đơn
+								Hiển thị 1 đến 5 trong tổng số ${fn:length(listInvoice)} hóa đơn
 							</div>
 						</div>
 
@@ -429,7 +391,9 @@
 		// Filter functions
 		function filterByStatus(status) { console.log('Lọc theo trạng thái:', status); }
 		function filterByPaymentMethod(method) { console.log('Lọc theo phương thức:', method); }
-		function filterByDateRange(range) { console.log('Lọc theo thời gian:', range); }
+		function filterByDateRange(range) {
+                    window.location.href='InvoiceManagement?action=filterByDate&range=' + range;
+                }
 		function filterByCustomer(customer) { console.log('Lọc theo khách hàng:', customer); }
 		
 		// Invoice actions

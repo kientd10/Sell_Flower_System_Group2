@@ -78,11 +78,26 @@ public class InvoiceManagement extends HttpServlet {
             String action = request.getParameter("action");
             List<Invoice> listInvoice = new  ArrayList<>();
             dal.PaymentDAO paymentDao = new PaymentDAO();
+            //in ra list invoice
             if(action.equals("displayAll")){
                 listInvoice = paymentDao.DisplayInvoice();
                 request.setAttribute("listInvoice", listInvoice);
                 request.getRequestDispatcher("invoiceManagement.jsp").forward(request, response);
+                return;
             }
+            
+            //sort by name 
+            
+            //filter by date
+            if(action.equals("filterByDate")){
+                String range =  request.getParameter("range");
+                listInvoice = paymentDao.DisplayInvoiceByDate(range);
+                request.setAttribute("listInvoice", listInvoice);
+                request.getRequestDispatcher("invoiceManagement.jsp").forward(request, response);
+                return;
+            }
+            //filter by user name
+            
 
     }
 
