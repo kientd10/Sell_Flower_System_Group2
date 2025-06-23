@@ -5,6 +5,8 @@
 
 package Controller;
 
+import Model.Invoice;
+import dal.PaymentDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,6 +14,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -55,7 +59,7 @@ public class InvoiceManagement extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        doPost(request, response);
     } 
 
     /** 
@@ -68,7 +72,18 @@ public class InvoiceManagement extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        response.setCharacterEncoding("UTF-8");
+            request.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html;charset=UTF-8");
+            String action = request.getParameter("action");
+            List<Invoice> listInvoice = new  ArrayList<>();
+            dal.PaymentDAO paymentDao = new PaymentDAO();
+            if(action.equals("displayAll")){
+                listInvoice = paymentDao.DisplayInvoice();
+                request.setAttribute("listInvoice", listInvoice);
+                request.getRequestDispatcher("invoiceManagement.jsp").forward(request, response);
+            }
+
     }
 
     /** 

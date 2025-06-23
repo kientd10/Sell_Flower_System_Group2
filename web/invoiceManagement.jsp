@@ -155,7 +155,7 @@
 					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
 					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
 					<li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-					<li><a href="invoiceManagement.jsp" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
+					<li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
 					<li class="sidebar-header">Hệ Thống</li>
 					<li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
 					<li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
@@ -312,7 +312,6 @@
 										<th>Mã Hóa Đơn</th>
 										<th>Khách Hàng</th>
 										<th>Ngày Tạo</th>
-										<th>Hạn Thanh Toán</th>
 										<th>Tổng Tiền</th>
 										<th>Trạng Thái</th>
 										<th>Phương Thức</th>
@@ -320,40 +319,33 @@
 									</tr>
 								</thead>
 								<tbody>
+                                                                    <c:forEach var="listI" items="${listInvoice}">
 									<!-- Invoice 1: Paid -->
 									<tr>
-										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="1"></td>
+										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="${listI.payment_id}"></td>
 										<td>
 											<div>
-												<strong>HD-2024-001</strong>
-												<div class="text-muted small">Đơn hàng: #ORD-2024-001</div>
+												<strong>${listI.order_code}</strong>
+												<div class="text-muted small">Đơn hàng: ${listI.order_code}</div>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong>Nguyễn Thị Mai</strong>
-												<div class="text-muted small">mai.nguyen@email.com</div>
-												<div class="text-muted small">0901234567</div>
+												<strong>${listI.customer_name}</strong>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong>15/01/2024</strong>
-												<div class="text-muted small">09:30 AM</div>
+												<strong>${listI.date}</strong>
 											</div>
 										</td>
+										
 										<td>
-											<div>
-												<strong>22/01/2024</strong>
-												<div class="text-success small">Còn 7 ngày</div>
-											</div>
+											<div class="invoice-amount paid">${listI.totalPayment}</div>
+											<div class="text-muted small">${listI.status}</div>
 										</td>
-										<td>
-											<div class="invoice-amount paid">1.200.000₫</div>
-											<div class="text-muted small">Đã thanh toán</div>
-										</td>
-										<td><span class="invoice-status paid">Đã Thanh Toán</span></td>
-										<td><span class="payment-method card">Thẻ Tín Dụng</span></td>
+										<td><span class="invoice-status paid">${listI.status}</span></td>
+										<td><span class="payment-method card">${listI.payment}</span></td>
 										<td>
 											<div class="invoice-actions">
 												<a href="invoice-details.jsp?id=1" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
@@ -371,207 +363,11 @@
 											</div>
 										</td>
 									</tr>
-
-									<!-- Invoice 2: Pending -->
-									<tr>
-										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="2"></td>
-										<td>
-											<div>
-												<strong>HD-2024-002</strong>
-												<div class="text-muted small">Đơn hàng: #ORD-2024-002</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Trần Văn Hùng</strong>
-												<div class="text-muted small">hung.tran@email.com</div>
-												<div class="text-muted small">0912345678</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>14/01/2024</strong>
-												<div class="text-muted small">02:15 PM</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>21/01/2024</strong>
-												<div class="text-warning small">Còn 6 ngày</div>
-											</div>
-										</td>
-										<td>
-											<div class="invoice-amount pending">850.000₫</div>
-											<div class="text-muted small">Chờ thanh toán</div>
-										</td>
-										<td><span class="invoice-status pending">Chờ Thanh Toán</span></td>
-										<td><span class="payment-method transfer">Chuyển Khoản</span></td>
-										<td>
-											<div class="invoice-actions">
-												<a href="invoice-details.jsp?id=2" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
-													<i class="fas fa-eye"></i>
-												</a>
-												<button class="btn btn-sm btn-success" onclick="markAsPaid(2)" title="Đánh Dấu Đã Thanh Toán">
-													<i class="fas fa-check"></i>
-												</button>
-												<button class="btn btn-sm btn-outline-info" onclick="sendReminder(2)" title="Gửi Nhắc Nhở">
-													<i class="fas fa-bell"></i>
-												</button>
-												<a href="edit-invoice.jsp?id=2" class="btn btn-sm btn-outline-warning" title="Chỉnh Sửa">
-													<i class="fas fa-edit"></i>
-												</a>
-											</div>
-										</td>
-									</tr>
-
-									<!-- Invoice 3: Overdue -->
-									<tr class="table-warning">
-										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="3"></td>
-										<td>
-											<div>
-												<strong>HD-2024-003</strong>
-												<div class="text-muted small">Đơn hàng: #ORD-2024-003</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Lê Thị Hoa</strong>
-												<div class="text-muted small">hoa.le@email.com</div>
-												<div class="text-muted small">0923456789</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>10/01/2024</strong>
-												<div class="text-muted small">11:45 AM</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>17/01/2024</strong>
-												<div class="text-danger small">Quá hạn 2 ngày</div>
-											</div>
-										</td>
-										<td>
-											<div class="invoice-amount overdue">1.500.000₫</div>
-											<div class="text-muted small">Quá hạn thanh toán</div>
-										</td>
-										<td><span class="invoice-status overdue">Quá Hạn</span></td>
-										<td><span class="payment-method cash">Tiền Mặt</span></td>
-										<td>
-											<div class="invoice-actions">
-												<a href="invoice-details.jsp?id=3" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
-													<i class="fas fa-eye"></i>
-												</a>
-												<button class="btn btn-sm btn-success" onclick="markAsPaid(3)" title="Đánh Dấu Đã Thanh Toán">
-													<i class="fas fa-check"></i>
-												</button>
-												<button class="btn btn-sm btn-danger" onclick="sendUrgentReminder(3)" title="Gửi Nhắc Nhở Khẩn">
-													<i class="fas fa-exclamation-triangle"></i>
-												</button>
-												<button class="btn btn-sm btn-outline-secondary" onclick="negotiatePayment(3)" title="Thương Lượng">
-													<i class="fas fa-handshake"></i>
-												</button>
-											</div>
-										</td>
-									</tr>
-
-									<!-- Invoice 4: Draft -->
-									<tr class="table-light">
-										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="4"></td>
-										<td>
-											<div>
-												<strong>HD-2024-004</strong>
-												<div class="text-muted small">Đơn hàng: #ORD-2024-004</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Phạm Minh Tuấn</strong>
-												<div class="text-muted small">tuan.pham@email.com</div>
-												<div class="text-muted small">0934567890</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>15/01/2024</strong>
-												<div class="text-muted small">04:20 PM</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<span class="text-muted">Chưa xác định</span>
-											</div>
-										</td>
-										<td>
-											<div class="invoice-amount">675.000₫</div>
-											<div class="text-muted small">Bản nháp</div>
-										</td>
-										<td><span class="invoice-status draft">Bản Nháp</span></td>
-										<td><span class="text-muted">Chưa chọn</span></td>
-										<td>
-											<div class="invoice-actions">
-												<a href="edit-invoice.jsp?id=4" class="btn btn-sm btn-primary" title="Hoàn Thành">
-													<i class="fas fa-edit"></i>
-												</a>
-												<button class="btn btn-sm btn-success" onclick="finalizeInvoice(4)" title="Hoàn Tất">
-													<i class="fas fa-check-circle"></i>
-												</button>
-												<button class="btn btn-sm btn-outline-danger" onclick="deleteInvoice(4)" title="Xóa">
-													<i class="fas fa-trash"></i>
-												</button>
-											</div>
-										</td>
-									</tr>
-
-									<!-- Invoice 5: Cancelled -->
-									<tr class="table-secondary">
-										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="5"></td>
-										<td>
-											<div>
-												<strong>HD-2024-005</strong>
-												<div class="text-muted small">Đơn hàng: #ORD-2024-005</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Võ Thị Lan</strong>
-												<div class="text-muted small">lan.vo@email.com</div>
-												<div class="text-muted small">0945678901</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>12/01/2024</strong>
-												<div class="text-muted small">10:30 AM</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<span class="text-muted">Đã hủy</span>
-											</div>
-										</td>
-										<td>
-											<div class="text-muted">950.000₫</div>
-											<div class="text-muted small">Đã hủy</div>
-										</td>
-										<td><span class="invoice-status cancelled">Đã Hủy</span></td>
-										<td><span class="text-muted">N/A</span></td>
-										<td>
-											<div class="invoice-actions">
-												<a href="invoice-details.jsp?id=5" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
-													<i class="fas fa-eye"></i>
-												</a>
-												<button class="btn btn-sm btn-outline-info" onclick="viewCancelReason(5)" title="Lý Do Hủy">
-													<i class="fas fa-info-circle"></i>
-												</button>
-												<button class="btn btn-sm btn-outline-success" onclick="recreateInvoice(5)" title="Tạo Lại">
-													<i class="fas fa-redo"></i>
-												</button>
-											</div>
-										</td>
-									</tr>
+                                                                    </c:forEach>
+									
 								</tbody>
+
+
 							</table>
 						</div>
 

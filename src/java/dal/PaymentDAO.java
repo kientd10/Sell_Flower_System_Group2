@@ -3,9 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dal;
+import Model.Invoice;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import dal.DBcontext; // đảm bảo bạn có class DBcontext để lấy connection
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.ResultSet;
 
 /**
  *
@@ -37,4 +41,46 @@ public class PaymentDAO {
         e.printStackTrace();
     }
      }
+  
+  //in ra list invoice
+  public List<Invoice> DisplayInvoice() {
+        List<Invoice> list = new ArrayList<>();
+        String sql = "SELECT \n"
+                + "    \n"
+                + "    p.payment_status,\n"
+                + "    \n"
+                + "    p.payment_id,\n"
+                + "    p.payment_method,\n"
+                + "\n"
+                + "    \n"
+                + "    o.order_code,\n"
+                + "    \n"
+                + "    o.created_at,\n"
+                + "    o.total_amount,\n"
+                + "    \n"
+                + "    u.username\n"
+                + "	\n"
+                + "FROM \n"
+                + "      flower_shop_db.payments p\n"
+                + "JOIN \n"
+                + "    orders o ON p.order_id = o.order_id\n"
+                + "JOIN \n"
+                + "    users u ON o.customer_id = u.user_id";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setStatus(rs.getString(1));
+                invoice.setPayment_id(rs.getString(2));
+                invoice.setPayment(rs.getString(3));
+                invoice.setOrder_code(rs.getString(4));
+                invoice.setDate(rs.getDate(5));
+                invoice.setTotalPayment(rs.getDouble(6));
+                invoice.setCustomer_name(rs.getString(7));
+                list.add(invoice);
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+
    }
