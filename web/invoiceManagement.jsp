@@ -1,13 +1,7 @@
-<%-- 
-    Document   : invoiceManagement
-    Created on : Jun 16, 2025, 9:46:37 AM
-    Author     : ADMIN
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,14 +14,14 @@
 	
 	<style>
 		/* ===== SHARED STYLES ===== */
-	:root {
+		:root {
 		--primary-red: #c44d58;
 		--primary-red-dark: #a03d4a;
 		--secondary-gray: #6c757d;
 		--dark-gray: #343a40;
 		--light-gray: #f8f9fa;
 		--sidebar-width: 280px;
-	}
+		}
 		
 		body { 
 			font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
@@ -124,8 +118,7 @@
 			.main-content { margin-left: 250px; width: calc(100% - 250px); }
 			.content-area { padding: 1rem; }
 		}
-</style>
-        
+	</style>
 </head>
 
 <body>
@@ -138,10 +131,9 @@
 
 			<div class="sidebar-user">
 				<div class="d-flex align-items-center">
-					<img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
 					<div>
-						<div style="font-weight: 600;">Admin User</div>
-						<small style="opacity: 0.8;">System Manager</small>
+						<div style="font-weight: 600;">Quản lý</div>
+						<small style="opacity: 0.8;">Chào mừng bạn đến trang quản lý!</small>
 					</div>
 				</div>
 			</div>
@@ -149,7 +141,7 @@
 			<ul class="sidebar-nav">
 				<li class="sidebar-header">Menu Chính</li>
 				<!-- Chỉ hiển thị nếu là Staff -->
-                                <c:if test="${sessionScope.user.roleId == 2}">                                            
+				<c:if test="${sessionScope.user.roleId == 2}">                                             
 					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
 					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
 					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
@@ -157,13 +149,13 @@
 				</c:if> 
 
 				<!-- Chỉ hiển thị nếu là Manager -->
-				<c:if test="${sessionScope.user.roleId == 3}"> 
+                                <c:if test="${sessionScope.user.roleId == 3}">
 					<li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
 					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
 					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
 					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
 					<li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-					<li><a href="invoiceManagement.jsp" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
+					<li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
 					<li class="sidebar-header">Hệ Thống</li>
 					<li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
 					<li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
@@ -176,6 +168,30 @@
 				</c:if>                   
 			</ul>
 		</nav>
+
+		<!-- ===== MAIN CONTENT AREA ===== -->
+		<div class="main-content">
+			<!-- Top Navigation Bar -->
+			<div class="top-navbar">
+				<div class="d-flex justify-content-between align-items-center">
+					<div class="input-group" style="width: 300px;">
+						<input type="text" class="form-control" placeholder="Tìm kiếm hóa đơn..." id="invoiceSearch">
+						<button class="btn btn-outline-secondary" onclick="searchInvoices()"><i class="fas fa-search"></i></button>
+					</div>
+					
+					<div class="d-flex align-items-center gap-3">
+						<a href="create-invoice.jsp" class="btn btn-primary">
+							<i class="fas fa-plus me-2"></i>Tạo Hóa Đơn Mới
+						</a>
+						<button class="btn btn-success" onclick="exportInvoices()">
+							<i class="fas fa-file-export me-2"></i>Xuất Excel
+						</button>
+						<button class="btn btn-outline-secondary" onclick="printInvoices()">
+							<i class="fas fa-print me-2"></i>In Hóa Đơn
+						</button>
+					</div>
+				</div>
+			</div>
 
 			<!-- Main Content -->
 			<div class="content-area">
@@ -303,35 +319,33 @@
 									</tr>
 								</thead>
 								<tbody>
-                                                                <form>
-                                                                    
-                                                                    <c:forEach var="list" items="${listInvoice}">
+                                                                    <c:forEach var="listI" items="${listInvoice}">
 									<!-- Invoice 1: Paid -->
 									<tr>
-										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="1"></td>
+										<td><input type="checkbox" class="form-check-input invoice-checkbox" value="${listI.payment_id}"></td>
 										<td>
 											<div>
-												<strong></strong>
-												<div class="text-muted small">Đơn hàng: </div>
+												<strong>${listI.order_code}</strong>
+												<div class="text-muted small">Đơn hàng: ${listI.order_code}</div>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong></strong>
+												<strong>${listI.customer_name}</strong>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong></strong>
+												<strong>${listI.date}</strong>
 											</div>
 										</td>
 										
 										<td>
-											<div class="invoice-amount paid"></div>
-											<div class="text-muted small"></div>
+											<div class="invoice-amount paid">${listI.totalPayment}</div>
+											<div class="text-muted small">${listI.status}</div>
 										</td>
-										<td><span class="invoice-status paid"></span></td>
-										<td><span class="payment-method card"></span></td>
+										<td><span class="invoice-status paid">${listI.status}</span></td>
+										<td><span class="payment-method card">${listI.payment}</span></td>
 										<td>
 											<div class="invoice-actions">
 												<a href="invoice-details.jsp?id=1" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
@@ -350,8 +364,12 @@
 										</td>
 									</tr>
                                                                     </c:forEach>
-                                                                        </form>
 									
+								</tbody>
+
+
+							</table>
+						</div>
 
 						<!-- ===== BULK ACTIONS ===== -->
 						<div class="d-flex justify-content-between align-items-center mt-3">
@@ -560,39 +578,45 @@
 			});
 			
 			console.log('Trang quản lý hóa đơn đã được khởi tạo');
-		});  
+		});
                 
-                        // Tự động highlight menu item dựa trên URL hiện tại
-document.addEventListener('DOMContentLoaded', function() {
-    // Lấy tên file hiện tại từ URL
-    var currentPage = window.location.pathname.split('/').pop();
-    
-    // Xóa tất cả class active
-    document.querySelectorAll('.sidebar-link').forEach(function(link) {
-        link.classList.remove('active');
-    });
-    
-    // Thêm class active cho menu item tương ứng
-    var menuMap = {
-        'management.jsp': 'management.jsp',
-        'productManagement.jsp': 'productManagement.jsp',
-        'categoryManagement.jsp': 'categoryManagement.jsp',
-        'storageManagement.jsp': 'storageManagement.jsp',
-        'orderManagement.jsp': 'orderManagement.jsp',
-        'invoiceManagement.jsp': 'invoiceManagement.jsp',
-        'userManagement.jsp': 'userManagement.jsp',
-        'feedbackManagement.jsp': 'feedbackManagement.jsp',
-        'notificationManagement.jsp': 'notificationManagement.jsp'
-    };
-    
-    // Tìm và highlight menu item hiện tại
-    if (menuMap[currentPage]) {
-        var activeLink = document.querySelector('a[href="' + menuMap[currentPage] + '"]');
-        if (activeLink) {
-            activeLink.classList.add('active');
-        }
-    }
-});
+                		// Initialize page
+		document.addEventListener('DOMContentLoaded', function() {
+			// Add event listeners to product checkboxes
+			document.querySelectorAll('.product-checkbox').forEach(checkbox => {
+				checkbox.addEventListener('change', updateBulkActionButtons);
+			});
+			
+			// Enable real-time search
+			document.getElementById('productSearch').addEventListener('keyup', function(e) {
+				if (e.key === 'Enter') {
+					searchProducts();
+				}
+			});
+
+			// Tự động highlight menu item dựa trên URL hiện tại
+			var currentPage = window.location.pathname.split('/').pop();
+			document.querySelectorAll('.sidebar-link').forEach(function(link) {
+				link.classList.remove('active');
+			});
+			var menuMap = {
+				'management.jsp': 'management.jsp',
+				'productManagement.jsp': 'productManagement.jsp',
+				'categoryManagement.jsp': 'categoryManagement.jsp',
+				'storageManagement.jsp': 'storageManagement.jsp',
+				'orderManagement.jsp': 'orderManagement.jsp',
+				'invoiceManagement.jsp': 'invoiceManagement.jsp',
+				'userManagement.jsp': 'userManagement.jsp',
+				'feedbackManagement.jsp': 'feedbackManagement.jsp',
+				'notificationManagement.jsp': 'notificationManagement.jsp'
+			};
+			if (menuMap[currentPage]) {
+				var activeLink = document.querySelector('a[href="' + menuMap[currentPage] + '"]');
+				if (activeLink) {
+					activeLink.classList.add('active');
+				}
+			}
+		});
                 
 	</script>
 </body>
