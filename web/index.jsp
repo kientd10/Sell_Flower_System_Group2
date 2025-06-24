@@ -99,18 +99,7 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Trang chủ</a></li>
-                                    <li class="dropdown"><a href="#">Danh mục hoa<i class="fa fa-angle-down"></i></a>
-                                        <ul role="menu" class="sub-menu">
-                                            <c:if test="${empty categories}">
-                                                <li><a href="#">Không có danh mục nào</a></li>
-                                                </c:if>
-                                                <c:forEach var="category" items="${categories}">
-                                                <li><a href="${pageContext.request.contextPath}/bouquet?categoryId=${category.categoryId}">
-                                                        ${category.categoryName}</a></li>
-                                                    </c:forEach>
-                                        </ul>
-                                    </li>                             
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Trang chủ</a></li>                            
                                     <li><a href="contact-us.jsp">Liên hệ</a></li>
                                 </ul>
                             </div>
