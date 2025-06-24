@@ -91,7 +91,7 @@ public class OrderDAO {
                 ps.setString(1, orderCode);
                 ps.setInt(2, userId);
                 ps.setDouble(3, totalAmount);
-                ps.setInt(4, 2); // status_id = 2 = đã thanh toán
+                ps.setInt(4, 1); // status_id = 1 (chờ xác nhận) -- nếu pay success
                 ps.setString(5, deliveryAddress);
                 ps.setString(6, deliveryPhone);
                 ps.executeUpdate();
@@ -143,7 +143,7 @@ public class OrderDAO {
 
         String sql = """
             SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address,
-            os.status_name
+            os.status_name,o.created_At
             FROM orders o
             JOIN order_status os ON o.status_id = os.status_id
             WHERE o.customer_id = ?
@@ -166,6 +166,7 @@ public class OrderDAO {
                 order.setTotalAmount(rs.getDouble("total_amount"));
                 order.setDeliveryAddress(rs.getString("delivery_address"));
                 order.setStatus(rs.getString("status_name"));
+                order.setCreatedAt(rs.getString("created_at"));
 
                 // Load danh sách sản phẩm trong đơn hàng
                 order.setItems(getItemsByOrderId(order.getOrderId(), conn));

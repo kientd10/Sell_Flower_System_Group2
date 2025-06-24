@@ -78,13 +78,14 @@ public class Order {
         this.paymentStatus = paymentStatus;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
+public String getCreatedAt() {
+    return createdAt;
+}
+
+public void setCreatedAt(String createdAt) {
+    this.createdAt = createdAt;
+}
 
     public String getDeliveryAddress() {
         return deliveryAddress;
