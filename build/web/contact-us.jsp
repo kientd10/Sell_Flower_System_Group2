@@ -148,11 +148,17 @@
 	 <div id="contact-page" class="container">
     	<div class="bg">
 	    	<div class="row">    		
-	    		<div class="col-sm-12">    			   			
-					<h2 class="title text-center">Contact <strong>Us</strong></h2>    			    				    				
-					<div id="gmap" class="contact-map">
-					</div>
-				</div>			 		
+	    		<div class="text-center" style="margin-bottom: 30px;">
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d21067.077378762857!2d105.53453467526923!3d21.025950128780995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135abc60e7d3f19%3A0x2be9d7d0b5abcbf4!2sFPT%20University!5e0!3m2!1sen!2s!4v1750935417308!5m2!1sen!2s"
+        width="100%"
+        height="450"
+        style="max-width: 100%; border: 0; border-radius: 10px;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>			 		
 			</div>    	
     		<div class="row">  	
 	    		<div class="col-sm-8">
