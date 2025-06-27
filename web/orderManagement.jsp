@@ -826,7 +826,7 @@
 			}, 300000);
 		});
                 
-                        // Tự động highlight menu item dựa trên URL hiện tại
+// Tự động highlight menu item dựa trên URL hiện tại
 document.addEventListener('DOMContentLoaded', function() {
     // Lấy tên file hiện tại từ URL
     var currentPage = window.location.pathname.split('/').pop();
