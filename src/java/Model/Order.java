@@ -25,6 +25,8 @@ public class Order {
     private String createdAt;
     private String deliveryAddress;
     private List<OrderItem> items;
+    private String phone;
+    private String email;
 
     public Order() {
         this.items = new ArrayList<>();
@@ -101,5 +103,21 @@ public void setCreatedAt(String createdAt) {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
