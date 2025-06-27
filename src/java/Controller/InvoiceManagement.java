@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+
 
 package Controller;
 
@@ -85,21 +82,27 @@ public class InvoiceManagement extends HttpServlet {
                 request.getRequestDispatcher("invoiceManagement.jsp").forward(request, response);
                 return;
             }
-            
-            //sort by name 
-            
-            //filter by date
-            if(action.equals("filterByDate")){
-                String range =  request.getParameter("range");
-                listInvoice = paymentDao.DisplayInvoiceByDate(range);
+           
+            //filter
+            if(action.equals("filterAll")){
+                String date =  request.getParameter("date");
+                String price = request.getParameter("priceRange");
+                
+                listInvoice = paymentDao.FilterInvoice(date, price);
+                
                 request.setAttribute("listInvoice", listInvoice);
+                request.setAttribute("selectedRange", date);
+                request.setAttribute("selectedPrice", price);
+                
                 request.getRequestDispatcher("invoiceManagement.jsp").forward(request, response);
                 return;
             }
-            //filter by user name
+            
             
 
     }
+
+
 
     /** 
      * Returns a short description of the servlet.
@@ -111,3 +114,5 @@ public class InvoiceManagement extends HttpServlet {
     }// </editor-fold>
 
 }
+
+

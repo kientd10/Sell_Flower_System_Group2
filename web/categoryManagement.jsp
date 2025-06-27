@@ -371,15 +371,15 @@
 						<nav aria-label="Category pagination" class="mt-3">
 							<ul class="pagination">
 								<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-									<a class="page-link" href="${pageContext.request.contextPath}/categories?action=management&pageNum=${currentPage - 1}"><i class="fas fa-chevron-left"></i></a>
+									<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${currentPage - 1}"><i class="fas fa-chevron-left"></i></a>
 								</li>
 								<c:forEach begin="1" end="${totalPages}" var="i">
 									<li class="page-item ${currentPage == i ? 'active' : ''}">
-										<a class="page-link" href="${pageContext.request.contextPath}/categories?action=management&pageNum=${i}">${i}</a>
+										<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${i}">${i}</a>
 									</li>
 								</c:forEach>
 								<li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-									<a class="page-link" href="${pageContext.request.contextPath}/categories?action=management&pageNum=${currentPage + 1}"><i class="fas fa-chevron-right"></i></a>
+									<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${currentPage + 1}"><i class="fas fa-chevron-right"></i></a>
 								</li>
 							</ul>
 						</nav>

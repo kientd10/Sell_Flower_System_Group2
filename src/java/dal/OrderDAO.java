@@ -188,6 +188,181 @@ public class OrderDAO {
         return orders;
     }
 
+    // Lấy tất cả đơn hàng (cho Manager)
+    public List<Order> getAllOrders() throws Exception {
+        List<Order> orders = new ArrayList<>();
+
+        String sql = """
+            SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address,
+            os.status_name, o.created_At, u.full_name as customer_name
+            FROM orders o
+            JOIN order_status os ON o.status_id = os.status_id
+            JOIN users u ON o.customer_id = u.user_id
+            ORDER BY o.created_at DESC
+            """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setOrderCode(rs.getString("order_code"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setDeliveryAddress(rs.getString("delivery_address"));
+                order.setStatus(rs.getString("status_name"));
+                order.setCreatedAt(rs.getString("created_at"));
+                order.setCustomerName(rs.getString("customer_name"));
+
+                // Load danh sách sản phẩm trong đơn hàng
+                order.setItems(getItemsByOrderId(order.getOrderId(), conn));
+                orders.add(order);
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+
+        return orders;
+    }
+
+    // Lấy đơn hàng theo trạng thái (cho Staff và Shipper)
+    public List<Order> getOrdersByStatus(String status) throws Exception {
+        List<Order> orders = new ArrayList<>();
+
+        String sql = """
+            SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address,
+            os.status_name, o.created_At, u.full_name as customer_name
+            FROM orders o
+            JOIN order_status os ON o.status_id = os.status_id
+            JOIN users u ON o.customer_id = u.user_id
+            WHERE os.status_name = ?
+            ORDER BY o.created_at DESC
+            """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, status);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setOrderCode(rs.getString("order_code"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setDeliveryAddress(rs.getString("delivery_address"));
+                order.setStatus(rs.getString("status_name"));
+                order.setCreatedAt(rs.getString("created_at"));
+                order.setCustomerName(rs.getString("customer_name"));
+
+                // Load danh sách sản phẩm trong đơn hàng
+                order.setItems(getItemsByOrderId(order.getOrderId(), conn));
+                orders.add(order);
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+
+        return orders;
+    }
+
+    // Lấy trạng thái hiện tại của đơn hàng
+    public String getOrderStatusById(int orderId) throws Exception {
+        String sql = """
+            SELECT os.status_name
+            FROM orders o
+            JOIN order_status os ON o.status_id = os.status_id
+            WHERE o.order_id = ?
+            """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("status_name");
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+
+        return null;
+    }
+
+    // Cập nhật trạng thái đơn hàng
+    public boolean updateOrderStatus(int orderId, String newStatus) throws Exception {
+        String sql = """
+            UPDATE orders o
+            JOIN order_status os ON os.status_name = ?
+            SET o.status_id = os.status_id
+            WHERE o.order_id = ?
+            """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, newStatus);
+            ps.setInt(2, orderId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } finally {
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+    }
+
+    // Lấy tất cả trạng thái đơn hàng (cho dropdown)
+    public List<String> getAllOrderStatuses() throws Exception {
+        List<String> statuses = new ArrayList<>();
+        String sql = "SELECT status_name FROM order_status ORDER BY status_id";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                statuses.add(rs.getString("status_name"));
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+
+        return statuses;
+    }
+
     private List<OrderItem> getItemsByOrderId(int orderId, Connection conn) throws Exception {
         List<OrderItem> items = new ArrayList<>();
 

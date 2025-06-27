@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dal;
 
 import Model.Role;
@@ -107,6 +103,23 @@ public class UserDAO {
         } finally {
             dbContext.closeConnection(conn);
         }
+        return false;
+    }
+
+    
+    //Kiểm tra số điện thoại tồn tại
+    public boolean GetPhone(String Phone){
+        String sql = "select count(*) from users where phone = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try{
+            conn = dbContext.getConnection(); ps = conn.prepareStatement(sql);
+            ps.setString(1, Phone);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                return rs.getInt(1)>0;
+            }
+        }catch(Exception e){}
         return false;
     }
 
@@ -290,3 +303,4 @@ public class UserDAO {
     }
 
 }
+

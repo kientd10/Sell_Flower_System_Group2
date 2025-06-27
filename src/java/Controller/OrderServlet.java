@@ -65,16 +65,40 @@ public class OrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("userId"); // session phải có userId
+        Integer userId = (Integer) session.getAttribute("userId");
+        String role = (String) session.getAttribute("role"); // Lấy role từ session
+        
         System.out.println("UserId from session: " + userId);
-        if (userId == null) {
+        System.out.println("Role from session: " + role);
+        
+        if (userId == null || role == null) {
             response.sendRedirect("login.jsp");
             return;
         }
 
         try {
-            List<Order> allOrders = orderDAO.getOrdersByUserId(userId);
+            List<Order> allOrders = new ArrayList<>();
+            
+            // Lấy đơn hàng theo role
+            if (role.equals("Customer")) {
+                // Customer chỉ thấy đơn hàng của mình
+                allOrders = orderDAO.getOrdersByUserId(userId);
+            } else if (role.equals("Manager")) {
+                // Manager thấy tất cả đơn hàng
+                allOrders = orderDAO.getAllOrders();
+            } else if (role.equals("Staff")) {
+                // Staff chỉ thấy đơn hàng đang chuẩn bị
+                allOrders = orderDAO.getOrdersByStatus("Đang chuẩn bị");
+            } else if (role.equals("Shipper")) {
+                // Shipper chỉ thấy đơn hàng đang giao hàng
+                allOrders = orderDAO.getOrdersByStatus("Chờ giao hàng");
+            } else {
+                // Role không hợp lệ
+                response.sendRedirect("accessDenied.jsp");
+                return;
+            }
 
+            // Phân loại đơn hàng theo trạng thái
             List<Order> pendingOrders = new ArrayList<>();
             List<Order> preparingOrders = new ArrayList<>();
             List<Order> shippingOrders = new ArrayList<>();
@@ -93,6 +117,11 @@ public class OrderServlet extends HttpServlet {
             request.setAttribute("preparingOrders", preparingOrders);
             request.setAttribute("shippingOrders", shippingOrders);
             request.setAttribute("completedOrders", completedOrders);
+            request.setAttribute("userRole", role);
+
+            // Lấy danh sách trạng thái để hiển thị trong dropdown
+            List<String> orderStatuses = orderDAO.getAllOrderStatuses();
+            request.setAttribute("orderStatuses", orderStatuses);
 
             request.getRequestDispatcher("order.jsp").forward(request, response);
 
@@ -112,7 +141,50 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        String role = (String) session.getAttribute("role");
+        
+        // Chỉ Manager và Staff mới được update trạng thái
+        if (!role.equals("Manager") && !role.equals("Staff")) {
+            response.sendRedirect("accessDenied.jsp");
+            return;
+        }
+        
+        String action = request.getParameter("action");
+        
+        if ("updateStatus".equals(action)) {
+            try {
+                int orderId = Integer.parseInt(request.getParameter("orderId"));
+                String newStatus = request.getParameter("newStatus");
+                
+                // Kiểm tra quyền update theo role
+                boolean canUpdate = false;
+                if (role.equals("Manager")) {
+                    // Manager có thể update tất cả trạng thái
+                    canUpdate = true;
+                } else if (role.equals("Staff")) {
+                    // Staff chỉ có thể update từ "Đang chuẩn bị" sang "Chờ giao hàng"
+                    String currentStatus = orderDAO.getOrderStatusById(orderId);
+                    if ("Đang chuẩn bị".equals(currentStatus) && "Chờ giao hàng".equals(newStatus)) {
+                        canUpdate = true;
+                    }
+                }
+                
+                if (canUpdate) {
+                    orderDAO.updateOrderStatus(orderId, newStatus);
+                    request.setAttribute("message", "Cập nhật trạng thái đơn hàng thành công!");
+                } else {
+                    request.setAttribute("error", "Bạn không có quyền thực hiện thao tác này!");
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", "Lỗi khi cập nhật trạng thái đơn hàng!");
+            }
+        }
+        
+        // Redirect về trang order
+        response.sendRedirect("orders");
     }
 
     /** 
