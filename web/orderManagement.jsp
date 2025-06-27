@@ -11,7 +11,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Inventory Control | Flower Shop</title>
+	<title>Đơn hàng | Flower Shop</title>
 	
 	<!-- External CSS -->
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -166,10 +166,9 @@
 			<div class="top-navbar">
 				<div class="d-flex justify-content-between align-items-center">
 					<div class="input-group" style="width: 300px;">
-						<input type="text" class="form-control" placeholder="Search inventory..." id="inventorySearch">
+						<input type="text" class="form-control" placeholder="Tìm kiếm theo id, tên, sdt..." id="inventorySearch">
 						<button class="btn btn-outline-secondary" onclick="searchInventory()"><i class="fas fa-search"></i></button>
-					</div>
-					
+					</div>					
 					<div class="d-flex align-items-center gap-3">
 						<a href="stock-adjustment.jsp" class="btn btn-primary">
 							<i class="fas fa-edit me-2"></i>Stock Adjustment
@@ -189,11 +188,11 @@
 				<!-- Page Header -->
 				<div class="d-flex justify-content-between align-items-center mb-4">
 					<div>
-						<h2 class="page-title">Inventory Control</h2>
-						<p class="text-muted">Monitor stock levels, manage reorders, and track inventory movements</p>
+						<h2 class="page-title">Quản lí đơn hàng</h2>
+						<p class="text-muted">Trang quản lí đơn hàng, trạng thái đơn hàng</p>
 					</div>
 					<div class="text-muted">
-						Total Items: <strong>248</strong> | Value: <strong>$45,230</strong>
+						Total Items: <strong>100</strong> | Value: <strong>100</strong>
 					</div>
 				</div>
 
@@ -201,34 +200,30 @@
 				<div class="row mb-4">
 					<div class="col-md-3">
 						<div class="inventory-stats text-center">
-							<i class="fas fa-boxes fa-2x text-primary mb-2"></i>
-							<h4 class="text-primary">248</h4>
-							<p class="mb-0">Total Items</p>
-							<small class="text-muted">Across all categories</small>
+							<i class="fa-solid fa-clock fa-2x text-primary mb-2"></i>
+							<h4 class="text-primary">100</h4>
+							<p class="mb-0">Đơn hàng chờ xác nhận</p>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="inventory-stats text-center">
-							<i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
-							<h4 class="text-warning">12</h4>
-							<p class="mb-0">Low Stock Items</p>
-							<small class="text-muted">Need reordering</small>
+							<i class="fa-solid fa-cog fa-2x mb-2" style="color: #d84c4c;"></i>
+							<h4 class="text-danger">12</h4>
+							<p class="mb-0">Đơn hàng đang chuẩn bị</p>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="inventory-stats text-center">
-							<i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
-							<h4 class="text-danger">3</h4>
-							<p class="mb-0">Out of Stock</p>
-							<small class="text-muted">Urgent attention</small>
+							<i class="fa-solid fa-truck fa-2x mb-2" style="color: #2d771e;"></i>
+							<h4 class="text-success">3</h4>
+							<p class="mb-0">Đơn hàng chờ giao </p>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="inventory-stats text-center">
-							<i class="fas fa-dollar-sign fa-2x text-success mb-2"></i>
-							<h4 class="text-success">$45.2K</h4>
-							<p class="mb-0">Total Value</p>
-							<small class="text-muted">Current inventory</small>
+							<i class="fa-solid fa-check-circle fa-2x mb-2" style="color: #f0e052;"></i>
+							<h4 class="text-warning">45</h4>
+							<p class="mb-0">Đơn hàng đã giao</p>
 						</div>
 					</div>
 				</div>
@@ -257,44 +252,77 @@
 					<div class="card-body">
 						<div class="row align-items-center">
 							<div class="col-md-3">
-								<label class="form-label">Stock Level:</label>
+								<label class="form-label">Trạng thái đơn hàng</label>
 								<select class="form-select" onchange="filterByStockLevel(this.value)">
-									<option value="">All Stock Levels</option>
-									<option value="critical">Critical (3)</option>
-									<option value="low">Low Stock (12)</option>
-									<option value="normal">Normal (198)</option>
-									<option value="high">Overstocked (35)</option>
+									<option value="">Tất cả đơn hàng</option>
+									<option value="">Chờ xác nhận</option>
+									<option value="">Đang chuẩn bị</option>
+									<option value="">Chờ giao</option>
+									<option value="">Đã giao</option>
 								</select>
 							</div>
 							<div class="col-md-3">
-								<label class="form-label">Category:</label>
+								<label class="form-label">Danh mục:</label>
 								<select class="form-select" onchange="filterByCategory(this.value)">
-									<option value="">All Categories</option>
-									<option value="cut-flowers">Cut Flowers (89)</option>
-									<option value="bouquets">Bouquets (45)</option>
-									<option value="potted-plants">Potted Plants (67)</option>
-									<option value="wedding-flowers">Wedding Flowers (23)</option>
-									<option value="supplies">Supplies & Materials (24)</option>
+									<option value="">Tất cả danh mục </option>
+									<option value="">Chỗ này sẽ list lặp danh mục đang có</option>
+									<option value="">hoa1</option>
+									<option value="">hoa2</option>
+									<option value="">hoa3</option>
+									<option value="">hoa4</option>
 								</select>
 							</div>
 							<div class="col-md-3">
-								<label class="form-label">Supplier:</label>
+								<label class="form-label">Khoảng giá:</label>
 								<select class="form-select" onchange="filterBySupplier(this.value)">
-									<option value="">All Suppliers</option>
-									<option value="flower-paradise">Flower Paradise (78)</option>
-									<option value="rose-garden">Rose Garden Co. (65)</option>
-									<option value="dutch-flowers">Dutch Flowers Ltd. (45)</option>
-									<option value="exotic-plants">Exotic Plants Inc. (35)</option>
-									<option value="seasonal-blooms">Seasonal Blooms (25)</option>
+									<option value="">Từ thấp đến cao</option>
+									<option value="">Từ cao đến thấp</option>
+									<option value="">Dưới 1 triệu</option>
+									<option value="">Từ 1 triệu đến dưới 5 triệu</option>
+									<option value="">Từ 5 triệu đến dưới 10 triệu</option>
+									<option value="">Trên 10 triệu</option>
 								</select>
 							</div>
 							<div class="col-md-3">
-								<label class="form-label">Location:</label>
-								<select class="form-select" onchange="filterByLocation(this.value)">
-									<option value="">All Locations</option>
-									<option value="main-warehouse">Main Warehouse (180)</option>
-									<option value="cold-storage">Cold Storage (45)</option>
-									<option value="display-area">Display Area (23)</option>
+								<label class="form-label">Tỉnh thành</label>
+								<select class="form-select" onchange="filterByLocation(this.value)" style="max-height: 160px; overflow-y: auto;">
+									<option value="">Tất cả tỉnh thành</option>
+									<!-- 4 tỉnh ưu tiên -->
+									<option value="hanoi">Hà Nội</option>
+									<option value="hochiminh">TP. Hồ Chí Minh</option>
+									<option value="danang">Đà Nẵng</option>
+									<option value="cantho">Cần Thơ</option>
+									<!-- Các tỉnh còn lại (30 tỉnh) -->
+									<option value="haiphong">Hải Phòng</option>
+									<option value="quangninh">Quảng Ninh</option>
+									<option value="thanhhoa">Thanh Hóa</option>
+									<option value="nghean">Nghệ An</option>
+									<option value="hue">Thừa Thiên Huế</option>
+									<option value="binhdinh">Bình Định</option>
+									<option value="binhduong">Bình Dương</option>
+									<option value="dongnai">Đồng Nai</option>
+									<option value="lamdong">Lâm Đồng</option>
+									<option value="kiengiang">Kiên Giang</option>
+									<option value="angiang">An Giang</option>
+									<option value="daklak">Đắk Lắk</option>
+									<option value="tayninh">Tây Ninh</option>
+									<option value="bacgiang">Bắc Giang</option>
+									<option value="bacninh">Bắc Ninh</option>
+									<option value="namdinh">Nam Định</option>
+									<option value="thaibinh">Thái Bình</option>
+									<option value="phutho">Phú Thọ</option>
+									<option value="vinhphuc">Vĩnh Phúc</option>
+									<option value="yenbai">Yên Bái</option>
+									<option value="laocai">Lào Cai</option>
+									<option value="dienbien">Điện Biên</option>
+									<option value="sonla">Sơn La</option>
+									<option value="baclieu">Bạc Liêu</option>
+									<option value="camau">Cà Mau</option>
+									<option value="haugiang">Hậu Giang</option>
+									<option value="travinh">Trà Vinh</option>
+									<option value="soctrang">Sóc Trăng</option>
+									<option value="ninhthuan">Ninh Thuận</option>
+									<option value="phuyen">Phú Yên</option>
 								</select>
 							</div>
 						</div>
@@ -321,343 +349,64 @@
 								<thead>
 									<tr>
 										<th><input type="checkbox" class="form-check-input" onchange="selectAllItems(this)"></th>
-										<th>Product Info</th>
-										<th>Current Stock</th>
-										<th>Stock Level</th>
-										<th>Reorder Point</th>
-										<th>Supplier Info</th>
-										<th>Last Movement</th>
-										<th>Value</th>
+										<th>Mã đơn hàng</th>
+										<th>Thông tin đơn hàng</th>
+										<th>Trạng thái</th>
+										<th>Thông tin khách hàng</th>
+										<th>Địa chỉ giao hàng</th>
+										<th>Tổng tiền</th>
 										<th>Actions</th>
 									</tr>
 								</thead>
 								<tbody>
 									<!-- Item 1: Critical Stock - Out of Stock -->
-									<tr class="table-danger">
+									<tr>
 										<td><input type="checkbox" class="form-check-input item-checkbox" value="1"></td>
 										<td>
 											<div>
-												<strong>Purple Orchid Pot</strong>
-												<div class="text-muted small">SKU: OP-001</div>
-												<div class="text-muted small">Location: Cold Storage</div>
-												<div class="text-muted small">Category: Potted Plants</div>
-											</div>
-										</td>
-										<td>
-											<div class="text-center">
-												<strong class="text-danger">0</strong>
-												<div class="text-muted small">units</div>
-												<div class="stock-progress mt-1">
-													<div class="progress-bar critical" style="width: 0%"></div>
-												</div>
-											</div>
-										</td>
-										<td><span class="stock-level critical">OUT OF STOCK</span></td>
-										<td>
-											<div>
-												<strong>Min: 5</strong>
-												<div class="text-muted small">Max: 20</div>
-												<div class="text-danger small">Reorder: 15 units</div>
-											</div>
-										</td>
-										<td>
-											<div class="supplier-info">
-												<strong>Exotic Plants Inc.</strong>
-												<div class="text-muted small">Lead time: 5-7 days</div>
-												<div class="text-muted small">Last order: Dec 20, 2023</div>
-												<div class="text-muted small">Cost: $25.00/unit</div>
+												<strong>ID : ORD123</strong>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong>Sale</strong>
-												<div class="text-muted small">Jan 12, 2024</div>
-												<div class="text-muted small">-1 unit</div>
-												<div class="text-danger small">5 days ago</div>
+												<strong>Tên mẫu hoa :</strong>
+												<div class="text-muted small">Danh mục :</div>
+												<div class="text-muted small">Số lượng : </div>
+											</div>
+										</td>
+										<td><span class="stock-level critical">Chờ xác nhận</span>
+                                                                                <span class="stock-level low">Đang chuẩn bị</span>
+                                                                                <span class="stock-level normal">Chờ giao hàng</span>
+                                                                                <span class="stock-level high">Đã giao hàng </span></td>
+										<td>
+											<div>
+												<strong>Tên khách hàng :</strong>
+												<div class="text-muted small">Số điện thoại: </div>
+												<div class="text-muted small">Email :</div>
 											</div>
 										</td>
 										<td>
 											<div>
-												<strong>$0.00</strong>
-												<div class="text-muted small">Unit: $45.00</div>
-												<div class="text-danger small">Lost sales risk</div>
+												<strong>Tỉnh, huyện, xã</strong>
+											</div>
+										</td>
+										<td>
+											<div>
+												<strong>1.000.000 vnd</strong>
+												<div class="text-muted small">Chữ:1 triệu đồng</div>
 											</div>
 										</td>
 										<td>
 											<div class="btn-group-vertical" role="group">
 												<button class="btn btn-sm btn-danger" onclick="urgentReorder(1)">
-													<i class="fas fa-exclamation-triangle"></i> Urgent Order
+													<i class="fas fa-exclamation-triangle"></i> Cập nhật
 												</button>
 												<a href="stock-adjustment.jsp?id=1" class="btn btn-sm btn-outline-primary">
-													<i class="fas fa-edit"></i> Adjust
+													<i class="fas fa-edit"></i> cập nhật
 												</a>
 												<a href="inventory-history.jsp?id=1" class="btn btn-sm btn-outline-info">
-													<i class="fas fa-history"></i> History
+													<i class="fas fa-history"></i> cập nhật
 												</a>
-											</div>
-										</td>
-									</tr>
-
-									<!-- Item 2: Low Stock - Wedding Bouquet -->
-									<tr class="table-warning">
-										<td><input type="checkbox" class="form-check-input item-checkbox" value="2"></td>
-										<td>
-											<div>
-												<strong>Premium Wedding Bouquet</strong>
-												<div class="text-muted small">SKU: WB-001</div>
-												<div class="text-muted small">Location: Main Warehouse</div>
-												<div class="text-muted small">Category: Wedding Flowers</div>
-											</div>
-										</td>
-										<td>
-											<div class="text-center">
-												<strong class="text-warning">5</strong>
-												<div class="text-muted small">units</div>
-												<div class="stock-progress mt-1">
-													<div class="progress-bar low" style="width: 25%"></div>
-												</div>
-											</div>
-										</td>
-										<td><span class="stock-level low">LOW STOCK</span></td>
-										<td>
-											<div>
-												<strong>Min: 10</strong>
-												<div class="text-muted small">Max: 30</div>
-												<div class="text-warning small">Reorder: 25 units</div>
-											</div>
-										</td>
-										<td>
-											<div class="supplier-info">
-												<strong>Flower Paradise</strong>
-												<div class="text-muted small">Lead time: 2-3 days</div>
-												<div class="text-muted small">Last order: Jan 5, 2024</div>
-												<div class="text-muted small">Cost: $85.00/unit</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Sale</strong>
-												<div class="text-muted small">Jan 15, 2024</div>
-												<div class="text-muted small">-1 unit</div>
-												<div class="text-success small">Today</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>$750.00</strong>
-												<div class="text-muted small">Unit: $150.00</div>
-												<div class="text-warning small">High demand item</div>
-											</div>
-										</td>
-										<td>
-											<div class="btn-group-vertical" role="group">
-												<button class="btn btn-sm btn-warning" onclick="createReorder(2)">
-													<i class="fas fa-shopping-cart"></i> Reorder
-												</button>
-												<a href="stock-adjustment.jsp?id=2" class="btn btn-sm btn-outline-primary">
-													<i class="fas fa-edit"></i> Adjust
-												</a>
-												<a href="inventory-history.jsp?id=2" class="btn btn-sm btn-outline-info">
-													<i class="fas fa-history"></i> History
-												</a>
-											</div>
-										</td>
-									</tr>
-
-									<!-- Item 3: Normal Stock - Red Roses -->
-									<tr>
-										<td><input type="checkbox" class="form-check-input item-checkbox" value="3"></td>
-										<td>
-											<div>
-												<strong>Red Roses (12 pieces)</strong>
-												<div class="text-muted small">SKU: RR-012</div>
-												<div class="text-muted small">Location: Cold Storage</div>
-												<div class="text-muted small">Category: Cut Flowers</div>
-											</div>
-										</td>
-										<td>
-											<div class="text-center">
-												<strong class="text-success">45</strong>
-												<div class="text-muted small">units</div>
-												<div class="stock-progress mt-1">
-													<div class="progress-bar normal" style="width: 75%"></div>
-												</div>
-											</div>
-										</td>
-										<td><span class="stock-level normal">NORMAL</span></td>
-										<td>
-											<div>
-												<strong>Min: 20</strong>
-												<div class="text-muted small">Max: 60</div>
-												<div class="text-success small">Stock OK</div>
-											</div>
-										</td>
-										<td>
-											<div class="supplier-info">
-												<strong>Rose Garden Co.</strong>
-												<div class="text-muted small">Lead time: 1-2 days</div>
-												<div class="text-muted small">Last order: Jan 12, 2024</div>
-												<div class="text-muted small">Cost: $12.00/unit</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Received</strong>
-												<div class="text-muted small">Jan 14, 2024</div>
-												<div class="text-muted small">+20 units</div>
-												<div class="text-success small">1 day ago</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>$1,125.00</strong>
-												<div class="text-muted small">Unit: $25.00</div>
-												<div class="text-success small">Best seller</div>
-											</div>
-										</td>
-										<td>
-											<div class="btn-group-vertical" role="group">
-												<a href="stock-adjustment.jsp?id=3" class="btn btn-sm btn-outline-primary">
-													<i class="fas fa-edit"></i> Adjust
-												</a>
-												<a href="inventory-history.jsp?id=3" class="btn btn-sm btn-outline-info">
-													<i class="fas fa-history"></i> History
-												</a>
-												<button class="btn btn-sm btn-outline-success" onclick="viewDetails(3)">
-													<i class="fas fa-eye"></i> Details
-												</button>
-											</div>
-										</td>
-									</tr>
-
-									<!-- Item 4: High Stock - Yellow Tulips -->
-									<tr>
-										<td><input type="checkbox" class="form-check-input item-checkbox" value="4"></td>
-										<td>
-											<div>
-												<strong>Yellow Tulips (10 pieces)</strong>
-												<div class="text-muted small">SKU: YT-010</div>
-												<div class="text-muted small">Location: Cold Storage</div>
-												<div class="text-muted small">Category: Cut Flowers</div>
-											</div>
-										</td>
-										<td>
-											<div class="text-center">
-												<strong class="text-info">85</strong>
-												<div class="text-muted small">units</div>
-												<div class="stock-progress mt-1">
-													<div class="progress-bar high" style="width: 95%"></div>
-												</div>
-											</div>
-										</td>
-										<td><span class="stock-level high">OVERSTOCKED</span></td>
-										<td>
-											<div>
-												<strong>Min: 15</strong>
-												<div class="text-muted small">Max: 50</div>
-												<div class="text-info small">Excess: 35 units</div>
-											</div>
-										</td>
-										<td>
-											<div class="supplier-info">
-												<strong>Dutch Flowers Ltd.</strong>
-												<div class="text-muted small">Lead time: 3-5 days</div>
-												<div class="text-muted small">Last order: Jan 10, 2024</div>
-												<div class="text-muted small">Cost: $9.00/unit</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Received</strong>
-												<div class="text-muted small">Jan 10, 2024</div>
-												<div class="text-muted small">+50 units</div>
-												<div class="text-muted small">5 days ago</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>$1,530.00</strong>
-												<div class="text-muted small">Unit: $18.00</div>
-												<div class="text-info small">Promotion candidate</div>
-											</div>
-										</td>
-										<td>
-											<div class="btn-group-vertical" role="group">
-												<button class="btn btn-sm btn-info" onclick="createPromotion(4)">
-													<i class="fas fa-percent"></i> Promote
-												</button>
-												<a href="stock-adjustment.jsp?id=4" class="btn btn-sm btn-outline-primary">
-													<i class="fas fa-edit"></i> Adjust
-												</a>
-												<button class="btn btn-sm btn-outline-warning" onclick="transferStock(4)">
-													<i class="fas fa-exchange-alt"></i> Transfer
-												</button>
-											</div>
-										</td>
-									</tr>
-
-									<!-- Item 5: Normal Stock - Seasonal Arrangement -->
-									<tr>
-										<td><input type="checkbox" class="form-check-input item-checkbox" value="5"></td>
-										<td>
-											<div>
-												<strong>Spring Seasonal Arrangement</strong>
-												<div class="text-muted small">SKU: SA-SPR24</div>
-												<div class="text-muted small">Location: Display Area</div>
-												<div class="text-muted small">Category: Seasonal</div>
-											</div>
-										</td>
-										<td>
-											<div class="text-center">
-												<strong class="text-success">15</strong>
-												<div class="text-muted small">units</div>
-												<div class="stock-progress mt-1">
-													<div class="progress-bar normal" style="width: 60%"></div>
-												</div>
-											</div>
-										</td>
-										<td><span class="stock-level normal">NORMAL</span></td>
-										<td>
-											<div>
-												<strong>Min: 8</strong>
-												<div class="text-muted small">Max: 25</div>
-												<div class="text-success small">Stock OK</div>
-											</div>
-										</td>
-										<td>
-											<div class="supplier-info">
-												<strong>Seasonal Blooms</strong>
-												<div class="text-muted small">Lead time: 2-4 days</div>
-												<div class="text-muted small">Last order: Jan 14, 2024</div>
-												<div class="text-muted small">Cost: $35.00/unit</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Received</strong>
-												<div class="text-muted small">Jan 15, 2024</div>
-												<div class="text-muted small">+10 units</div>
-												<div class="text-success small">Today</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>$975.00</strong>
-												<div class="text-muted small">Unit: $65.00</div>
-												<div class="text-success small">Seasonal item</div>
-											</div>
-										</td>
-										<td>
-											<div class="btn-group-vertical" role="group">
-												<a href="stock-adjustment.jsp?id=5" class="btn btn-sm btn-outline-primary">
-													<i class="fas fa-edit"></i> Adjust
-												</a>
-												<a href="inventory-history.jsp?id=5" class="btn btn-sm btn-outline-info">
-													<i class="fas fa-history"></i> History
-												</a>
-												<button class="btn btn-sm btn-outline-success" onclick="viewDetails(5)">
-													<i class="fas fa-eye"></i> Details
-												</button>
 											</div>
 										</td>
 									</tr>
@@ -669,20 +418,20 @@
 						<div class="d-flex justify-content-between align-items-center mt-3">
 							<div>
 								<button class="btn btn-outline-primary btn-sm" onclick="bulkAdjustment()" disabled id="bulkAdjustBtn">
-									<i class="fas fa-edit me-2"></i>Bulk Adjustment
+									<i class="fas fa-edit me-2"></i>Xác nhận
 								</button>
 								<button class="btn btn-outline-success btn-sm" onclick="bulkReorder()" disabled id="bulkReorderBtn">
-									<i class="fas fa-shopping-cart me-2"></i>Bulk Reorder
+									<i class="fas fa-shopping-cart me-2"></i>Xác nhận
 								</button>
 								<button class="btn btn-outline-info btn-sm" onclick="bulkTransfer()" disabled id="bulkTransferBtn">
-									<i class="fas fa-exchange-alt me-2"></i>Transfer Stock
+									<i class="fas fa-exchange-alt me-2"></i>Xác nhận
 								</button>
 								<button class="btn btn-outline-warning btn-sm" onclick="bulkPromotion()" disabled id="bulkPromotionBtn">
-									<i class="fas fa-percent me-2"></i>Create Promotion
+									<i class="fas fa-percent me-2"></i>Xác nhận
 								</button>
 							</div>
 							<div class="text-muted">
-								Showing 1 to 5 of 248 items
+								Showing 1 to 20 of 100
 							</div>
 						</div>
 
