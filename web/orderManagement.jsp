@@ -5,6 +5,7 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -166,8 +167,15 @@
 			<div class="top-navbar">
 				<div class="d-flex justify-content-between align-items-center">
 					<div class="input-group" style="width: 300px;">
-						<input type="text" class="form-control" placeholder="Tìm kiếm theo id, tên, sdt..." id="inventorySearch">
-						<button class="btn btn-outline-secondary" onclick="searchInventory()"><i class="fas fa-search"></i></button>
+						<form method="get" action="orderManagement" class="d-flex" style="max-width: 350px;">
+							<input type="hidden" name="status" value="${param.status}"/>
+							<input type="hidden" name="category" value="${param.category}"/>
+							<input type="hidden" name="priceRange" value="${param.priceRange}"/>
+							<input type="hidden" name="province" value="${param.province}"/>
+							<input type="hidden" name="dateFilter" value="${param.dateFilter}"/>
+							<input type="text" class="form-control me-2" name="search" value="${param.search}" placeholder="Tìm kiếm mã đơn, tên, SĐT..."/>
+							<button type="submit" class="btn btn-outline-primary" style="color: #e4cbce; background-color: #c7606e; border: #c7606e;"><i class="fas fa-search"></i></button>
+						</form>						
 					</div>					
 					<div class="d-flex align-items-center gap-3">
 						<a href="stock-adjustment.jsp" class="btn btn-primary">
@@ -196,136 +204,98 @@
 					</div>
 				</div>
 
-				<!-- ===== INVENTORY OVERVIEW STATISTICS ===== -->
+				<!-- FILTER FORM (chỉ giữ các select, không có nút Lọc) -->
+				<form method="get" action="orderManagement" class="row align-items-center mb-4">
+					<div class="col-md-2">
+						<label class="form-label">Trạng thái</label>
+						<select class="form-select" name="status">
+							<option value="">Tất cả</option>
+							<c:forEach var="status" items="${orderStatuses}">
+								<option value="${status}" ${param.status == status ? 'selected' : ''}>${status}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">Danh mục</label>
+						<select class="form-select" name="category">
+							<option value="">Tất cả</option>
+							<c:forEach var="cat" items="${categories}">
+								<option value="${cat.categoryName}" ${param.category == cat.categoryName ? 'selected' : ''}>${cat.categoryName}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">Khoảng giá</label>
+						<select class="form-select" name="priceRange">
+							<option value="">Tất cả</option>
+							<option value="Dưới 1 triệu" ${param.priceRange == 'Dưới 1 triệu' ? 'selected' : ''}>Dưới 1 triệu</option>
+							<option value="Từ 1 triệu đến dưới 5 triệu" ${param.priceRange == 'Từ 1 triệu đến dưới 5 triệu' ? 'selected' : ''}>Từ 1 triệu đến dưới 5 triệu</option>
+							<option value="Từ 5 triệu đến dưới 10 triệu" ${param.priceRange == 'Từ 5 triệu đến dưới 10 triệu' ? 'selected' : ''}>Từ 5 triệu đến dưới 10 triệu</option>
+							<option value="Trên 10 triệu" ${param.priceRange == 'Trên 10 triệu' ? 'selected' : ''}>Trên 10 triệu</option>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">Tỉnh thành</label>
+						<select class="form-select" name="province">
+							<option value="">Tất cả</option>
+							<option value="Hà Nội" ${param.province == 'Hà Nội' ? 'selected' : ''}>Hà Nội</option>
+							<option value="TP. Hồ Chí Minh" ${param.province == 'TP. Hồ Chí Minh' ? 'selected' : ''}>TP. Hồ Chí Minh</option>
+							<option value="Đà Nẵng" ${param.province == 'Đà Nẵng' ? 'selected' : ''}>Đà Nẵng</option>
+							<option value="Cần Thơ" ${param.province == 'Cần Thơ' ? 'selected' : ''}>Cần Thơ</option>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">Ngày đặt</label>
+						<select class="form-select" name="dateFilter">
+							<option value="">Tất cả</option>
+							<option value="today" ${param.dateFilter == 'today' ? 'selected' : ''}>Trong ngày</option>
+							<option value="week" ${param.dateFilter == 'week' ? 'selected' : ''}>Trong tuần</option>
+							<option value="month" ${param.dateFilter == 'month' ? 'selected' : ''}>Trong tháng này</option>
+						</select>
+					</div>
+					<div class="col-md-2 d-flex align-items-end justify-content-center">
+						<button type="submit" class="btn btn-primary w-100" style="height:37px; width: 50px; margin-top: 28px;">Lọc</button>
+					</div>
+				</form>
+
+
+				<!-- ICON THỐNG KÊ -->
 				<div class="row mb-4">
 					<div class="col-md-3">
-						<div class="inventory-stats text-center">
-							<i class="fa-solid fa-clock fa-2x text-primary mb-2"></i>
-							<h4 class="text-primary">100</h4>
-							<p class="mb-0">Đơn hàng chờ xác nhận</p>
-						</div>
+						<a href="orderManagement?status=Chờ xác nhận" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-clock fa-2x text-primary mb-2"></i>
+								<h4 class="text-primary">${pendingCount}</h4>
+								<p class="mb-0">Đơn hàng chờ xác nhận</p>
+							</div>
+						</a>
 					</div>
 					<div class="col-md-3">
-						<div class="inventory-stats text-center">
-							<i class="fa-solid fa-cog fa-2x mb-2" style="color: #d84c4c;"></i>
-							<h4 class="text-danger">12</h4>
-							<p class="mb-0">Đơn hàng đang chuẩn bị</p>
-						</div>
+						<a href="orderManagement?status=Đang chuẩn bị" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-cog fa-2x mb-2" style="color: #d84c4c;"></i>
+								<h4 class="text-danger">${preparingCount}</h4>
+								<p class="mb-0">Đơn hàng đang chuẩn bị</p>
+							</div>
+						</a>
 					</div>
 					<div class="col-md-3">
-						<div class="inventory-stats text-center">
-							<i class="fa-solid fa-truck fa-2x mb-2" style="color: #2d771e;"></i>
-							<h4 class="text-success">3</h4>
-							<p class="mb-0">Đơn hàng chờ giao </p>
-						</div>
+						<a href="orderManagement?status=Chờ giao hàng" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-truck fa-2x mb-2" style="color: #2d771e;"></i>
+								<h4 class="text-success">${shippingCount}</h4>
+								<p class="mb-0">Đơn hàng chờ giao</p>
+							</div>
+						</a>
 					</div>
 					<div class="col-md-3">
-						<div class="inventory-stats text-center">
-							<i class="fa-solid fa-check-circle fa-2x mb-2" style="color: #f0e052;"></i>
-							<h4 class="text-warning">45</h4>
-							<p class="mb-0">Đơn hàng đã giao</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- ===== CRITICAL ALERTS ===== -->
-				<div class="row mb-4">
-					<div class="col-12">
-						<div class="reorder-alert">
-							<div class="d-flex align-items-center justify-content-between">
-								<div>
-									<h6 class="mb-1"><i class="fas fa-exclamation-triangle me-2"></i>Urgent Reorder Required</h6>
-									<p class="mb-0">3 items are out of stock and 12 items are below minimum stock levels. Immediate action required to prevent stockouts.</p>
-								</div>
-								<div>
-									<a href="urgent-reorder.jsp" class="btn btn-warning">
-										<i class="fas fa-shopping-cart me-2"></i>Create Purchase Orders
-									</a>
-								</div>
+						<a href="orderManagement?status=Đã mua" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-check-circle fa-2x mb-2" style="color: #f0e052;"></i>
+								<h4 class="text-warning">${completedCount}</h4>
+								<p class="mb-0">Đơn hàng đã giao</p>
 							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- ===== FILTER SECTION ===== -->
-				<div class="card mb-4">
-					<div class="card-body">
-						<div class="row align-items-center">
-							<div class="col-md-3">
-								<label class="form-label">Trạng thái đơn hàng</label>
-								<select class="form-select" onchange="filterByStockLevel(this.value)">
-									<option value="">Tất cả đơn hàng</option>
-									<option value="">Chờ xác nhận</option>
-									<option value="">Đang chuẩn bị</option>
-									<option value="">Chờ giao</option>
-									<option value="">Đã giao</option>
-								</select>
-							</div>
-							<div class="col-md-3">
-								<label class="form-label">Danh mục:</label>
-								<select class="form-select" onchange="filterByCategory(this.value)">
-									<option value="">Tất cả danh mục </option>
-									<option value="">Chỗ này sẽ list lặp danh mục đang có</option>
-									<option value="">hoa1</option>
-									<option value="">hoa2</option>
-									<option value="">hoa3</option>
-									<option value="">hoa4</option>
-								</select>
-							</div>
-							<div class="col-md-3">
-								<label class="form-label">Khoảng giá:</label>
-								<select class="form-select" onchange="filterBySupplier(this.value)">
-									<option value="">Từ thấp đến cao</option>
-									<option value="">Từ cao đến thấp</option>
-									<option value="">Dưới 1 triệu</option>
-									<option value="">Từ 1 triệu đến dưới 5 triệu</option>
-									<option value="">Từ 5 triệu đến dưới 10 triệu</option>
-									<option value="">Trên 10 triệu</option>
-								</select>
-							</div>
-							<div class="col-md-3">
-								<label class="form-label">Tỉnh thành</label>
-								<select class="form-select" onchange="filterByLocation(this.value)" style="max-height: 160px; overflow-y: auto;">
-									<option value="">Tất cả tỉnh thành</option>
-									<!-- 4 tỉnh ưu tiên -->
-									<option value="hanoi">Hà Nội</option>
-									<option value="hochiminh">TP. Hồ Chí Minh</option>
-									<option value="danang">Đà Nẵng</option>
-									<option value="cantho">Cần Thơ</option>
-									<!-- Các tỉnh còn lại (30 tỉnh) -->
-									<option value="haiphong">Hải Phòng</option>
-									<option value="quangninh">Quảng Ninh</option>
-									<option value="thanhhoa">Thanh Hóa</option>
-									<option value="nghean">Nghệ An</option>
-									<option value="hue">Thừa Thiên Huế</option>
-									<option value="binhdinh">Bình Định</option>
-									<option value="binhduong">Bình Dương</option>
-									<option value="dongnai">Đồng Nai</option>
-									<option value="lamdong">Lâm Đồng</option>
-									<option value="kiengiang">Kiên Giang</option>
-									<option value="angiang">An Giang</option>
-									<option value="daklak">Đắk Lắk</option>
-									<option value="tayninh">Tây Ninh</option>
-									<option value="bacgiang">Bắc Giang</option>
-									<option value="bacninh">Bắc Ninh</option>
-									<option value="namdinh">Nam Định</option>
-									<option value="thaibinh">Thái Bình</option>
-									<option value="phutho">Phú Thọ</option>
-									<option value="vinhphuc">Vĩnh Phúc</option>
-									<option value="yenbai">Yên Bái</option>
-									<option value="laocai">Lào Cai</option>
-									<option value="dienbien">Điện Biên</option>
-									<option value="sonla">Sơn La</option>
-									<option value="baclieu">Bạc Liêu</option>
-									<option value="camau">Cà Mau</option>
-									<option value="haugiang">Hậu Giang</option>
-									<option value="travinh">Trà Vinh</option>
-									<option value="soctrang">Sóc Trăng</option>
-									<option value="ninhthuan">Ninh Thuận</option>
-									<option value="phuyen">Phú Yên</option>
-								</select>
-							</div>
-						</div>
+						</a>
 					</div>
 				</div>
 
@@ -355,61 +325,106 @@
 										<th>Thông tin khách hàng</th>
 										<th>Địa chỉ giao hàng</th>
 										<th>Tổng tiền</th>
+										<th>Ngày tạo</th>
 										<th>Actions</th>
 									</tr>
 								</thead>
 								<tbody>
-									<!-- Item 1: Critical Stock - Out of Stock -->
-									<tr>
-										<td><input type="checkbox" class="form-check-input item-checkbox" value="1"></td>
-										<td>
-											<div>
-												<strong>ID : ORD123</strong>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Tên mẫu hoa :</strong>
-												<div class="text-muted small">Danh mục :</div>
-												<div class="text-muted small">Số lượng : </div>
-											</div>
-										</td>
-										<td><span class="stock-level critical">Chờ xác nhận</span>
-                                                                                <span class="stock-level low">Đang chuẩn bị</span>
-                                                                                <span class="stock-level normal">Chờ giao hàng</span>
-                                                                                <span class="stock-level high">Đã giao hàng </span></td>
-										<td>
-											<div>
-												<strong>Tên khách hàng :</strong>
-												<div class="text-muted small">Số điện thoại: </div>
-												<div class="text-muted small">Email :</div>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>Tỉnh, huyện, xã</strong>
-											</div>
-										</td>
-										<td>
-											<div>
-												<strong>1.000.000 vnd</strong>
-												<div class="text-muted small">Chữ:1 triệu đồng</div>
-											</div>
-										</td>
-										<td>
-											<div class="btn-group-vertical" role="group">
-												<button class="btn btn-sm btn-danger" onclick="urgentReorder(1)">
-													<i class="fas fa-exclamation-triangle"></i> Cập nhật
-												</button>
-												<a href="stock-adjustment.jsp?id=1" class="btn btn-sm btn-outline-primary">
-													<i class="fas fa-edit"></i> cập nhật
-												</a>
-												<a href="inventory-history.jsp?id=1" class="btn btn-sm btn-outline-info">
-													<i class="fas fa-history"></i> cập nhật
-												</a>
-											</div>
-										</td>
-									</tr>
+									<c:forEach var="order" items="${orders}">
+										<tr>
+											<td><input type="checkbox" class="form-check-input item-checkbox" value="${order.orderId}"></td>
+											<td>
+												<div>
+													<strong>ID : ${order.orderCode}</strong>
+												</div>
+											</td>
+											<td>
+												<c:forEach var="item" items="${order.items}">
+													<div>
+														<strong>${item.productName}</strong>
+														<span class="text-muted small">SL: ${item.quantity}</span>
+														<span class="text-muted small">Giá: <fmt:formatNumber value="${item.unitPrice}" type="currency" currencySymbol="₫"/></span>
+													</div>
+												</c:forEach>
+											</td>
+											<td>
+												<c:choose>
+													<c:when test="${order.status eq 'Chờ xác nhận'}">
+														<span class="stock-level" style="background: #ff6b6b; color: white;">${order.status}</span>
+													</c:when>
+													<c:when test="${order.status eq 'Đang chuẩn bị'}">
+														<span class="stock-level" style="background: #feca57; color: white;">${order.status}</span>
+													</c:when>
+													<c:when test="${order.status eq 'Chờ giao hàng'}">
+														<span class="stock-level" style="background: #1dd1a1; color: white;">${order.status}</span>
+													</c:when>
+													<c:otherwise>
+														<span class="stock-level" style="background: #48dbfb; color: white;">${order.status}</span>
+													</c:otherwise>
+												</c:choose>
+											</td>
+											<td>
+												<div>
+													<strong>${order.customerName}</strong>
+													<div class="text-muted small">Số điện thoại: ${order.phone}</div>
+													<div class="text-muted small">Email: ${order.email}</div>
+												</div>
+											</td>
+											<td>
+												<div>
+													<strong>${order.deliveryAddress}</strong>
+												</div>
+											</td>
+											<td>
+												<div>
+													<strong><fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/></strong>
+												</div>
+											</td>
+											<td>
+												<div>
+													<strong>Ngày tạo :</strong>
+													<c:choose>
+														<c:when test="${not empty order.createdAt}">
+															<fmt:parseDate value="${order.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
+															<div class="text-muted small">
+																<fmt:formatDate value="${parsedDate}" pattern="dd-MM-yyyy"/>
+															</div>
+														</c:when>
+														<c:otherwise>
+															<div class="text-muted small">-</div>
+														</c:otherwise>
+													</c:choose>
+												</div>
+											</td>
+											<td>
+												<div class="btn-group-vertical" role="group">
+													<c:if test="${userRole eq 'Manager'}">
+														<form method="post" action="orderManagement">
+															<input type="hidden" name="action" value="updateStatus"/>
+															<input type="hidden" name="orderId" value="${order.orderId}"/>
+															<select name="newStatus" class="form-select form-select-sm mb-1">
+																<c:forEach var="status" items="${orderStatuses}">
+																	<option value="${status}" ${status eq order.status ? 'selected' : ''}>${status}</option>
+																</c:forEach>
+															</select>
+															<button type="submit" class="btn btn-sm btn-outline-primary">Cập nhật</button>
+														</form>
+													</c:if>
+													<c:if test="${userRole eq 'Staff' && order.status eq 'Đang chuẩn bị'}">
+														<form method="post" action="orderManagement">
+															<input type="hidden" name="action" value="updateStatus"/>
+															<input type="hidden" name="orderId" value="${order.orderId}"/>
+															<input type="hidden" name="newStatus" value="Chờ giao hàng"/>
+															<button type="submit" class="btn btn-sm btn-outline-primary">Chuyển sang chờ giao hàng</button>
+														</form>
+													</c:if>
+													<c:if test="${userRole eq 'Shipper' && order.status eq 'Chờ giao hàng'}">
+														<span class="btn btn-sm btn-outline-success disabled">Đang giao hàng</span>
+													</c:if>
+												</div>
+											</td>
+										</tr>
+									</c:forEach>
 								</tbody>
 							</table>
 						</div>
@@ -420,15 +435,6 @@
 								<button class="btn btn-outline-primary btn-sm" onclick="bulkAdjustment()" disabled id="bulkAdjustBtn">
 									<i class="fas fa-edit me-2"></i>Xác nhận
 								</button>
-								<button class="btn btn-outline-success btn-sm" onclick="bulkReorder()" disabled id="bulkReorderBtn">
-									<i class="fas fa-shopping-cart me-2"></i>Xác nhận
-								</button>
-								<button class="btn btn-outline-info btn-sm" onclick="bulkTransfer()" disabled id="bulkTransferBtn">
-									<i class="fas fa-exchange-alt me-2"></i>Xác nhận
-								</button>
-								<button class="btn btn-outline-warning btn-sm" onclick="bulkPromotion()" disabled id="bulkPromotionBtn">
-									<i class="fas fa-percent me-2"></i>Xác nhận
-								</button>
 							</div>
 							<div class="text-muted">
 								Showing 1 to 20 of 100
@@ -436,19 +442,23 @@
 						</div>
 
 						<!-- ===== PAGINATION ===== -->
-						<nav aria-label="Inventory pagination" class="mt-3">
+						<nav aria-label="Order pagination" class="mt-3">
 							<ul class="pagination">
-								<li class="page-item disabled">
-									<a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
-								</li>
-								<li class="page-item active"><a class="page-link" href="#">1</a></li>
-								<li class="page-item"><a class="page-link" href="inventory.jsp?page=2">2</a></li>
-								<li class="page-item"><a class="page-link" href="inventory.jsp?page=3">3</a></li>
-								<li class="page-item"><a class="page-link" href="inventory.jsp?page=4">4</a></li>
-								<li class="page-item"><a class="page-link" href="inventory.jsp?page=5">5</a></li>
-								<li class="page-item">
-									<a class="page-link" href="inventory.jsp?page=2"><i class="fas fa-chevron-right"></i></a>
-								</li>
+								<c:if test="${currentPage > 1}">
+									<li class="page-item">
+										<a class="page-link" href="orderManagement?page=${currentPage - 1}"><i class="fas fa-chevron-left"></i></a>
+									</li>
+								</c:if>
+								<c:forEach var="i" begin="1" end="${totalPages}">
+									<li class="page-item ${i == currentPage ? 'active' : ''}">
+										<a class="page-link" href="orderManagement?page=${i}">${i}</a>
+									</li>
+								</c:forEach>
+								<c:if test="${currentPage < totalPages}">
+									<li class="page-item">
+										<a class="page-link" href="orderManagement?page=${currentPage + 1}"><i class="fas fa-chevron-right"></i></a>
+									</li>
+								</c:if>
 							</ul>
 						</nav>
 					</div>
@@ -610,3 +620,4 @@ document.addEventListener('DOMContentLoaded', function() {
 	</script>      
 </body>
 </html>
+
