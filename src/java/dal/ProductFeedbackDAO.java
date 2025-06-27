@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Model.ProductFeedback;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductFeedbackDAO {
     public ProductFeedback getFeedback(int productId, int customerId) throws SQLException {
@@ -59,5 +61,34 @@ public class ProductFeedbackDAO {
             ps.executeUpdate();
         }
     }
+
+    public List<ProductFeedback> getFeedbacksByProductId(int productId) throws SQLException {
+    List<ProductFeedback> list = new ArrayList<>();
+    String sql = """
+        SELECT f.*, u.full_name 
+        FROM product_feedback f
+        JOIN users u ON f.customer_id = u.user_id
+        WHERE f.product_id = ?
+        ORDER BY f.created_at DESC
+    """;
+    try (Connection con = new DBcontext().getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, productId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            ProductFeedback f = new ProductFeedback();
+            f.setFeedbackId(rs.getInt("feedback_id"));
+            f.setProductId(rs.getInt("product_id"));
+            f.setCustomerId(rs.getInt("customer_id"));
+            f.setRating(rs.getInt("rating"));
+            f.setComment(rs.getString("comment"));
+            f.setCreatedAt(rs.getTimestamp("created_at"));
+            f.setUpdatedAt(rs.getTimestamp("updated_at"));
+            f.setCustomerName(rs.getString("full_name")); // cần JOIN với bảng users
+            list.add(f);
+        }
+    }
+    return list;
+}
 }
     
