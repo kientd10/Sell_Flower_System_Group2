@@ -216,22 +216,45 @@
 		<nav class="sidebar">
 			<a href="home" class="sidebar-brand" style="font-size:27px ; color: #d4d4d4">
 				<i class="fas fa-seedling me-2" style="color: #dc3545;" ></i>Menu quản lý
-			</a>
-
-			<div class="sidebar-user">
-				<div class="d-flex align-items-center">
-					<img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
-					<div>
-						<div style="font-weight: 600;">Admin User</div>
-						<small style="opacity: 0.8;">System Manager</small>
+			</a>							
+			<!-- ===== SIDEBAR USER ===== -->
+			<c:if test="${sessionScope.user.roleId == 2}">
+				<div class="sidebar-user">
+					<div class="d-flex align-items-center">
+						<div>
+							<div style="font-weight: 600;">Staff</div>
+							<small style="opacity: 0.8;">Chào mừng nhân viên !</small>
+						</div>
 					</div>
 				</div>
-			</div>
+			</c:if>
+
+			<c:if test="${sessionScope.user.roleId == 3}">
+				<div class="sidebar-user">
+					<div class="d-flex align-items-center">
+						<div>
+							<div style="font-weight: 600;">Manager</div>
+							<small style="opacity: 0.8;">Chào mừng người quản lí!</small>
+						</div>
+					</div>
+				</div>
+			</c:if> 
+			
+			<c:if test="${sessionScope.user.roleId == 4}">
+				<div class="sidebar-user">
+					<div class="d-flex align-items-center">
+						<div>
+							<div style="font-weight: 600;">Shipper</div>
+							<small style="opacity: 0.8;">Chào mừng người giao hàng!</small>
+						</div>
+					</div>
+				</div>
+			</c:if> 
                     
 			<ul class="sidebar-nav">
 				<li class="sidebar-header">Menu Chính</li>
 				<!-- Chỉ hiển thị nếu là Staff -->
-                                <c:if test="${sessionScope.user.roleId == 2}">                                            
+                <c:if test="${sessionScope.user.roleId == 2}">                                            
 					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
 					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
 					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
