@@ -17,6 +17,8 @@ import Model.Category;
 import Model.BouquetTemplate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.security.MessageDigest;
+
 
 @WebServlet(name = "Customer", urlPatterns = {"/Customer"})
 public class Customer extends HttpServlet {
@@ -57,19 +59,15 @@ public class Customer extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", a);
                 Cookie Email = new Cookie("email", email);
-                Cookie Pass = new Cookie("password", pass);
                 Cookie Remember = new Cookie("remember", remember);
                 if (remember != null) {
                     Email.setMaxAge(60 * 60 * 24 * 30);
-                    Pass.setMaxAge(60 * 60 * 24 * 3);
                     Remember.setMaxAge(60 * 60 * 24 * 30);
                 } else {
                     Email.setMaxAge(0);
-                    Pass.setMaxAge(0);
                     Remember.setMaxAge(0);
                 }
                 response.addCookie(Email);
-                response.addCookie(Pass);
                 response.addCookie(Remember);
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
@@ -152,7 +150,7 @@ public class Customer extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-             if(!cfPass.equals(pass)){
+             if(!cfPass.equals(pass)){//so sánh pass và confirm pass
                 request.setAttribute("errorpass", "Confirm is not true!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
@@ -185,6 +183,20 @@ public class Customer extends HttpServlet {
                 request.setAttribute("CFpass", cfPass);
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
+             }
+             
+             boolean checkPhone = dao.GetPhone(phone);
+             if(checkPhone){//kiểm tra trùng số điện thoại
+                 request.setAttribute("errorpass", "Phone had registered!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+
              }
              
              //địa chỉ
@@ -233,6 +245,7 @@ public class Customer extends HttpServlet {
 
     }
     
+    // check emnail
     public boolean isValidEmail(String email) {
         // Biểu thức chính quy cho định dạng email
         String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$";
@@ -247,9 +260,12 @@ public class Customer extends HttpServlet {
         return matcher.matches();
     }
 
-
     @Override
     public String getServletInfo() {
         return "Customer Servlet for handling login, logout, and signup";
     }
 }
+
+
+
+

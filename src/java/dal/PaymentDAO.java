@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package dal;
 
 import Model.Invoice;
@@ -84,8 +81,8 @@ public class PaymentDAO {
         return list;
     }
 
-    //filter by date
-    public List<Invoice> DisplayInvoiceByDate(String Date) {
+     //filter 
+    public List<Invoice> FilterInvoice(String Date, String price) {
         List<Invoice> list = new ArrayList<>();
         String sql = "SELECT \n"
                 + "    \n"
@@ -110,26 +107,43 @@ public class PaymentDAO {
                 + "    users u ON o.customer_id = u.user_id\n"
                 + "    \n"
                 + "where 1=1";
-        switch (Date) {
-            case "all":
-                sql = sql;
-                break;
-            case "today":
-                sql+=" AND DATE(o.created_at) = CURDATE()";
-                break;
-            case "yesterday":
-                sql += " AND DATE(o.created_at) = CURDATE() - INTERVAL 1 DAY";
-                break;
-            case "week":
-                sql += " AND WEEK(o.created_at, 1) = WEEK(CURDATE(), 1) AND YEAR(o.created_at) = YEAR(CURDATE())";
-                break;
-            case "month":
-                sql += " AND MONTH(o.created_at) = MONTH(CURDATE()) AND YEAR(o.created_at) = YEAR(CURDATE())";
-                break;
-            case "quarter":
-                sql += " AND QUARTER(o.created_at) = QUARTER(CURDATE()) AND YEAR(o.created_at) = YEAR(CURDATE())";
-                break;
+
+        if (Date != null && !Date.equals("all")) {
+            switch (Date) {
+                case "today":
+                    sql += " AND DATE(o.created_at) = CURDATE()";
+                    break;
+                case "yesterday":
+                    sql += " AND DATE(o.created_at) = CURDATE() - INTERVAL 1 DAY";
+                    break;
+                case "week":
+                    sql += " AND WEEK(o.created_at, 1) = WEEK(CURDATE(), 1) AND YEAR(o.created_at) = YEAR(CURDATE())";
+                    break;
+                case "month":
+                    sql += " AND MONTH(o.created_at) = MONTH(CURDATE()) AND YEAR(o.created_at) = YEAR(CURDATE())";
+                    break;
+                case "quarter":
+                    sql += " AND QUARTER(o.created_at) = QUARTER(CURDATE()) AND YEAR(o.created_at) = YEAR(CURDATE())";
+                    break;
+            }
         }
+
+        if (price != null && !price.equals("all")) {
+            switch (price) {
+                case "price1": // 0 - 99,000
+                    sql += " AND o.total_amount BETWEEN 0 AND 99000";
+                    break;
+                case "price2": // 100,000 - 499,000
+                    sql += " AND o.total_amount BETWEEN 100000 AND 499000";
+                    break;
+                case "price3": // 500,000 trở lên
+                    sql += " AND o.total_amount >= 500000";
+                    break;
+
+            }
+        }
+        
+        sql +=" ORDER BY o.total_amount DESC";   
         try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Invoice invoice = new Invoice();
@@ -146,6 +160,14 @@ public class PaymentDAO {
         }
         return list;
     }
+    public static void main(String[] args) {
+        PaymentDAO d = new PaymentDAO();
+        List<Invoice> list = d.FilterInvoice("quarter", "price3");
+        System.out.println(list);
+    }
+
     
    
 }
+
+
