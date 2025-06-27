@@ -72,6 +72,7 @@
                                         <li><a href="profile"><i class="fa fa-user"></i> Hồ sơ</a></li>
                                         <li><a href="orders"><i class="fa fa-truck"></i> Đơn hàng</a></li>
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+                                        <li><a href="feedback_list.jsp"><i class="fa fa-comments"></i> Đánh giá</a></li>
                                         <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
                                         </c:if> 
                                         <c:if test="${sessionScope.user == null}">

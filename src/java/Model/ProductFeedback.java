@@ -18,7 +18,7 @@ public class ProductFeedback {
     private String comment;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-
+    private String customerName;
     public int getFeedbackId() {
         return feedbackId;
     }
@@ -74,5 +74,12 @@ public class ProductFeedback {
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public String getCustomerName() {
+    return customerName;
+}
+
+public void setCustomerName(String customerName) {
+    this.customerName = customerName;
+}
 
 }

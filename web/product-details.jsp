@@ -234,7 +234,7 @@
                                 <img style="width:264px ; height: 430px ; margin-top:40px; border-radius: 5px " src="https://4kwallpapers.com/images/wallpapers/teddy-bear-rose-cute-toy-gift-valentines-day-5k-2160x3840-441.jpg" alt="" />
                             </div><!--/shipping-->                          
                         </div>
-                                           
+
                     </div>
                     <div class="col-sm-9 padding-right">
                         <div class="product-details"><!--product-details-->
@@ -271,6 +271,20 @@
                                         <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>                                   
                                     </ul> 
                                 </div><!--/product-information-->
+                                <h3>Đánh giá từ người mua</h3>
+
+                                <c:if test="${empty feedbacks}">
+                                    <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+                                </c:if>
+
+                                <c:forEach var="fb" items="${feedbacks}">
+                                    <div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:5px;">
+                                        <strong>${fb.customerName}</strong>
+                                        <em style="float:right;">${fb.createdAt}</em><br/>
+                                        <span style="color:orange;">⭐ ${fb.rating}/5</span><br/>
+                                        <p>${fb.comment}</p>
+                                    </div>
+                                </c:forEach>
                             </div>
                         </div><!--/product-details-->
 
