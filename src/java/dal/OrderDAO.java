@@ -404,7 +404,7 @@ public class OrderDAO {
     }
 
     // Lấy danh sách đơn hàng cho trang quản lý, có lọc và phân trang
-    public List<Order> getOrdersForManagement(Integer roleId, String status, String category, String priceRange, String province, String search, String dateFilter, int page, int pageSize) {
+    public List<Order> getOrdersForManagement(Integer roleId, String status, String category, String priceRange, String province, String search, String dateFilter, String sortPrice, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, os.status_name, o.created_At, u.full_name as customer_name, u.phone, u.email ");
@@ -453,7 +453,16 @@ public class OrderDAO {
             }
         }
         sql.append("GROUP BY o.order_id ");
-        sql.append("ORDER BY o.created_at DESC ");
+        
+        // Xử lý sắp xếp
+        if ("asc".equals(sortPrice)) {
+            sql.append("ORDER BY o.total_amount ASC ");
+        } else if ("desc".equals(sortPrice)) {
+            sql.append("ORDER BY o.total_amount DESC ");
+        } else {
+            sql.append("ORDER BY o.created_at DESC ");
+        }
+        
         sql.append("LIMIT ? OFFSET ?");
 
         List<Object> params = new ArrayList<>();

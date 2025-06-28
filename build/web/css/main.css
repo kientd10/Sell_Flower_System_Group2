@@ -65,7 +65,7 @@ a#scrollUp i{
 **************************/
 
 .header_top {
-  background: none repeat scroll 0 0 #F0F0E9;
+  background: #c44d58;
 }
 
 .contactinfo ul li:first-child{
@@ -74,7 +74,7 @@ a#scrollUp i{
 
 .contactinfo ul li a{
   font-size: 12px;
-  color: #696763;
+  color: #ffffff;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -87,7 +87,7 @@ a#scrollUp i{
 .social-icons ul li a {
   border: 0 none;
   border-radius: 0;
-  color: #696763;
+  color: #ffffff;
   padding:0px;
 }
 
@@ -125,6 +125,7 @@ a#scrollUp i{
   margin-right: 0;
   padding-bottom: 20px;
   padding-top: 20px;
+  background: #ffffff;
 }
 
 .header-middle .container .row .col-sm-4{
@@ -206,6 +207,7 @@ a#scrollUp i{
 .header-bottom {
   padding-bottom: 30px;
   padding-top: 30px;
+  background: #ffffff;
 }
 
 .navbar-collapse.collapse{
@@ -326,12 +328,12 @@ ul.sub-menu {
 **************************/
 
 #footer {
-  background: #F0F0E9;
+  background: #c44d58;
 }
 
 
 .footer-top .container {
-  border-bottom: 1px solid #E0E0DA;
+  border-bottom: 1px solid #ffcccc;
   padding-bottom: 20px;
 }
 
@@ -340,7 +342,7 @@ ul.sub-menu {
 }
 
 .companyinfo h2 {
-  color: #B4B1AB;
+  color: #ffffff;
   font-family: abel;
   font-size: 27px;
   text-transform: uppercase;
@@ -351,7 +353,7 @@ ul.sub-menu {
 }
 
 .companyinfo p {
-  color: #B3B3AD;
+  color: #ffffff;
   font-family: 'Roboto', sans-serif;
   font-size: 12px;
   font-weight: 300;
@@ -409,7 +411,7 @@ ul.sub-menu {
 }
 
 .video-gallery p {
-  color: #8C8C88;
+  color: #ffffff;
   font-family: 'Roboto', sans-serif;
   font-size: 12px;
   font-weight: 500;
@@ -417,7 +419,7 @@ ul.sub-menu {
 }
 
 .video-gallery  h2 {
-  color: #8c8c88;
+  color: #ffffff;
   font-family: 'Roboto', sans-serif;
   font-size: 12px;
   font-weight: 300;
@@ -436,7 +438,7 @@ ul.sub-menu {
 }
 
 .address p {
-  color: #666663;
+  color: #ffffff;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -455,7 +457,7 @@ ul.sub-menu {
 }
 
 .single-widget h2 {
-  color: #666663;
+  color: #ffffff;
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
   font-weight: 500;
@@ -468,7 +470,7 @@ ul.sub-menu {
 }
 
 .single-widget ul li a{
-	color: #8C8C88;
+	color: #ffffff;
 	font-family: 'Roboto', sans-serif;
 	font-size: 14px;
 	font-weight: 300;
@@ -517,7 +519,7 @@ ul.sub-menu {
 }
 
 .searchform p {
-  color: #8C8C88;
+  color: #ffffff;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -525,12 +527,12 @@ ul.sub-menu {
 }
 
 .footer-bottom {
-  background: #D6D6D0;
+  background: #8B0000;
   padding-top: 10px;
 }
 
 .footer-bottom p {
-  color: #363432;
+  color: #ffffff;
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
   margin-left: 15px;

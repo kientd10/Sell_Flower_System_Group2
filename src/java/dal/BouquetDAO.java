@@ -348,6 +348,8 @@ public class BouquetDAO {
 
     public List<BouquetTemplate> getTopSellingBouquets(int limit) {
         List<BouquetTemplate> bouquets = new ArrayList<>();
+        
+        // Thử lấy sản phẩm bán chạy từ order_details trước
         String sql = "SELECT bt.template_id, bt.template_name, bt.description, bt.base_price, bt.image_url "
                 + "FROM order_details od "
                 + "JOIN bouquet_templates bt ON od.template_id = bt.template_id "
@@ -355,6 +357,7 @@ public class BouquetDAO {
                 + "GROUP BY bt.template_id, bt.template_name, bt.description, bt.base_price, bt.image_url "
                 + "ORDER BY SUM(od.quantity) DESC "
                 + "LIMIT ?";
+        
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, limit);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -369,8 +372,35 @@ public class BouquetDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error getting top selling bouquets: " + e.getMessage());
         }
+        
+        // Nếu không có sản phẩm bán chạy, lấy sản phẩm mới nhất làm fallback
+        if (bouquets.isEmpty()) {
+            String fallbackSql = "SELECT template_id, template_name, description, base_price, image_url "
+                    + "FROM bouquet_templates "
+                    + "WHERE is_active = TRUE "
+                    + "ORDER BY template_id DESC "
+                    + "LIMIT ?";
+            
+            try (PreparedStatement stmt = conn.prepareStatement(fallbackSql)) {
+                stmt.setInt(1, limit);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        bouquets.add(new BouquetTemplate(
+                                rs.getInt("template_id"),
+                                rs.getString("template_name"),
+                                rs.getString("description"),
+                                rs.getDouble("base_price"),
+                                rs.getString("image_url")
+                        ));
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Error getting fallback bouquets: " + e.getMessage());
+            }
+        }
+        
         return bouquets;
     }
 

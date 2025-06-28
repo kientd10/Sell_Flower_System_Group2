@@ -81,7 +81,7 @@ public class HomeServlet extends HttpServlet {
             List<Category> categories = categoryDAO.getAllCategories();
             request.setAttribute("categories", categories);
 
-            List<BouquetTemplate> featuredBouquets = bouquetDAO.getAllBouquets(); // Cho slider
+            List<BouquetTemplate> featuredBouquets = bouquetDAO.getTopSellingBouquets(3); // Lấy top 3 sản phẩm bán chạy cho slider
             request.setAttribute("featuredBouquets", featuredBouquets);
 
             List<BouquetTemplate> bouquets;
