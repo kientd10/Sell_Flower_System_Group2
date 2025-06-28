@@ -14,6 +14,7 @@ public class OrderItem {
     private int quantity;
     private double unitPrice;
     private String imageUrl;
+    private int templateId;
 
     public String getProductName() {
         return productName;
@@ -45,5 +46,13 @@ public class OrderItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public int getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(int templateId) {
+        this.templateId = templateId;
     }
 }

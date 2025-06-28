@@ -33,8 +33,8 @@
     
 <style>
     .order-status {
-        padding: 8px 15px;
-        border-radius: 20px;
+        padding: 7px 14px;
+        border-radius: 16px;
         font-size: 12px;
         font-weight: bold;
         display: inline-block;
@@ -61,51 +61,72 @@
     }
     
     .order-card {
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        margin-bottom: 25px;
         background: white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        box-shadow: 0 1.5px 7px rgba(0,0,0,0.07);
+        margin-bottom: 18px;
         overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .order-card:hover {
+        box-shadow: 0 3.5px 14px rgba(0,0,0,0.11);
+        transform: translateY(-1.5px);
     }
     
     .order-header {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        padding: 20px;
+        background: linear-gradient(135deg, #f8bebe 0%, #ffb6b6 100%);
+        padding: 14px 18px;
         border-bottom: 1px solid #dee2e6;
     }
     
+    .order-header h4 {
+        color: #333 !important;
+        margin: 0;
+        font-weight: 600;
+        font-size: 17px;
+    }
+    
+    .order-header p {
+        color: #666 !important;
+        margin: 4px 0 0 0;
+        font-size: 13px;
+    }
+    
     .order-content {
-        padding: 20px;
+        padding: 14px 18px;
     }
     
     .product-row {
         display: flex;
         align-items: center;
-        padding: 15px;
-        border: 1px solid #f0f0f0;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        background-color: #fafafa;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .product-row:last-child {
+        border-bottom: none;
     }
     
     .product-image {
-        width: 70px;
-        height: 70px;
+        width: 46px;
+        height: 46px;
         object-fit: cover;
-        border-radius: 8px;
-        margin-right: 15px;
+        border-radius: 7px;
+        margin-right: 14px;
+        box-shadow: 0 1.5px 3.5px rgba(0,0,0,0.1);
     }
     
     .order-total {
-        font-size: 20px;
+        font-size: 17px;
         font-weight: bold;
         color: #28a745;
+        margin: 0;
     }
     
     .nav-tabs-custom {
-        border-bottom: 7px solid #c44d58;
-        margin-bottom: 30px;
+        border-bottom: 5px solid #c44d58;
+        margin-bottom: 28px;
     }
     
     .nav-tabs-custom > li > a {
@@ -113,7 +134,8 @@
         font-weight: 500;
         border: none;
         border-radius: 0;
-        padding: 12px 20px;
+        padding: 11px 18px;
+        font-size: 15px;
     }
     
     .nav-tabs-custom > li.active > a,
@@ -122,19 +144,116 @@
         background-color: #c44d58;
         color: white;
         border: none;
-        border-radius: 15px 15px 0 0;
+        border-radius: 12px 12px 0 0;
     }
     
     .empty-state {
         text-align: center;
-        padding: 60px 20px;
+        padding: 45px 20px;
         color: #6c757d;
     }
     
     .empty-state i {
-        font-size: 80px;
-        margin-bottom: 20px;
+        font-size: 65px;
+        margin-bottom: 18px;
         color: #dee2e6;
+    }
+    
+    .empty-state h4 {
+        font-size: 19px;
+        margin-bottom: 9px;
+    }
+    
+    .empty-state p {
+        font-size: 15px;
+    }
+    
+    .order-info-section {
+        background: #f8f9fa;
+        border-radius: 7px;
+        padding: 12px 14px;
+        margin: 14px 0;
+    }
+    
+    .order-info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 7px;
+        font-size: 13px;
+    }
+    
+    .order-info-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .order-info-item i {
+        width: 17px;
+        margin-right: 9px;
+        color: #28a745;
+        font-size: 13px;
+    }
+    
+    .order-info-item strong {
+        color: #333;
+        margin-right: 7px;
+        min-width: 85px;
+        font-size: 13px;
+    }
+    
+    .order-info-item span {
+        color: #666;
+        flex: 1;
+        font-size: 13px;
+    }
+    
+    .btn-custom {
+        border-radius: 16px;
+        padding: 7px 18px;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        margin: 2px;
+    }
+    
+    .btn-custom:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2.5px 9px rgba(0,0,0,0.15);
+    }
+    
+    .btn-reorder {
+        background-color: #28a745;
+        color: white;
+    }
+    
+    .btn-reorder:hover {
+        background-color: #218838;
+        color: white;
+    }
+    
+    /* Tăng kích thước cho tiêu đề trang */
+    .text-center h2 {
+        font-size: 26px;
+        margin-bottom: 9px;
+    }
+    
+    .text-center p {
+        font-size: 15px;
+    }
+    
+    /* Tăng kích thước cho tên sản phẩm */
+    .product-row h5 {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+    
+    .product-row p {
+        font-size: 13px;
+    }
+    
+    /* Tăng kích thước cho giá */
+    .product-row strong {
+        font-size: 17px;
     }
 </style>
 
@@ -276,7 +395,7 @@
                                                 </p>
                                             </div>
                                             <div class="col-md-6 text-right">
-                                                <span class="order-status status-pending">
+                                                <span class="order-status status-pending status-badge">
                                                     <i class="fa fa-clock-o"></i> ${order.status}
                                                 </span>
                                             </div>
@@ -285,7 +404,9 @@
                                     <div class="order-content">
                                         <c:forEach var="item" items="${order.items}">
                                             <div class="product-row">
-                                                <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'">
+                                                <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
+                                                    <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                </a>
                                                 <div style="flex: 1;">
                                                     <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
                                                     <p style="margin: 5px 0 0 0; color: #666;">Số lượng: ${item.quantity}</p>
@@ -297,22 +418,33 @@
                                                 </div>
                                             </div>
                                         </c:forEach>
-                                        <div style="border-top: 2px solid #f0f0f0; margin-top: 20px; padding-top: 20px;">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h6><i class="fa fa-map-marker"></i> Địa chỉ giao hàng:</h6>
-                                                    <p style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                                                        ${order.deliveryAddress}
-                                                    </p>
+                                        <div style="margin-top:5px; padding-top: 5px;">
+                                            <div class="order-info-section">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-map-marker"></i>
+                                                    <strong>Địa chỉ giao hàng:</strong>
+                                                    <span>${order.deliveryAddress}</span>
                                                 </div>
-                                                <div class="col-md-6 text-right">
-                                                    <h6>Tổng tiền:</h6>
-                                                    <p class="order-total" style="margin: 10px 0;">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-phone"></i>
+                                                    <strong>Số điện thoại:</strong>
+                                                    <span>${order.deliveryPhone}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <h6 style="color: #333; font-weight: 600; margin-bottom: 10px; display: inline-block; margin-right: 0px; font-size: 14px;">
+                                                        <i class="fa fa-money" ></i> Tổng tiền  :
+                                                    </h6>
+                                                    <p class="order-total" style="margin: 10px 10px; display: inline-block;">
                                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
                                                     </p>
-                                                    <div>
-                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-sm">
+                                                    <div style="margin-top: 10px;">
+                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
                                                             <i class="fa fa-eye"></i> Chi tiết
+                                                        </a>
+                                                        <a href="contactSupport?orderId=${order.orderId}" class="btn btn-warning btn-custom">
+                                                            <i class="fa fa-phone"></i> Liên hệ
                                                         </a>
                                                     </div>
                                                 </div>
@@ -346,7 +478,7 @@
                                                 </p>
                                             </div>
                                             <div class="col-md-6 text-right">
-                                                <span class="order-status status-preparing">
+                                                <span class="order-status status-preparing status-badge">
                                                     <i class="fa fa-cog fa-spin"></i> ${order.status}
                                                 </span>
                                             </div>
@@ -355,7 +487,9 @@
                                     <div class="order-content">
                                         <c:forEach var="item" items="${order.items}">
                                             <div class="product-row">
-                                                <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'">
+                                                <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
+                                                    <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                </a>
                                                 <div style="flex: 1;">
                                                     <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
                                                     <p style="margin: 5px 0 0 0; color: #666;">Số lượng: ${item.quantity}</p>
@@ -367,22 +501,33 @@
                                                 </div>
                                             </div>
                                         </c:forEach>
-                                        <div style="border-top: 2px solid #f0f0f0; margin-top: 20px; padding-top: 20px;">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h6><i class="fa fa-map-marker"></i> Địa chỉ giao hàng:</h6>
-                                                    <p style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                                                        ${order.deliveryAddress}
-                                                    </p>
+                                        <div style="margin-top:5px; padding-top: 5px;">
+                                            <div class="order-info-section">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-map-marker"></i>
+                                                    <strong>Địa chỉ giao hàng:</strong>
+                                                    <span>${order.deliveryAddress}</span>
                                                 </div>
-                                                <div class="col-md-6 text-right">
-                                                    <h6>Tổng tiền:</h6>
-                                                    <p class="order-total" style="margin: 10px 0;">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-phone"></i>
+                                                    <strong>Số điện thoại:</strong>
+                                                    <span>${order.deliveryPhone}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <h6 style="color: #333; font-weight: 600; margin-bottom: 10px; display: inline-block; margin-right: 0px; font-size: 14px;">
+                                                        <i class="fa fa-money"></i> Tổng tiền  :
+                                                    </h6>
+                                                    <p class="order-total" style="margin: 10px 10px; display: inline-block;">
                                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
                                                     </p>
-                                                    <div>
-                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-sm">
+                                                    <div style="margin-top: 10px;">
+                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
                                                             <i class="fa fa-eye"></i> Chi tiết
+                                                        </a>
+                                                        <a href="contactSupport?orderId=${order.orderId}" class="btn btn-warning btn-custom">
+                                                            <i class="fa fa-phone"></i> Liên hệ
                                                         </a>
                                                     </div>
                                                 </div>
@@ -416,7 +561,7 @@
                                                 </p>
                                             </div>
                                             <div class="col-md-6 text-right">
-                                                <span class="order-status status-shipping">
+                                                <span class="order-status status-shipping status-badge">
                                                     <i class="fa fa-truck"></i> ${order.status}
                                                 </span>
                                                 <p style="margin: 5px 0 0 0; color: #666; font-size: 13px;">
@@ -429,7 +574,9 @@
                                     <div class="order-content">
                                         <c:forEach var="item" items="${order.items}">
                                             <div class="product-row">
-                                                <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'">
+                                                <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
+                                                    <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                </a>
                                                 <div style="flex: 1;">
                                                     <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
                                                     <p style="margin: 5px 0 0 0; color: #666;">Số lượng: ${item.quantity}</p>
@@ -441,24 +588,32 @@
                                                 </div>
                                             </div>
                                         </c:forEach>
-                                        <div style="border-top: 2px solid #f0f0f0; margin-top: 20px; padding-top: 20px;">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h6><i class="fa fa-map-marker"></i> Địa chỉ giao hàng:</h6>
-                                                    <p style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                                                        ${order.deliveryAddress}
-                                                    </p>
+                                        <div style="margin-top:5px; padding-top: 5px;">
+                                            <div class="order-info-section">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-map-marker"></i>
+                                                    <strong>Địa chỉ giao hàng:</strong>
+                                                    <span>${order.deliveryAddress}</span>
                                                 </div>
-                                                <div class="col-md-6 text-right">
-                                                    <h6>Tổng tiền:</h6>
-                                                    <p class="order-total" style="margin: 10px 0;">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-phone"></i>
+                                                    <strong>Số điện thoại:</strong>
+                                                    <span>${order.deliveryPhone}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <h6 style="color: #333; font-weight: 600; margin-bottom: 10px; display: inline-block; margin-right: 0px; font-size: 14px;">
+                                                        <i class="fa fa-money"></i> Tổng tiền  :
+                                                    </h6>
+                                                    <p class="order-total" style="margin: 10px 10px; display: inline-block;">
                                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
                                                     </p>
-                                                    <div>
-                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-sm" style="margin-right: 10px;">
+                                                    <div style="margin-top: 10px;">
+                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
                                                             <i class="fa fa-eye"></i> Chi tiết
                                                         </a>
-                                                        <a href="contactSupport?orderId=${order.orderId}" class="btn btn-warning btn-sm">
+                                                        <a href="contactSupport?orderId=${order.orderId}" class="btn btn-warning btn-custom">
                                                             <i class="fa fa-phone"></i> Liên hệ
                                                         </a>
                                                     </div>
@@ -493,7 +648,7 @@
                                                 </p>
                                             </div>
                                             <div class="col-md-6 text-right">
-                                                <span class="order-status status-completed">
+                                                <span class="order-status status-completed status-badge">
                                                     <i class="fa fa-check-circle"></i> ${order.status}
                                                 </span>
                                             </div>
@@ -502,7 +657,9 @@
                                     <div class="order-content">
                                         <c:forEach var="item" items="${order.items}">
                                             <div class="product-row">
-                                                <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'">
+                                                <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
+                                                    <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                </a>
                                                 <div style="flex: 1;">
                                                     <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
                                                     <p style="margin: 5px 0 0 0; color: #666;">Số lượng: ${item.quantity}</p>
@@ -514,24 +671,32 @@
                                                 </div>
                                             </div>
                                         </c:forEach>
-                                        <div style="border-top: 2px solid #f0f0f0; margin-top: 20px; padding-top: 20px;">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h6><i class="fa fa-map-marker"></i> Địa chỉ giao hàng:</h6>
-                                                    <p style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                                                        ${order.deliveryAddress}
-                                                    </p>
+                                        <div style="margin-top:5px; padding-top: 5px;">
+                                            <div class="order-info-section">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-map-marker"></i>
+                                                    <strong>Địa chỉ giao hàng:</strong>
+                                                    <span>${order.deliveryAddress}</span>
                                                 </div>
-                                                <div class="col-md-6 text-right">
-                                                    <h6>Tổng tiền:</h6>
-                                                    <p class="order-total" style="margin: 10px 0;">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-phone"></i>
+                                                    <strong>Số điện thoại:</strong>
+                                                    <span>${order.deliveryPhone}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <h6 style="color: #333; font-weight: 600; margin-bottom: 10px; display: inline-block; margin-right: 0px; font-size: 14px;">
+                                                        <i class="fa fa-money"></i> Tổng tiền  :
+                                                    </h6>
+                                                    <p class="order-total" style="margin: 10px 10px; display: inline-block;">
                                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
                                                     </p>
-                                                    <div>
-                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-sm" style="margin-right: 10px;">
+                                                    <div style="margin-top: 10px;">
+                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
                                                             <i class="fa fa-eye"></i> Chi tiết
                                                         </a>
-                                                        <a href="reorder?orderId=${order.orderId}" class="btn btn-success btn-sm">
+                                                        <a href="reorder?orderId=${order.orderId}" class="btn btn-success btn-custom">
                                                             <i class="fa fa-refresh"></i> Mua lại
                                                         </a>
                                                     </div>

@@ -328,9 +328,13 @@ ul.sub-menu {
 **************************/
 
 #footer {
-  background: #c44d58;
+  background: #b8434f;
+  margin-top: 20px;
 }
 
+.footer-top {
+  background: #ffb6b6;
+}
 
 .footer-top .container {
   border-bottom: 1px solid #ffcccc;

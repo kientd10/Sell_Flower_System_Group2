@@ -143,11 +143,12 @@ public class OrderDAO {
         List<Order> orders = new ArrayList<>();
 
         String sql = """
-            SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address,
+            SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_phone,
             os.status_name,o.created_At
             FROM orders o
             JOIN order_status os ON o.status_id = os.status_id
             WHERE o.customer_id = ?
+            ORDER BY o.created_at DESC 
             """;
 
         Connection conn = null;
@@ -166,6 +167,7 @@ public class OrderDAO {
                 order.setOrderCode(rs.getString("order_code"));
                 order.setTotalAmount(rs.getDouble("total_amount"));
                 order.setDeliveryAddress(rs.getString("delivery_address"));
+                order.setDeliveryPhone(rs.getString("delivery_phone"));
                 order.setStatus(rs.getString("status_name"));
                 order.setCreatedAt(rs.getString("created_at"));
 
@@ -364,11 +366,11 @@ public class OrderDAO {
         return statuses;
     }
 
-    private List<OrderItem> getItemsByOrderId(int orderId, Connection conn) throws Exception {
+    public List<OrderItem> getItemsByOrderId(int orderId, Connection conn) throws Exception {
         List<OrderItem> items = new ArrayList<>();
 
         String sql = """
-            SELECT od.quantity, od.unit_price, bt.template_name, bt.image_url
+            SELECT od.quantity, od.unit_price, bt.template_name, bt.image_url, bt.template_id
             FROM order_details od
             JOIN bouquet_templates bt ON od.template_id = bt.template_id
             WHERE od.order_id = ?
@@ -376,8 +378,14 @@ public class OrderDAO {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
+        boolean shouldCloseConnection = false;
 
         try {
+            if (conn == null) {
+                conn = DBcontext.getJDBCConnection();
+                shouldCloseConnection = true;
+            }
+            
             ps = conn.prepareStatement(sql);
             ps.setInt(1, orderId);
             rs = ps.executeQuery();
@@ -388,6 +396,7 @@ public class OrderDAO {
                 item.setImageUrl(rs.getString("image_url"));
                 item.setQuantity(rs.getInt("quantity"));
                 item.setUnitPrice(rs.getDouble("unit_price"));
+                item.setTemplateId(rs.getInt("template_id"));
                 items.add(item);
             }
 
@@ -397,6 +406,9 @@ public class OrderDAO {
             }
             if (ps != null) {
                 ps.close();
+            }
+            if (shouldCloseConnection && conn != null) {
+                conn.close();
             }
         }
 
