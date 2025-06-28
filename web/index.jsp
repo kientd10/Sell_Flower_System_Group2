@@ -289,8 +289,8 @@
                                                         <form action="${pageContext.request.contextPath}/add" method="get">
                                                             <input type="hidden" name="templateId" value="${bou.templateId}" />
                                                             <button type="submit"
-                                                                    class="btn btn-primary">
-                                                                <i class="fa fa-shopping-cart"></i> Add to cart
+                                                                    class="btn btn-primary" style="border-radius: 4px;">
+                                                                <i class="fa fa-shopping-cart"></i> Mua ngay
                                                             </button>
                                                         </form>
                                                     </div>
@@ -387,7 +387,7 @@
                 <div class="container">
                     <div class="row">
                         <p class="pull-left">Copyright © 2025  Flower Shop. All rights reserved</p>
-                        <p class="pull-right">Designed by <span><a target="_blank" href="https://github.com/kientd10/Sell_Flower_System_Group2">Group 2</a></span></p>
+                        <p class="pull-right">Designed by <span style="color: #080101;"  ><a target="_blank" href="https://github.com/kientd10/Sell_Flower_System_Group2">Group 2</a></span></p>
                     </div>
                 </div>
             </div>

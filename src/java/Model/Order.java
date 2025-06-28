@@ -24,6 +24,7 @@ public class Order {
     private String paymentStatus;
     private String createdAt;
     private String deliveryAddress;
+    private String deliveryPhone;
     private List<OrderItem> items;
     private String phone;
     private String email;
@@ -95,6 +96,14 @@ public void setCreatedAt(String createdAt) {
 
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getDeliveryPhone() {
+        return deliveryPhone;
+    }
+
+    public void setDeliveryPhone(String deliveryPhone) {
+        this.deliveryPhone = deliveryPhone;
     }
 
     public List<OrderItem> getItems() {

@@ -40,6 +40,14 @@
         <servlet-name>OrderServlet</servlet-name>
         <servlet-class>Controller.OrderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderDetailsServlet</servlet-name>
+        <servlet-class>Controller.OrderDetailsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReorderServlet</servlet-name>
+        <servlet-class>Controller.ReorderServlet</servlet-class>
+    </servlet>
     <servlet>        
         <servlet-name>ProductManagementServlet</servlet-name>
         <servlet-class>Controller.ProductManagementServlet</servlet-class>
@@ -87,6 +95,14 @@
     <servlet-mapping>
         <servlet-name>OrderServlet</servlet-name>
         <url-pattern>/orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderDetailsServlet</servlet-name>
+        <url-pattern>/orderDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReorderServlet</servlet-name>
+        <url-pattern>/reorder</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ProductManagementServlet</servlet-name>
