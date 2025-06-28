@@ -528,7 +528,7 @@
     <body>
         <div class="wrapper">
             <% 
-                Integer role = (Integer) request.getSession().getAttribute("role"); 
+                Integer role = (Integer) request.getSession().getAttribute("roleId"); 
                 UserDAO userDAO = new UserDAO();
                 User userToEdit = (User) request.getAttribute("user");
                 String error = request.getParameter("error");

@@ -128,7 +128,7 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect("productmanagement?action=view");
                     break;
                 case 3: // Quản lý (Manager)
-                    response.sendRedirect("management.jsp");
+                    response.sendRedirect("statistics");
                     break;
                 case 4: // Người giao hàng (Shipper)
                     response.sendRedirect("orderManagement.jsp");
