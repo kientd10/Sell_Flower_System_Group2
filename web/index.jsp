@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -122,11 +121,11 @@
             </div><!--/header-bottom-->        
         </header><!--/header-->
 
-        <section id="slider""><!--slider-->
+        <section id="slider"><!--slider-->
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
-
+                        <h2 class="title text-center">Sản Phẩm Nổi Bật</h2>
                         <c:choose>
                             <c:when test="${not empty featuredBouquets}">
                                 <div id="slider-carousel" class="carousel slide" data-ride="carousel">
@@ -140,16 +139,14 @@
                                     <div class="carousel-inner">
                                         <c:forEach var="item" items="${featuredBouquets}" varStatus="loop">
                                             <div class="item ${loop.first ? 'active' : ''}">
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <h1><span style="color: #ff6f61">Flower Shop</span></h1>
+                                                <div class="row" style="margin-top: 20px;">
+                                                    <div class="col-sm-6" style="margin-top: 65px;">
                                                         <h2>${item.templateName}</h2>
                                                         <p>${item.description}</p>
-                                                        <a href="product-detail.jsp?templateId=${item.templateId}" class="btn btn-default get">Mua ngay</a>
+                                                        <a href="bouquet-detail?templateId=${item.templateId}" class="btn btn-default get" style="border-radius: 5px;">Mua ngay</a>
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <img src="${item.imageUrl}" class="girl img-responsive" alt="${item.templateName}" />
-                                                        <img src="images/home/pricing.png" class="pricing" alt="Price Tag" />
                                                     </div>
                                                 </div>
                                             </div>

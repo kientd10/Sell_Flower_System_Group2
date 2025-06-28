@@ -103,6 +103,69 @@
 		.page-link:hover { color: white; background-color: var(--primary-red); border-color: var(--primary-red); transform: translateY(-1px); }
 		.page-item.active .page-link { background-color: var(--primary-red); border-color: var(--primary-red); }
 		
+		/* ===== TABLE STYLES ===== */
+		.table {
+			font-size: 0.9rem;
+			vertical-align: middle;
+		}
+		.table th {
+			background: #f8f9fa;
+			border-bottom: 2px solid #dee2e6;
+			font-weight: 600;
+			white-space: nowrap;
+		}
+		.table td {
+			border-bottom: 1px solid #f1f3f4;
+			padding: 0.75rem 0.5rem;
+			vertical-align: top;
+		}
+		.table tbody tr:hover {
+			background-color: #f8f9fa;
+		}
+		.text-truncate {
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.badge {
+			font-size: 0.75rem;
+			padding: 0.35em 0.65em;
+		}
+		.form-select-sm {
+			font-size: 0.8rem;
+			padding: 0.25rem 0.5rem;
+		}
+		.btn-sm {
+			font-size: 0.8rem;
+			padding: 0.25rem 0.5rem;
+		}
+		
+		/* Fix font for all select elements */
+		.form-select, .form-select-sm {
+			font-family: Arial, sans-serif !important;
+			font-size: 14px !important;
+		}
+		.form-select option {
+			font-family: Arial, sans-serif !important;
+			font-size: 14px !important;
+		}
+		
+		/* Remove any background images or icons that might overlap */
+		.form-select {
+			background-image: none !important;
+			-webkit-appearance: menulist !important;
+			-moz-appearance: menulist !important;
+			appearance: menulist !important;
+		}
+		
+		/* Ensure proper z-index and positioning */
+		.card-header .form-select {
+			position: relative;
+			z-index: 1;
+			background-color: white !important;
+		}
+		
 		/* ===== RESPONSIVE DESIGN ===== */
 		@media (max-width: 768px) {
 			.sidebar { width: 250px; }
@@ -137,7 +200,7 @@
 					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
 					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
 					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-					<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+					<li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
 				</c:if> 
 
 				<!-- Chỉ hiển thị nếu là Manager -->
@@ -146,17 +209,17 @@
 					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
 					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
 					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-					<li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+					<li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
 					<li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
 					<li class="sidebar-header">Hệ Thống</li>
 					<li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-					<li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
+					<li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
 					<li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
 				</c:if> 
                     
 				<!-- Chỉ hiển thị nếu là Shipper -->                        
 				<c:if test="${sessionScope.user.roleId == 4}">
-					<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+					<li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
 				</c:if>                   
 			</ul>
 		</nav>
@@ -168,25 +231,20 @@
 				<div class="d-flex justify-content-between align-items-center">
 					<div class="input-group" style="width: 300px;">
 						<form method="get" action="orderManagement" class="d-flex" style="max-width: 350px;">
+							<input type="hidden" name="pageSize" value="${pageSize}"/>
 							<input type="hidden" name="status" value="${param.status}"/>
 							<input type="hidden" name="category" value="${param.category}"/>
 							<input type="hidden" name="priceRange" value="${param.priceRange}"/>
 							<input type="hidden" name="province" value="${param.province}"/>
 							<input type="hidden" name="dateFilter" value="${param.dateFilter}"/>
-							<input type="text" class="form-control me-2" name="search" value="${param.search}" placeholder="Tìm kiếm mã đơn, tên, SĐT..."/>
+							<input type="text" class="form-control me-2" name="search" value="${param.search}" placeholder="mã đơn, tên, email, sđt..."/>
 							<button type="submit" class="btn btn-outline-primary" style="color: #e4cbce; background-color: #c7606e; border: #c7606e;"><i class="fas fa-search"></i></button>
 						</form>						
 					</div>					
 					<div class="d-flex align-items-center gap-3">
-						<a href="stock-adjustment.jsp" class="btn btn-primary">
-							<i class="fas fa-edit me-2"></i>Stock Adjustment
-						</a>
 						<a href="purchase-order.jsp" class="btn btn-success">
 							<i class="fas fa-shopping-cart me-2"></i>Purchase Order
 						</a>
-						<button class="btn btn-outline-secondary" onclick="generateInventoryReport()">
-							<i class="fas fa-file-export me-2"></i>Export Report
-						</button>
 					</div>
 				</div>
 			</div>
@@ -200,12 +258,84 @@
 						<p class="text-muted">Trang quản lí đơn hàng, trạng thái đơn hàng</p>
 					</div>
 					<div class="text-muted">
-						Total Items: <strong>100</strong> | Value: <strong>100</strong>
+						Số lượng đơn hàng: <strong>${totalOrders}</strong> 
 					</div>
 				</div>
 
+				<!-- ICON THỐNG KÊ -->
+				<!-- QUAN LY -->
+				<c:if test="${sessionScope.user.roleId == 3}">
+				<div class="row mb-4">
+					<div class="col-md-3">
+						<a href="orderManagement?status=Chờ xác nhận&pageSize=${pageSize}" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-clock fa-2x text-primary mb-2"></i>
+								<h4 class="text-primary">${pendingCount}</h4>
+								<p class="mb-0">Đơn hàng chờ xác nhận</p>
+							</div>
+						</a>
+					</div>
+					<div class="col-md-3">
+						<a href="orderManagement?status=Đang chuẩn bị&pageSize=${pageSize}" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-cog fa-2x mb-2" style="color: #d84c4c;"></i>
+								<h4 class="text-danger">${preparingCount}</h4>
+								<p class="mb-0">Đơn hàng đang chuẩn bị</p>
+							</div>
+						</a>
+					</div>
+					<div class="col-md-3">
+						<a href="orderManagement?status=Chờ giao hàng&pageSize=${pageSize}" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-truck fa-2x mb-2" style="color: #2d771e;"></i>
+								<h4 class="text-success">${shippingCount}</h4>
+								<p class="mb-0">Đơn hàng chờ giao</p>
+							</div>
+						</a>
+					</div>
+					<div class="col-md-3">
+						<a href="orderManagement?status=Đã mua&pageSize=${pageSize}" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-check-circle fa-2x mb-2" style="color: #f0e052;"></i>
+								<h4 class="text-warning">${completedCount}</h4>
+								<p class="mb-0">Đơn hàng đã giao</p>
+							</div>
+						</a>
+					</div>
+				</div>
+				</c:if>
+				<!-- NHAN VIEN -->
+				<c:if test="${sessionScope.user.roleId == 2}">
+				<div class="row mb-4">
+					<div class="col-md-6 offset-md-3">
+						<a href="orderManagement?status=Đang chuẩn bị&pageSize=${pageSize}" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-cog fa-2x mb-2" style="color: #d84c4c;"></i>
+								<h4 class="text-danger">${preparingCount}</h4>
+								<p class="mb-0">Đơn hàng đang chuẩn bị</p>
+							</div>
+						</a>
+					</div>
+				</div>
+				</c:if>				 
+				<!-- SHIPPER -->
+				<c:if test="${sessionScope.user.roleId == 4}">
+				<div class="row mb-4">
+					<div class="col-md-6 offset-md-3">
+						<a href="orderManagement?status=Chờ giao hàng&pageSize=${pageSize}" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-truck fa-2x mb-2" style="color: #2d771e;"></i>
+								<h4 class="text-success">${shippingCount}</h4>
+								<p class="mb-0">Đơn hàng chờ giao</p>
+							</div>
+						</a>
+					</div>
+				</div>
+				</c:if>
+
 				<!-- FILTER FORM (chỉ giữ các select, không có nút Lọc) -->
 				<form method="get" action="orderManagement" class="row align-items-center mb-4">
+					<input type="hidden" name="pageSize" value="${pageSize}"/>
 					<div class="col-md-2">
 						<label class="form-label">Trạng thái</label>
 						<select class="form-select" name="status">
@@ -235,6 +365,14 @@
 						</select>
 					</div>
 					<div class="col-md-2">
+						<label class="form-label">Sắp xếp giá</label>
+						<select class="form-select" name="sortPrice">
+							<option value="">Mặc định</option>
+							<option value="asc" ${param.sortPrice == 'asc' ? 'selected' : ''}>Từ thấp đến cao</option>
+							<option value="desc" ${param.sortPrice == 'desc' ? 'selected' : ''}>Từ cao xuống thấp</option>
+						</select>
+					</div>
+					<div class="col-md-2">
 						<label class="form-label">Tỉnh thành</label>
 						<select class="form-select" name="province">
 							<option value="">Tất cả</option>
@@ -253,64 +391,24 @@
 							<option value="month" ${param.dateFilter == 'month' ? 'selected' : ''}>Trong tháng này</option>
 						</select>
 					</div>
-					<div class="col-md-2 d-flex align-items-end justify-content-center">
-						<button type="submit" class="btn btn-primary w-100" style="height:37px; width: 50px; margin-top: 28px;">Lọc</button>
+					<div class="col-md-12 d-flex justify-content-center mt-3">
+						<button type="submit" class="btn btn-primary" style="height:37px; width: 100px;">Lọc</button>
 					</div>
 				</form>
 
 
-				<!-- ICON THỐNG KÊ -->
-				<div class="row mb-4">
-					<div class="col-md-3">
-						<a href="orderManagement?status=Chờ xác nhận" style="text-decoration:none">
-							<div class="inventory-stats text-center">
-								<i class="fa-solid fa-clock fa-2x text-primary mb-2"></i>
-								<h4 class="text-primary">${pendingCount}</h4>
-								<p class="mb-0">Đơn hàng chờ xác nhận</p>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-3">
-						<a href="orderManagement?status=Đang chuẩn bị" style="text-decoration:none">
-							<div class="inventory-stats text-center">
-								<i class="fa-solid fa-cog fa-2x mb-2" style="color: #d84c4c;"></i>
-								<h4 class="text-danger">${preparingCount}</h4>
-								<p class="mb-0">Đơn hàng đang chuẩn bị</p>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-3">
-						<a href="orderManagement?status=Chờ giao hàng" style="text-decoration:none">
-							<div class="inventory-stats text-center">
-								<i class="fa-solid fa-truck fa-2x mb-2" style="color: #2d771e;"></i>
-								<h4 class="text-success">${shippingCount}</h4>
-								<p class="mb-0">Đơn hàng chờ giao</p>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-3">
-						<a href="orderManagement?status=Đã mua" style="text-decoration:none">
-							<div class="inventory-stats text-center">
-								<i class="fa-solid fa-check-circle fa-2x mb-2" style="color: #f0e052;"></i>
-								<h4 class="text-warning">${completedCount}</h4>
-								<p class="mb-0">Đơn hàng đã giao</p>
-							</div>
-						</a>
-					</div>
-				</div>
-
 				<!-- ===== INVENTORY TABLE ===== -->
 				<div class="card">
 					<div class="card-header d-flex justify-content-between align-items-center">
-						<h5 class="mb-0">Inventory Status</h5>
+						<h5 class="mb-0">Danh sách đơn hàng</h5>
 						<div class="d-flex align-items-center gap-3">
-							<span class="text-light">Show:</span>
-							<select class="form-select form-select-sm" style="width: auto;">
-								<option value="25" selected>25</option>
-								<option value="50">50</option>
-								<option value="100">100</option>
+							<span class="text-light">Hiển thị:</span>
+							<select class="form-select form-select-sm" style="width: 80px; font-family: Arial, sans-serif; font-size: 14px; background: white; border: 1px solid #ced4da;" onchange="changePageSize(this.value)">
+								<option value="20" ${param.pageSize == '20' || empty param.pageSize ? 'selected' : ''}>20</option>
+								<option value="40" ${param.pageSize == '40' ? 'selected' : ''}>40</option>
+								<option value="60" ${param.pageSize == '60' ? 'selected' : ''}>60</option>
 							</select>
-							<span class="text-light">entries</span>
+							<span class="text-light">Đơn hàng</span>
 						</div>
 					</div>
 					<div class="card-body">
@@ -318,15 +416,15 @@
 							<table class="table table-hover">
 								<thead>
 									<tr>
-										<th><input type="checkbox" class="form-check-input" onchange="selectAllItems(this)"></th>
-										<th>Mã đơn hàng</th>
-										<th>Thông tin đơn hàng</th>
-										<th>Trạng thái</th>
-										<th>Thông tin khách hàng</th>
-										<th>Địa chỉ giao hàng</th>
-										<th>Tổng tiền</th>
-										<th>Ngày tạo</th>
-										<th>Actions</th>
+										<th style="width: 50px;"><input type="checkbox" class="form-check-input" onchange="selectAllItems(this)"></th>
+										<th style="width: 120px;">Mã đơn hàng</th>
+										<th style="width: 200px;">Thông tin đơn hàng</th>
+										<th style="width: 120px;">Trạng thái</th>
+										<th style="width: 180px;">Thông tin khách hàng</th>
+										<th style="width: 150px;">Địa chỉ giao hàng</th>
+										<th style="width: 120px;">Tổng tiền</th>
+										<th style="width: 100px;">Ngày tạo</th>
+										<th style="width: 150px;">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -334,72 +432,86 @@
 										<tr>
 											<td><input type="checkbox" class="form-check-input item-checkbox" value="${order.orderId}"></td>
 											<td>
-												<div>
-													<strong>ID : ${order.orderCode}</strong>
+												<div class="text-truncate" title="${order.orderCode}">
+													<strong>${order.orderCode}</strong>
 												</div>
 											</td>
 											<td>
-												<c:forEach var="item" items="${order.items}">
-													<div>
-														<strong>${item.productName}</strong>
-														<span class="text-muted small">SL: ${item.quantity}</span>
-														<span class="text-muted small">Giá: <fmt:formatNumber value="${item.unitPrice}" type="currency" currencySymbol="₫"/></span>
-													</div>
-												</c:forEach>
+												<div style="max-height: 80px; overflow-y: auto;">
+													<c:forEach var="item" items="${order.items}" varStatus="status">
+														<div class="mb-1 ${status.index > 0 ? 'border-top pt-1' : ''}">
+															<div class="text-truncate" title="${item.productName}">
+																<strong>${item.productName}</strong>
+															</div>
+															<div class="small text-muted">
+																SL: ${item.quantity} | 
+																<fmt:formatNumber value="${item.unitPrice}" type="currency" currencySymbol="₫"/>
+															</div>
+														</div>
+													</c:forEach>
+												</div>
 											</td>
 											<td>
 												<c:choose>
 													<c:when test="${order.status eq 'Chờ xác nhận'}">
-														<span class="stock-level" style="background: #ff6b6b; color: white;">${order.status}</span>
+														<span class="badge bg-warning text-dark">${order.status}</span>
 													</c:when>
 													<c:when test="${order.status eq 'Đang chuẩn bị'}">
-														<span class="stock-level" style="background: #feca57; color: white;">${order.status}</span>
+														<span class="badge bg-info text-white">${order.status}</span>
 													</c:when>
 													<c:when test="${order.status eq 'Chờ giao hàng'}">
-														<span class="stock-level" style="background: #1dd1a1; color: white;">${order.status}</span>
+														<span class="badge bg-primary text-white">${order.status}</span>
 													</c:when>
 													<c:otherwise>
-														<span class="stock-level" style="background: #48dbfb; color: white;">${order.status}</span>
+														<span class="badge bg-success text-white">${order.status}</span>
 													</c:otherwise>
 												</c:choose>
 											</td>
 											<td>
 												<div>
-													<strong>${order.customerName}</strong>
-													<div class="text-muted small">Số điện thoại: ${order.phone}</div>
-													<div class="text-muted small">Email: ${order.email}</div>
+													<div class="text-truncate" title="${order.customerName}">
+														<strong>${order.customerName}</strong>
+													</div>
+													<div class="small text-muted text-truncate" title="${order.phone}">
+														📞 ${order.phone}
+													</div>
+													<div class="small text-muted text-truncate" title="${order.email}">
+														📧 ${order.email}
+													</div>
+												</div>
+											</td>
+											<td>
+												<div class="text-truncate" title="${order.deliveryAddress}" style="max-width: 150px;">
+													📍 ${order.deliveryAddress}
 												</div>
 											</td>
 											<td>
 												<div>
-													<strong>${order.deliveryAddress}</strong>
+													<strong class="text-success">
+														<fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
+													</strong>
 												</div>
 											</td>
 											<td>
-												<div>
-													<strong><fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/></strong>
-												</div>
+												<c:choose>
+													<c:when test="${not empty order.createdAt}">
+														<fmt:parseDate value="${order.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
+														<div class="small">
+															<fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+														</div>
+														<div class="small text-muted">
+															<fmt:formatDate value="${parsedDate}" pattern="HH:mm"/>
+														</div>
+													</c:when>
+													<c:otherwise>
+														<div class="small text-muted">-</div>
+													</c:otherwise>
+												</c:choose>
 											</td>
 											<td>
-												<div>
-													<strong>Ngày tạo :</strong>
-													<c:choose>
-														<c:when test="${not empty order.createdAt}">
-															<fmt:parseDate value="${order.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
-															<div class="text-muted small">
-																<fmt:formatDate value="${parsedDate}" pattern="dd-MM-yyyy"/>
-															</div>
-														</c:when>
-														<c:otherwise>
-															<div class="text-muted small">-</div>
-														</c:otherwise>
-													</c:choose>
-												</div>
-											</td>
-											<td>
-												<div class="btn-group-vertical" role="group">
+												<div class="d-flex flex-column gap-1">
 													<c:if test="${userRole eq 'Manager'}">
-														<form method="post" action="orderManagement">
+														<form method="post" action="orderManagement" class="mb-1">
 															<input type="hidden" name="action" value="updateStatus"/>
 															<input type="hidden" name="orderId" value="${order.orderId}"/>
 															<select name="newStatus" class="form-select form-select-sm mb-1">
@@ -407,7 +519,7 @@
 																	<option value="${status}" ${status eq order.status ? 'selected' : ''}>${status}</option>
 																</c:forEach>
 															</select>
-															<button type="submit" class="btn btn-sm btn-outline-primary">Cập nhật</button>
+															<button type="submit" class="btn btn-sm btn-outline-primary w-100">Cập nhật</button>
 														</form>
 													</c:if>
 													<c:if test="${userRole eq 'Staff' && order.status eq 'Đang chuẩn bị'}">
@@ -415,11 +527,19 @@
 															<input type="hidden" name="action" value="updateStatus"/>
 															<input type="hidden" name="orderId" value="${order.orderId}"/>
 															<input type="hidden" name="newStatus" value="Chờ giao hàng"/>
-															<button type="submit" class="btn btn-sm btn-outline-primary">Chuyển sang chờ giao hàng</button>
+															<button type="submit" class="btn btn-sm btn-outline-primary w-100">Chuyển sang chờ giao hàng</button>
 														</form>
 													</c:if>
 													<c:if test="${userRole eq 'Shipper' && order.status eq 'Chờ giao hàng'}">
-														<span class="btn btn-sm btn-outline-success disabled">Đang giao hàng</span>
+														<form method="post" action="orderManagement">
+															<input type="hidden" name="action" value="updateStatus"/>
+															<input type="hidden" name="orderId" value="${order.orderId}"/>
+															<input type="hidden" name="newStatus" value="Đã mua"/>
+															<button type="submit" class="btn btn-sm btn-outline-success w-100">Xác nhận giao hàng</button>
+														</form>
+													</c:if>
+													<c:if test="${userRole eq 'Shipper' && order.status eq 'Đã mua'}">
+														<span class="btn btn-sm btn-outline-success disabled w-100">Đã giao hàng</span>
 													</c:if>
 												</div>
 											</td>
@@ -431,13 +551,8 @@
 
 						<!-- ===== BULK ACTIONS ===== -->
 						<div class="d-flex justify-content-between align-items-center mt-3">
-							<div>
-								<button class="btn btn-outline-primary btn-sm" onclick="bulkAdjustment()" disabled id="bulkAdjustBtn">
-									<i class="fas fa-edit me-2"></i>Xác nhận
-								</button>
-							</div>
-							<div class="text-muted">
-								Showing 1 to 20 of 100
+							<div class="text-muted" style="margin-left: 600px;">
+								Hiển thị ${(currentPage - 1) * pageSize + 1} đến ${currentPage * pageSize > totalOrders ? totalOrders : currentPage * pageSize} trong tổng số ${totalOrders} đơn hàng
 							</div>
 						</div>
 
@@ -446,17 +561,17 @@
 							<ul class="pagination">
 								<c:if test="${currentPage > 1}">
 									<li class="page-item">
-										<a class="page-link" href="orderManagement?page=${currentPage - 1}"><i class="fas fa-chevron-left"></i></a>
+										<a class="page-link" href="orderManagement?page=${currentPage - 1}&pageSize=${pageSize}&status=${param.status}&category=${param.category}&priceRange=${param.priceRange}&province=${param.province}&search=${param.search}&dateFilter=${param.dateFilter}"><i class="fas fa-chevron-left"></i></a>
 									</li>
 								</c:if>
 								<c:forEach var="i" begin="1" end="${totalPages}">
 									<li class="page-item ${i == currentPage ? 'active' : ''}">
-										<a class="page-link" href="orderManagement?page=${i}">${i}</a>
+										<a class="page-link" href="orderManagement?page=${i}&pageSize=${pageSize}&status=${param.status}&category=${param.category}&priceRange=${param.priceRange}&province=${param.province}&search=${param.search}&dateFilter=${param.dateFilter}">${i}</a>
 									</li>
 								</c:forEach>
 								<c:if test="${currentPage < totalPages}">
 									<li class="page-item">
-										<a class="page-link" href="orderManagement?page=${currentPage + 1}"><i class="fas fa-chevron-right"></i></a>
+										<a class="page-link" href="orderManagement?page=${currentPage + 1}&pageSize=${pageSize}&status=${param.status}&category=${param.category}&priceRange=${param.priceRange}&province=${param.province}&search=${param.search}&dateFilter=${param.dateFilter}"><i class="fas fa-chevron-right"></i></a>
 									</li>
 								</c:if>
 							</ul>
@@ -472,6 +587,14 @@
 	
 	<script>
 		// ===== INVENTORY MANAGEMENT FUNCTIONALITY =====
+		
+		// Change page size function
+		function changePageSize(pageSize) {
+			const urlParams = new URLSearchParams(window.location.search);
+			urlParams.set('pageSize', pageSize);
+			urlParams.set('page', '1'); // Reset to first page when changing page size
+			window.location.href = 'orderManagement?' + urlParams.toString();
+		}
 		
 		// Search inventory
 		function searchInventory() {
@@ -602,6 +725,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'categoryManagement.jsp': 'categoryManagement.jsp',
         'storageManagement.jsp': 'storageManagement.jsp',
         'orderManagement.jsp': 'orderManagement.jsp',
+        'orderManagement': 'orderManagement', // Thêm mapping cho servlet
         'invoiceManagement.jsp': 'invoiceManagement.jsp',
         'userManagement.jsp': 'userManagement.jsp',
         'feedbackManagement.jsp': 'feedbackManagement.jsp',

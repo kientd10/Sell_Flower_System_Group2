@@ -28,7 +28,7 @@ public class OrderManagementServlet extends HttpServlet {
         Integer userId = (Integer) session.getAttribute("userId");
         Integer roleId = (Integer) session.getAttribute("roleId");
         if (userId == null || roleId == null || (roleId != 2 && roleId != 3 && roleId != 4)) {
-            response.sendRedirect("accessDenied.jsp");
+            response.sendRedirect("accessDenied.jsp"); 
             return;
         }
         String role = "";
@@ -43,14 +43,24 @@ public class OrderManagementServlet extends HttpServlet {
         String province = request.getParameter("province");
         String search = request.getParameter("search");
         String dateFilter = request.getParameter("dateFilter");
+        String sortPrice = request.getParameter("sortPrice"); // Thêm tham số sắp xếp giá
         int page = 1;
-        int pageSize = 20;
+        int pageSize = 20; // Default page size
+        
         if (request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
         }
+        
+        if (request.getParameter("pageSize") != null) {
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+            // Validate page size to only allow 20, 40, 60
+            if (pageSize != 20 && pageSize != 40 && pageSize != 60) {
+                pageSize = 20; // Default to 20 if invalid value
+            }
+        }
 
         // Lấy danh sách đơn hàng theo role và filter
-        List<Order> orders = orderDAO.getOrdersForManagement(roleId, status, category, priceRange, province, search, dateFilter, page, pageSize);
+        List<Order> orders = orderDAO.getOrdersForManagement(roleId, status, category, priceRange, province, search, dateFilter, sortPrice, page, pageSize);
         int totalOrders = orderDAO.countOrdersForManagement(roleId, status, category, priceRange, province, search, dateFilter);
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
 
@@ -66,6 +76,8 @@ public class OrderManagementServlet extends HttpServlet {
         request.setAttribute("orders", orders);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalOrders", totalOrders);
         request.setAttribute("status", status);
         request.setAttribute("category", category);
         request.setAttribute("priceRange", priceRange);
@@ -93,11 +105,11 @@ public class OrderManagementServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Integer roleId = (Integer) session.getAttribute("roleId");
-        if (roleId == null || (roleId != 2 && roleId != 3)) {
+        if (roleId == null || (roleId != 2 && roleId != 3 && roleId != 4)) {
             response.sendRedirect("accessDenied.jsp");
             return;
         }
-        String role = roleId == 3 ? "Manager" : (roleId == 2 ? "Staff" : "");
+        String role = roleId == 3 ? "Manager" : (roleId == 2 ? "Staff" : (roleId == 4 ? "Shipper" : ""));
         String action = request.getParameter("action");
         if ("updateStatus".equals(action)) {
             try {
@@ -105,10 +117,18 @@ public class OrderManagementServlet extends HttpServlet {
                 String newStatus = request.getParameter("newStatus");
                 boolean canUpdate = false;
                 if (roleId == 3) {
+                    // Manager có thể update tất cả trạng thái
                     canUpdate = true;
                 } else if (roleId == 2) {
+                    // Staff chỉ có thể update từ "Đang chuẩn bị" sang "Chờ giao hàng"
                     String currentStatus = orderDAO.getOrderStatusById(orderId);
                     if ("Đang chuẩn bị".equals(currentStatus) && "Chờ giao hàng".equals(newStatus)) {
+                        canUpdate = true;
+                    }
+                } else if (roleId == 4) {
+                    // Shipper chỉ có thể update từ "Chờ giao hàng" sang "Đã mua"
+                    String currentStatus = orderDAO.getOrderStatusById(orderId);
+                    if ("Chờ giao hàng".equals(currentStatus) && "Đã mua".equals(newStatus)) {
                         canUpdate = true;
                     }
                 }

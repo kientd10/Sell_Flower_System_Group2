@@ -68,9 +68,9 @@ public class UserManagementServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        Integer role = (Integer) request.getSession().getAttribute("role");
+        Integer roleId = (Integer) request.getSession().getAttribute("roleId");
 
-        if (role == null || (role != 3 && role != 2)) { // Only Manager (3) and Staff (2) can manage users
+        if (roleId == null || (roleId != 3 && roleId != 2)) { // Only Manager (3) and Staff (2) can manage users
             response.sendRedirect("home");
             return;
         }
@@ -120,8 +120,8 @@ public class UserManagementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer role = (Integer) request.getSession().getAttribute("role");
-        if (role == null || (role != 3 && role != 2)) {
+        Integer roleId = (Integer) request.getSession().getAttribute("roleId");
+        if (roleId == null || (roleId != 3 && roleId != 2)) {
             response.sendRedirect("home");
             return;
         }

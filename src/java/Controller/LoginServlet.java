@@ -93,6 +93,22 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user);
             session.setAttribute("roleId", user.getRoleId());
             session.setAttribute("userId", user.getUserId());
+            
+            // Debug: In ra thông tin session sau khi lưu
+            System.out.println("=== Login Debug ===");
+            System.out.println("User logged in: " + user.getUsername());
+            System.out.println("User ID: " + user.getUserId());
+            System.out.println("Role ID: " + user.getRoleId());
+            System.out.println("Session ID: " + session.getId());
+            System.out.println("Session attributes after login:");
+            java.util.Enumeration<String> attributeNames = session.getAttributeNames();
+            while (attributeNames.hasMoreElements()) {
+                String name = attributeNames.nextElement();
+                Object value = session.getAttribute(name);
+                System.out.println("  " + name + ": " + value + " (type: " + (value != null ? value.getClass().getSimpleName() : "null") + ")");
+            }
+            System.out.println("=== End Login Debug ===");
+            
             if ("ON".equals(remember)) {
                 setCookie(response, "email", email, 7 * 24 * 60 * 60);
                 setCookie(response, "password", password, 7 * 24 * 60 * 60);
