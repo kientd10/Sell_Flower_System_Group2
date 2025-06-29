@@ -56,6 +56,12 @@ public class CategoryServlet extends HttpServlet {
                         }
                         return;
                     case "management":
+                        // Get parameters
+                        String searchTerm = request.getParameter("search");
+                        String status = request.getParameter("status");
+                        String sortBy = request.getParameter("sortBy");
+                        String sortOrder = request.getParameter("sortOrder");
+                        
                         int pageNum = 1;
                         int recordsPerPage = 10;
                         String pageNumStr = request.getParameter("pageNum");
@@ -66,14 +72,28 @@ public class CategoryServlet extends HttpServlet {
                                 pageNum = 1;
                             }
                         }
-                        int offset = (pageNum - 1) * recordsPerPage;
-                        List<Category> allCategories = categoryDAO.getAllCategories();
+                        
+                        // Get categories with search and filter
+                        List<Category> allCategories;
+                        if ((searchTerm != null && !searchTerm.trim().isEmpty()) || 
+                            (status != null && !status.trim().isEmpty())) {
+                            allCategories = categoryDAO.searchAndFilterCategories(searchTerm, status);
+                        } else {
+                            allCategories = categoryDAO.getCategoriesWithProductCount();
+                        }
+                        
+                        // Sort categories
+                        if (sortBy != null && sortOrder != null) {
+                            allCategories = categoryDAO.sortCategories(allCategories, sortBy, sortOrder);
+                        }
+                        
+                        // Pagination
                         int totalRecords = allCategories.size();
                         int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
 
                         List<Category> categoriesList = new ArrayList<>();
-                        int startIndex = Math.min(offset, totalRecords);
-                        int endIndex = Math.min(offset + recordsPerPage, totalRecords);
+                        int startIndex = Math.min((pageNum - 1) * recordsPerPage, totalRecords);
+                        int endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
                         if (startIndex < totalRecords) {
                             categoriesList = allCategories.subList(startIndex, endIndex);
                         }
@@ -81,6 +101,10 @@ public class CategoryServlet extends HttpServlet {
                         request.setAttribute("categories", categoriesList);
                         request.setAttribute("currentPage", pageNum);
                         request.setAttribute("totalPages", totalPages);
+                        request.setAttribute("search", searchTerm);
+                        request.setAttribute("status", status);
+                        request.setAttribute("sortBy", sortBy);
+                        request.setAttribute("sortOrder", sortOrder);
                         request.getRequestDispatcher("categoryManagement.jsp").forward(request, response);
                         return;
                     default:
@@ -217,6 +241,35 @@ public class CategoryServlet extends HttpServlet {
                         } catch (Exception e) {
                             request.setAttribute("error", e.getMessage());
                             request.getRequestDispatcher("categoryManagement.jsp").forward(request, response);
+                        }
+                        return;
+                    case "bulkDelete":
+                        String[] categoryIds = request.getParameterValues("categoryIds");
+                        if (categoryIds == null || categoryIds.length == 0) {
+                            request.setAttribute("error", "Vui lòng chọn ít nhất một danh mục để xóa!");
+                            response.sendRedirect(request.getContextPath() + "/category?action=management");
+                            return;
+                        }
+                        
+                        try {
+                            List<Integer> idsToDelete = new ArrayList<>();
+                            for (String id : categoryIds) {
+                                idsToDelete.add(Integer.parseInt(id));
+                            }
+                            
+                            boolean success = categoryDAO.bulkDeleteCategories(idsToDelete);
+                            if (success) {
+                                response.sendRedirect(request.getContextPath() + "/category?action=management");
+                            } else {
+                                request.setAttribute("error", "Xóa danh mục thất bại!");
+                                response.sendRedirect(request.getContextPath() + "/category?action=management");
+                            }
+                        } catch (NumberFormatException e) {
+                            request.setAttribute("error", "ID danh mục không hợp lệ!");
+                            response.sendRedirect(request.getContextPath() + "/category?action=management");
+                        } catch (Exception e) {
+                            request.setAttribute("error", e.getMessage());
+                            response.sendRedirect(request.getContextPath() + "/category?action=management");
                         }
                         return;
                     default:

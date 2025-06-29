@@ -41,7 +41,7 @@
     }
     
     .order-header {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #b4f3c7 0%, #b4f3c9 100%);
         padding: 20px;
         border-bottom: 1px solid #dee2e6;
     }
@@ -540,7 +540,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="total-amount">
-                                            Tổng tiền: <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
+                                            <a style="color: #131212;">Tổng tiền :</a> <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
                                         </div>
                                         <div class="action-buttons">
                                             <a href="orders" class="btn btn-back">
@@ -552,7 +552,7 @@
                                                 </a>
                                             </c:if>
                                             <c:if test="${order.status == 'Chờ giao hàng'}">
-                                                <a href="contactSupport?orderId=${order.orderId}" class="btn btn-warning btn-contact">
+                                                <a href="https://www.facebook.com/tran.uc.kien.588942" class="btn btn-warning btn-contact">
                                                     <i class="fa fa-phone"></i> Liên hệ
                                                 </a>
                                             </c:if>

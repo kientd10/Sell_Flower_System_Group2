@@ -86,34 +86,48 @@ public class PlaceOder extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("user_id");
-        if (userId == null) {
-            userId = 1; // Tạm thời giả lập nếu chưa đăng nhập
+        Integer userId = (Integer) session.getAttribute("userId");
+        Integer roleId = (Integer) session.getAttribute("roleId");
+        
+        // Kiểm tra đăng nhập
+        if (userId == null || roleId == null) {
+            System.out.println("PlaceOder: User not logged in, redirecting to login");
+            response.sendRedirect("login.jsp");
+            return;
         }
+        
+        // Chỉ cho phép Customer (roleId = 1) đặt hàng
+        if (roleId != 1) {
+            System.out.println("PlaceOder: User is not a customer, redirecting to home");
+            response.sendRedirect("home");
+            return;
+        }
+        
+        System.out.println("PlaceOder: Processing order for user " + userId + " with role " + roleId);
 
-String receiverName = request.getParameter("receiverName");
-String receiverPhone = request.getParameter("receiverPhone");
-String receiverAddress = request.getParameter("receiverAddress");
-String deliveryTime = request.getParameter("deliveryTime");
-// ❗️ THÊM dòng này để tránh lỗi
-String province = request.getParameter("province"); 
+        String receiverName = request.getParameter("receiverName");
+        String receiverPhone = request.getParameter("receiverPhone");
+        String receiverAddress = request.getParameter("receiverAddress");
+        String deliveryTime = request.getParameter("deliveryTime");
+        // ❗️ THÊM dòng này để tránh lỗi
+        String province = request.getParameter("province"); 
 
-String district = request.getParameter("district");
-String ward = request.getParameter("ward");
+        String district = request.getParameter("district");
+        String ward = request.getParameter("ward");
 
-String fullDeliveryAddress = receiverAddress + ", " + ward + ", " + district + ", " + province;
-System.out.println("📦 fullDeliveryAddress = " + fullDeliveryAddress);
+        String fullDeliveryAddress = receiverAddress + ", " + ward + ", " + district + ", " + province;
+        System.out.println("📦 fullDeliveryAddress = " + fullDeliveryAddress);
 
-// Lưu vào session nếu cần dùng ở trang tiếp theo
-session.setAttribute("receiverName", receiverName);
-session.setAttribute("receiverPhone", receiverPhone);
-session.setAttribute("receiverAddress", fullDeliveryAddress);  // ✅ địa chỉ đầy đủ
-session.setAttribute("deliveryTime", deliveryTime);
-session.setAttribute("fullname", receiverName);
+        // Lưu vào session nếu cần dùng ở trang tiếp theo
+        session.setAttribute("receiverName", receiverName);
+        session.setAttribute("receiverPhone", receiverPhone);
+        session.setAttribute("receiverAddress", fullDeliveryAddress);  // ✅ địa chỉ đầy đủ
+        session.setAttribute("deliveryTime", deliveryTime);
+        session.setAttribute("fullname", receiverName);
 
-// Lấy giỏ hàng từ session
-List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
-List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
+        // Lấy giỏ hàng từ session
+        List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
+        List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
         double total = 0.0;
         if (selectedCartIds != null && fullCart != null) {
             for (ShoppingCart item : fullCart) {
@@ -146,16 +160,16 @@ List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
             }
         }
 
-// ✅ Lưu đơn hàng
+        // ✅ Lưu đơn hàng
         OrderDAO dao = new OrderDAO();
-int orderId = dao.insertOrder(userId, selectedItems, total, fullDeliveryAddress, receiverPhone);
+        int orderId = dao.insertOrder(userId, selectedItems, total, fullDeliveryAddress, receiverPhone);
         System.out.println("===> Đã tạo đơn hàng với ID: " + orderId);
 
-// ✅ Xóa giỏ hàng khỏi session sau khi lưu đơn
+        // ✅ Xóa giỏ hàng khỏi session sau khi lưu đơn
         session.removeAttribute("cart");
         session.removeAttribute("selectedCartIds");
 
-// ✅ Điều hướng đến bước thanh toán tiếp theo
+        // ✅ Điều hướng đến bước thanh toán tiếp theo
         session.setAttribute("orderId", orderId); // Nếu cần
 
         // ✅ CHUYỂN SAU KHI SET XONG

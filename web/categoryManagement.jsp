@@ -34,61 +34,102 @@
 	/* ===== SIDEBAR STYLES ===== */
 	.sidebar {
 		width: var(--sidebar-width);
-		background: linear-gradient(135deg, var(--dark-gray) 0%, #495057 100%);
+		background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
 		position: fixed;
 		height: 100vh;
 		overflow-y: auto;
 		z-index: 1000;
-		box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+		box-shadow: 2px 0 15px rgba(0,0,0,0.15);
 	}
-	
 	.sidebar-brand {
-		padding: 1.5rem;
+		padding: 1.8rem 1.5rem;
 		color: white;
 		text-decoration: none;
 		font-weight: 700;
-		font-size: 1.2rem;
+		font-size: 1.4rem;
 		border-bottom: 1px solid rgba(255,255,255,0.1);
 		display: block;
 		text-align: center;
+		background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+		text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+		letter-spacing: 0.5px;
 	}
-	
-	.sidebar-user {
+	.sidebar-profile {
 		padding: 1.5rem;
 		border-bottom: 1px solid rgba(255,255,255,0.1);
-		color: white;
+		background: rgba(255,255,255,0.03);
 	}
-	
+	.profile-avatar {
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		border: 3px solid rgba(255,255,255,0.2);
+		object-fit: cover;
+		margin-bottom: 0.8rem;
+	}
+	.profile-welcome {
+		color: white;
+		font-size: 0.9rem;
+		margin-bottom: 0.5rem;
+	}
+	.profile-role {
+		color: #ecf0f1;
+		font-size: 0.8rem;
+		font-weight: 500;
+		margin-bottom: 1rem;
+		padding: 0.3rem 0.8rem;
+		background: rgba(255,255,255,0.1);
+		border-radius: 15px;
+		display: inline-block;
+	}
+	.logout-link {
+		color: #c44d58;
+		text-decoration: none;
+		font-size: 0.95rem;
+		font-weight: 500;
+		transition: all 0.3s ease;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.logout-link:hover {
+		color: #a03d4a;
+		transform: translateX(3px);
+	}
 	.sidebar-nav {
 		list-style: none;
 		padding: 1rem 0;
 		margin: 0;
 	}
-	
 	.sidebar-header {
 		padding: 1rem 1.5rem 0.5rem;
-		color: rgba(255,255,255,0.6);
-		font-size: 0.85rem;
+		color: rgba(255,255,255,0.7);
+		font-size: 0.8rem;
 		font-weight: 600;
 		text-transform: uppercase;
+		letter-spacing: 0.5px;
 	}
-	
 	.sidebar-link {
 		display: flex;
 		align-items: center;
-		padding: 0.8rem 1.5rem;
-		color: rgba(255,255,255,0.8);
+		padding: 0.9rem 1.5rem;
+		color: rgba(255,255,255,0.85);
 		text-decoration: none;
 		transition: all 0.3s ease;
+		border-left: 3px solid transparent;
+		margin: 0.2rem 0;
 	}
-	
 	.sidebar-link:hover, .sidebar-link.active {
-		background: var(--primary-red);
+		background: linear-gradient(90deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
 		color: white;
-		transform: translateX(5px);
+		border-left-color: #e74c3c;
+		transform: translateX(3px);
 	}
-	
-	.sidebar-link i { margin-right: 0.8rem; width: 18px; }
+	.sidebar-link i {
+		margin-right: 0.9rem;
+		width: 18px;
+		font-size: 1rem;
+	}
 	
 	/* ===== MAIN CONTENT STYLES ===== */
 	.main-content {
@@ -215,51 +256,66 @@
 
 <body>
 	<div class="wrapper">
-		<!-- ===== SIDEBAR NAVIGATION ===== -->
-		<nav class="sidebar">
-			<a href="home" class="sidebar-brand" style="font-size:27px ; color: #d4d4d4">
-				<i class="fas fa-seedling me-2" style="color: #dc3545;" ></i>Menu quản lý
-			</a>
+            <!-- ===== SIDEBAR NAVIGATION ===== -->
+            <nav class="sidebar">
+                <a href="home" class="sidebar-brand">
+                    <i style="color: #2c3e50;"></i>Menu Quản Lý
+                </a>
 
-			<div class="sidebar-user">
-				<div class="d-flex align-items-center">
-					<div>
-						<div style="font-weight: 600;">Quản lý</div>
-						<small style="opacity: 0.8;">Chào mừng bạn đến trang quản lý!</small>
-					</div>
-				</div>
-			</div>
-                    
-			<ul class="sidebar-nav">
-				<li class="sidebar-header">Menu Chính</li>
-				<!-- Chỉ hiển thị nếu là Staff -->
-				<c:if test="${sessionScope.user.roleId == 2}">                                             
-					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
-					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
-					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-					<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-				</c:if> 
+                <div class="sidebar-profile text-center">
+                    <img src="images/default-avatar.png" class="profile-avatar" alt="User Avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=3498db&color=fff&size=60&font-size=0.4'">
+                    <div class="profile-welcome">
+                        Chào mừng: 
+                        <c:choose>
+                            <c:when test="${sessionScope.user.roleId == 2}">
+                                <span class="profile-role">Nhân viên</span>
+                            </c:when>
+                            <c:when test="${sessionScope.user.roleId == 3}">
+                                <span class="profile-role">Quản lý</span>
+                            </c:when>
+                            <c:when test="${sessionScope.user.roleId == 4}">
+                                <span class="profile-role">Shipper</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="profile-role">Người dùng</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                    <a href="login.jsp" class="logout-link">
+                        <i class="fas fa-sign-out-alt"></i>Đăng xuất
+                    </a>
+                </div>
 
-				<!-- Chỉ hiển thị nếu là Manager -->
-				<c:if test="${sessionScope.user.roleId == 3}"> 
-					<li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
-					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
-					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
-					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-					<li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-					<li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
-					<li class="sidebar-header">Hệ Thống</li>
-					<li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-					<li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
-					<li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
-				</c:if> 
-                    
-				<!-- Chỉ hiển thị nếu là Shipper -->                        
-				<c:if test="${sessionScope.user.roleId == 4}">
-					<li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-				</c:if>                   
-			</ul>
-		</nav>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-header">Menu Chính</li>
+                    <!-- Chỉ hiển thị nếu là Staff -->
+                    <c:if test="${sessionScope.user.roleId == 2}">                                             
+                        <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+                        <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+                        <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+                        <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                    </c:if> 
+
+                    <!-- Chỉ hiển thị nếu là Manager -->
+                    <c:if test="${sessionScope.user.roleId == 3}"> 
+                        <li><a href="statistics" class="sidebar-link active" id="menu-management"><i class="fas fa-chart-bar"></i>Quản Lý</a></li>
+                        <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+                        <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+                        <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+                        <li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                        <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
+                        <li class="sidebar-header">Hệ Thống</li>
+                        <li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+                        <li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
+                        <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
+                    </c:if> 
+
+                    <!-- Chỉ hiển thị nếu là Shipper -->                        
+                    <c:if test="${sessionScope.user.roleId == 4}">
+                        <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                    </c:if>                   
+                </ul>
+            </nav>
 
 		<!-- ===== MAIN CONTENT AREA ===== -->
 		<div class="main-content">
@@ -267,8 +323,14 @@
 			<div class="top-navbar">
 				<div class="d-flex justify-content-between align-items-center">
 					<div class="input-group" style="width: 300px;">
-						<input type="text" class="form-control" placeholder="Search products..." id="productSearch">
-						<button class="btn btn-outline-secondary" onclick="searchProducts()"><i class="fas fa-search"></i></button>
+						<form method="get" action="category" class="d-flex" style="max-width: 350px;">
+							<input type="hidden" name="action" value="management"/>
+							<input type="hidden" name="status" value="${param.status}"/>
+							<input type="hidden" name="sortBy" value="${param.sortBy}"/>
+							<input type="hidden" name="sortOrder" value="${param.sortOrder}"/>
+							<input type="text" class="form-control me-2" name="search" value="${param.search}" placeholder="Tìm kiếm danh mục..."/>
+							<button type="submit" class="btn btn-outline-primary" style="color: #e4cbce; background-color: #c7606e; border: #c7606e;"><i class="fas fa-search"></i></button>
+						</form>
 					</div>
 					
 					<div class="d-flex align-items-center gap-3">
@@ -302,15 +364,35 @@
 				<!-- ===== FILTER & CATEGORY SECTION ===== -->
 				<div class="category-filter">
 					<div class="row align-items-center">
-						<div class="col-md-6">
-							<div class="d-flex align-items-center gap-3">
-								<label class="form-label mb-0">Lọc theo danh mục:</label>
-								<select class="form-select" style="width: auto;" onchange="filterByCategory(this.value)">
-									<option value="">Tất cả danh mục</option>
-									<c:forEach var="category" items="${categories}">
-										<option value="${category.categoryId}">${category.categoryName}</option>
-									</c:forEach>
+						<div class="col-md-4">
+							<div class="d-flex align-items-center">
+								<label class="form-label mb-0 me-2">Trạng thái:</label>
+								<select class="form-select" onchange="filterByStatus(this.value)">
+									<option value="">Tất cả</option>
+									<option value="active" ${param.status == 'active' ? 'selected' : ''}>Hoạt động (có sản phẩm)</option>
+									<option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>Không hoạt động (không có sản phẩm)</option>
 								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="d-flex align-items-center">
+								<label class="form-label mb-0 me-2">Sắp xếp theo:</label>
+								<select class="form-select" onchange="sortCategories(this.value)">
+									<option value="">Mặc định</option>
+									<option value="name_asc" ${param.sortBy == 'name' && param.sortOrder == 'asc' ? 'selected' : ''}>Tên A-Z</option>
+									<option value="name_desc" ${param.sortBy == 'name' && param.sortOrder == 'desc' ? 'selected' : ''}>Tên Z-A</option>
+									<option value="id_asc" ${param.sortBy == 'id' && param.sortOrder == 'asc' ? 'selected' : ''}>ID tăng dần</option>
+									<option value="id_desc" ${param.sortBy == 'id' && param.sortOrder == 'desc' ? 'selected' : ''}>ID giảm dần</option>
+									<option value="products_asc" ${param.sortBy == 'products' && param.sortOrder == 'asc' ? 'selected' : ''}>Số sản phẩm tăng dần</option>
+									<option value="products_desc" ${param.sortBy == 'products' && param.sortOrder == 'desc' ? 'selected' : ''}>Số sản phẩm giảm dần</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="d-flex justify-content-end">
+								<button type="button" class="btn btn-danger btn-sm" onclick="bulkDelete()" id="bulkDeleteBtn" disabled>
+									<i class="fas fa-trash me-1"></i>Xóa đã chọn
+								</button>
 							</div>
 						</div>
 					</div>
@@ -331,6 +413,8 @@
 										</th>
 										<th>Mã danh mục</th>
 										<th>Tên danh mục</th>
+										<th>Số sản phẩm</th>
+										<th>Trạng thái</th>
 										<th>Thao tác</th>
 									</tr>
 								</thead>
@@ -347,11 +431,24 @@
                                                 <div>${category.categoryName}</div>
                                             </td>
                                             <td>
+                                                <div>${category.productCount}</div>
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${category.productCount > 0}">
+                                                        <span class="badge bg-success">Hoạt động</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary">Không hoạt động</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
                                                 <div class="btn-group" role="group">
                                                     <a href="${pageContext.request.contextPath}/category?action=update&id=${category.categoryId}" class="btn btn-sm btn-outline-primary" title="Sửa">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${category.categoryId})" title="Xóa">
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory('${category.categoryId}')" title="Xóa">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </div>
@@ -360,7 +457,7 @@
                                     </c:forEach>
 									<c:if test="${empty categories}">
 										<tr>
-											<td colspan="4" class="text-center">Không có danh mục nào!</td>
+											<td colspan="6" class="text-center">Không có danh mục nào!</td>
 										</tr>
 									</c:if>
 								</tbody>
@@ -371,15 +468,15 @@
 						<nav aria-label="Category pagination" class="mt-3">
 							<ul class="pagination">
 								<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-									<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${currentPage - 1}"><i class="fas fa-chevron-left"></i></a>
+									<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${currentPage - 1}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}"><i class="fas fa-chevron-left"></i></a>
 								</li>
 								<c:forEach begin="1" end="${totalPages}" var="i">
 									<li class="page-item ${currentPage == i ? 'active' : ''}">
-										<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${i}">${i}</a>
+										<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${i}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}">${i}</a>
 									</li>
 								</c:forEach>
 								<li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-									<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${currentPage + 1}"><i class="fas fa-chevron-right"></i></a>
+									<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${currentPage + 1}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}"><i class="fas fa-chevron-right"></i></a>
 								</li>
 							</ul>
 						</nav>
@@ -395,17 +492,26 @@
 	<script>
 		// ===== CATEGORY MANAGEMENT FUNCTIONALITY =====
 		
-		// Search categories
-		function searchProducts() {
-			const searchTerm = document.getElementById('productSearch').value;
-			// In real application, this would filter the table or make AJAX request
-			console.log('Searching for:', searchTerm);
+		// Filter by status
+		function filterByStatus(status) {
+			const urlParams = new URLSearchParams(window.location.search);
+			urlParams.set('status', status);
+			urlParams.set('action', 'management');
+			urlParams.set('pageNum', '1'); // Reset to first page
+			window.location.href = 'category?' + urlParams.toString();
 		}
 		
-		// Filter by category
-		function filterByCategory(categoryId) {
-			console.log('Filtering by category:', categoryId);
-			// Implementation would filter table rows based on category
+		// Sort categories
+		function sortCategories(sortValue) {
+			if (!sortValue) return;
+			
+			const [sortBy, sortOrder] = sortValue.split('_');
+			const urlParams = new URLSearchParams(window.location.search);
+			urlParams.set('sortBy', sortBy);
+			urlParams.set('sortOrder', sortOrder);
+			urlParams.set('action', 'management');
+			urlParams.set('pageNum', '1'); // Reset to first page
+			window.location.href = 'category?' + urlParams.toString();
 		}
 		
 		// Select all categories
@@ -418,22 +524,45 @@
 		// Update bulk action buttons based on selection
 		function updateBulkActionButtons() {
 			const selectedProducts = document.querySelectorAll('.product-checkbox:checked');
-			const bulkButtons = ['bulkEditBtn', 'bulkDeleteBtn', 'bulkRestockBtn'];
+			const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
 			
-			bulkButtons.forEach(btnId => {
-				const btn = document.getElementById(btnId);
-				if (btn) {
-					btn.disabled = selectedProducts.length === 0;
-				}
-			});
+			if (bulkDeleteBtn) {
+				bulkDeleteBtn.disabled = selectedProducts.length === 0;
+			}
 		}
 		
-		// Delete category
+		// Bulk delete categories
+		function bulkDelete() {
+			const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
+			if (selectedCheckboxes.length === 0) {
+				alert('Vui lòng chọn ít nhất một danh mục để xóa!');
+				return;
+			}
+			
+			if (confirm(`Bạn có chắc muốn xóa ${selectedCheckboxes.length} danh mục đã chọn?`)) {
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = 'category?action=bulkDelete';
+				
+				selectedCheckboxes.forEach(checkbox => {
+					const input = document.createElement('input');
+					input.type = 'hidden';
+					input.name = 'categoryIds';
+					input.value = checkbox.value;
+					form.appendChild(input);
+				});
+				
+				document.body.appendChild(form);
+				form.submit();
+			}
+		}
+		
+		// Delete single category
 		function deleteCategory(categoryId) {
 			if (confirm('Bạn có chắc muốn xóa danh mục này?')) {
 				const form = document.createElement('form');
 				form.method = 'post';
-				form.action = '${pageContext.request.contextPath}/category?action=delete';
+				form.action = 'category?action=delete';
 				const input = document.createElement('input');
 				input.type = 'hidden';
 				input.name = 'id';
@@ -450,35 +579,40 @@
 			document.querySelectorAll('.product-checkbox').forEach(checkbox => {
 				checkbox.addEventListener('change', updateBulkActionButtons);
 			});
-			
-			// Enable real-time search
-			document.getElementById('productSearch').addEventListener('keyup', function(e) {
-				if (e.key === 'Enter') {
-					searchProducts();
-				}
-			});
 
-			// Tự động highlight menu item dựa trên URL hiện tại
-			var currentPage = window.location.pathname.split('/').pop();
+			// Highlight menu item based on URL path
+			var path = window.location.pathname.toLowerCase();
 			document.querySelectorAll('.sidebar-link').forEach(function(link) {
 				link.classList.remove('active');
 			});
-			var menuMap = {
-				'management.jsp': 'management.jsp',
-				'productManagement.jsp': 'productManagement.jsp',
-				'categoryManagement.jsp': 'categoryManagement.jsp',
-				'storageManagement.jsp': 'storageManagement.jsp',
-				'orderManagement.jsp': 'orderManagement.jsp',
-				'invoiceManagement.jsp': 'invoiceManagement.jsp',
-				'userManagement.jsp': 'userManagement.jsp',
-				'feedbackManagement.jsp': 'feedbackManagement.jsp',
-				'notificationManagement.jsp': 'notificationManagement.jsp'
-			};
-			if (menuMap[currentPage]) {
-				var activeLink = document.querySelector('a[href="' + menuMap[currentPage] + '"]');
-				if (activeLink) {
-					activeLink.classList.add('active');
-				}
+
+			if (path.includes('/category')) {
+				var categoryLink = document.getElementById('menu-categoryManagement');
+				if (categoryLink) categoryLink.classList.add('active');
+			} else if (path.includes('/productmanagement')) {
+				var productLink = document.getElementById('menu-productManagement');
+				if (productLink) productLink.classList.add('active');
+			} else if (path.includes('/storagemanagement')) {
+				var storageLink = document.getElementById('menu-storageManagement');
+				if (storageLink) storageLink.classList.add('active');
+			} else if (path.includes('/ordermanagement')) {
+				var orderLink = document.getElementById('menu-orderManagement');
+				if (orderLink) orderLink.classList.add('active');
+			} else if (path.includes('/invoicemanagement')) {
+				var invoiceLink = document.getElementById('menu-invoiceManagement');
+				if (invoiceLink) invoiceLink.classList.add('active');
+			} else if (path.includes('usermanagement.jsp')) {
+				var userLink = document.getElementById('menu-userManagement');
+				if (userLink) userLink.classList.add('active');
+			} else if (path.includes('feedbackmanagement.jsp')) {
+				var feedbackLink = document.getElementById('menu-feedbackManagement');
+				if (feedbackLink) feedbackLink.classList.add('active');
+			} else if (path.includes('notificationmanagement.jsp')) {
+				var notificationLink = document.getElementById('menu-notificationManagement');
+				if (notificationLink) notificationLink.classList.add('active');
+			} else if (path.includes('/statistics')) {
+				var managementLink = document.getElementById('menu-management');
+				if (managementLink) managementLink.classList.add('active');
 			}
 		});
 	</script>

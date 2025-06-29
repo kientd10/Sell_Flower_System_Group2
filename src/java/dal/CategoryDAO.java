@@ -116,4 +116,202 @@ public class CategoryDAO {
             System.out.println("ID: " + c.getCategoryId() + ", Name: " + c.getCategoryName());
         }
     }
+    
+    // Search categories by name
+    public List<Category> searchCategoriesByName(String searchTerm) {
+        List<Category> categories = new ArrayList<>();
+        String sql = "SELECT category_id, category_name FROM categories WHERE category_name LIKE ? ORDER BY category_id ASC";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + searchTerm + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    categories.add(new Category(rs.getInt("category_id"), rs.getString("category_name")));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+    
+    // Get categories with product count and status
+    public List<Category> getCategoriesWithProductCount() {
+        List<Category> categories = new ArrayList<>();
+        String sql = """
+            SELECT c.category_id, c.category_name, 
+                   COUNT(bt.template_id) as product_count
+            FROM categories c
+            LEFT JOIN bouquet_templates bt ON c.category_id = bt.category_id
+            GROUP BY c.category_id, c.category_name
+            ORDER BY c.category_id ASC
+            """;
+        try (PreparedStatement stmt = conn.prepareStatement(sql); 
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Category category = new Category(rs.getInt("category_id"), rs.getString("category_name"));
+                category.setProductCount(rs.getInt("product_count"));
+                categories.add(category);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+    
+    // Filter categories by status (active = has products, inactive = no products)
+    public List<Category> filterCategoriesByStatus(String status) {
+        List<Category> categories = new ArrayList<>();
+        String sql;
+        
+        if ("active".equals(status)) {
+            sql = """
+                SELECT c.category_id, c.category_name, 
+                       COUNT(bt.template_id) as product_count
+                FROM categories c
+                INNER JOIN bouquet_templates bt ON c.category_id = bt.category_id
+                GROUP BY c.category_id, c.category_name
+                HAVING COUNT(bt.template_id) > 0
+                ORDER BY c.category_id ASC
+                """;
+        } else if ("inactive".equals(status)) {
+            sql = """
+                SELECT c.category_id, c.category_name, 
+                       COUNT(bt.template_id) as product_count
+                FROM categories c
+                LEFT JOIN bouquet_templates bt ON c.category_id = bt.category_id
+                GROUP BY c.category_id, c.category_name
+                HAVING COUNT(bt.template_id) = 0
+                ORDER BY c.category_id ASC
+                """;
+        } else {
+            return getCategoriesWithProductCount();
+        }
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql); 
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Category category = new Category(rs.getInt("category_id"), rs.getString("category_name"));
+                category.setProductCount(rs.getInt("product_count"));
+                categories.add(category);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+    
+    // Search and filter categories
+    public List<Category> searchAndFilterCategories(String searchTerm, String status) {
+        List<Category> categories = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        List<Object> params = new ArrayList<>();
+        
+        sql.append("""
+            SELECT c.category_id, c.category_name, 
+                   COUNT(bt.template_id) as product_count
+            FROM categories c
+            """);
+        
+        if ("active".equals(status)) {
+            sql.append("INNER JOIN bouquet_templates bt ON c.category_id = bt.category_id ");
+        } else if ("inactive".equals(status)) {
+            sql.append("LEFT JOIN bouquet_templates bt ON c.category_id = bt.category_id ");
+        } else {
+            sql.append("LEFT JOIN bouquet_templates bt ON c.category_id = bt.category_id ");
+        }
+        
+        sql.append("WHERE 1=1 ");
+        
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            sql.append("AND c.category_name LIKE ? ");
+            params.add("%" + searchTerm.trim() + "%");
+        }
+        
+        sql.append("GROUP BY c.category_id, c.category_name ");
+        
+        if ("active".equals(status)) {
+            sql.append("HAVING COUNT(bt.template_id) > 0 ");
+        } else if ("inactive".equals(status)) {
+            sql.append("HAVING COUNT(bt.template_id) = 0 ");
+        }
+        
+        sql.append("ORDER BY c.category_id ASC");
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Category category = new Category(rs.getInt("category_id"), rs.getString("category_name"));
+                    category.setProductCount(rs.getInt("product_count"));
+                    categories.add(category);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+    
+    // Sort categories
+    public List<Category> sortCategories(List<Category> categories, String sortBy, String sortOrder) {
+        if (categories == null || categories.isEmpty()) {
+            return categories;
+        }
+        
+        if ("name".equals(sortBy)) {
+            if ("asc".equals(sortOrder)) {
+                categories.sort((c1, c2) -> c1.getCategoryName().compareToIgnoreCase(c2.getCategoryName()));
+            } else {
+                categories.sort((c1, c2) -> c2.getCategoryName().compareToIgnoreCase(c1.getCategoryName()));
+            }
+        } else if ("id".equals(sortBy)) {
+            if ("asc".equals(sortOrder)) {
+                categories.sort((c1, c2) -> Integer.compare(c1.getCategoryId(), c2.getCategoryId()));
+            } else {
+                categories.sort((c1, c2) -> Integer.compare(c2.getCategoryId(), c1.getCategoryId()));
+            }
+        } else if ("products".equals(sortBy)) {
+            if ("asc".equals(sortOrder)) {
+                categories.sort((c1, c2) -> Integer.compare(c1.getProductCount(), c2.getProductCount()));
+            } else {
+                categories.sort((c1, c2) -> Integer.compare(c2.getProductCount(), c1.getProductCount()));
+            }
+        }
+        
+        return categories;
+    }
+    
+    // Bulk delete categories
+    public boolean bulkDeleteCategories(List<Integer> categoryIds) throws Exception {
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return false;
+        }
+        
+        // Check if any category is in use
+        for (Integer categoryId : categoryIds) {
+            if (isCategoryInUse(categoryId)) {
+                throw new Exception("Category ID " + categoryId + " is used in bouquet templates!");
+            }
+        }
+        
+        String sql = "DELETE FROM categories WHERE category_id IN (";
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < categoryIds.size(); i++) {
+            if (i > 0) placeholders.append(",");
+            placeholders.append("?");
+        }
+        sql += placeholders.toString() + ")";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 0; i < categoryIds.size(); i++) {
+                stmt.setInt(i + 1, categoryIds.get(i));
+            }
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

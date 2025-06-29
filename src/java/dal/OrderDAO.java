@@ -607,4 +607,59 @@ public class OrderDAO {
         return list;
     }
 
+    // Hủy đơn hàng (chỉ cho phép hủy đơn hàng chưa được xác nhận)
+    public boolean cancelOrder(int orderId, int userId) throws Exception {
+        String sql = """
+            UPDATE orders 
+            SET status_id = 5
+            WHERE order_id = ? AND customer_id = ? AND status_id = 1
+            """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            ps.setInt(2, userId);
+            
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } finally {
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+    }
+
+    // Kiểm tra xem đơn hàng có thể hủy không (chỉ đơn hàng chờ xác nhận)
+    public boolean canCancelOrder(int orderId, int userId) throws Exception {
+        String sql = """
+            SELECT COUNT(*) 
+            FROM orders o
+            WHERE o.order_id = ? AND o.customer_id = ? AND o.status_id = 1
+            """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            ps.setInt(2, userId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            return false;
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+    }
+
 }

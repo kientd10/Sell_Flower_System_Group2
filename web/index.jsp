@@ -290,7 +290,7 @@
                                                             <input type="hidden" name="templateId" value="${bou.templateId}" />
                                                             <button type="submit"
                                                                     class="btn btn-primary" style="border-radius: 4px;">
-                                                                <i class="fa fa-shopping-cart"></i> Mua ngay
+                                                                <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng   
                                                             </button>
                                                         </form>
                                                     </div>
