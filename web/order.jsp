@@ -60,6 +60,12 @@
         border: 1px solid #c3e6cb;
     }
     
+    .status-cancelled { 
+        background-color: #f8d7da; 
+        color: #721c24; 
+        border: 1px solid #f5c6cb;
+    }
+    
     .order-card {
         background: white;
         border-radius: 10px;
@@ -231,6 +237,16 @@
         color: white;
     }
     
+    .btn-cancel {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .btn-cancel:hover {
+        background-color: #c82333;
+        color: white;
+    }
+    
     /* Tăng kích thước cho tiêu đề trang */
     .text-center h2 {
         font-size: 26px;
@@ -343,6 +359,27 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
+                    <!-- Hiển thị thông báo -->
+                    <c:if test="${not empty sessionScope.message}">
+                        <div class="alert alert-success alert-dismissible fade in" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <i class="fa fa-check-circle"></i> ${sessionScope.message}
+                        </div>
+                        <c:remove var="message" scope="session"/>
+                    </c:if>
+                    
+                    <c:if test="${not empty sessionScope.error}">
+                        <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <i class="fa fa-exclamation-circle"></i> ${sessionScope.error}
+                        </div>
+                        <c:remove var="error" scope="session"/>
+                    </c:if>
+                    
                     <div class="text-center" style="margin-bottom: 40px;">
                         <h2><i class="fa fa-shopping-bag"></i> Đơn hàng </h2>
                         <p class="text-muted">Theo dõi và quản lý đơn hàng của bạn</p>
@@ -367,6 +404,11 @@
                         <li role="presentation">
                             <a href="#completed" aria-controls="completed" role="tab" data-toggle="tab">
                                 <i class="fa fa-check-circle"></i> Đã mua
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#cancelled" aria-controls="cancelled" role="tab" data-toggle="tab">
+                                <i class="fa fa-times-circle"></i> Đã hủy
                             </a>
                         </li>
                     </ul>
@@ -443,9 +485,16 @@
                                                         <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
                                                             <i class="fa fa-eye"></i> Chi tiết
                                                         </a>
-                                                        <a href="contactSupport?orderId=${order.orderId}" class="btn btn-warning btn-custom">
+                                                        <a href="https://www.facebook.com/tran.uc.kien.588942" class="btn btn-warning btn-custom" style="margin-right: 10px;">
                                                             <i class="fa fa-phone"></i> Liên hệ
                                                         </a>
+                                                        <form method="post" action="orders" style="display: inline;">
+                                                            <input type="hidden" name="action" value="cancelOrder">
+                                                            <input type="hidden" name="orderId" value="${order.orderId}">
+                                                            <button type="submit" class="btn btn-cancel btn-custom" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">
+                                                                <i class="fa fa-times"></i> Hủy đơn
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -526,7 +575,7 @@
                                                         <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
                                                             <i class="fa fa-eye"></i> Chi tiết
                                                         </a>
-                                                        <a href="contactSupport?orderId=${order.orderId}" class="btn btn-warning btn-custom">
+                                                        <a href="https://www.facebook.com/tran.uc.kien.588942" class="btn btn-warning btn-custom">
                                                             <i class="fa fa-phone"></i> Liên hệ
                                                         </a>
                                                     </div>
@@ -613,7 +662,7 @@
                                                         <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
                                                             <i class="fa fa-eye"></i> Chi tiết
                                                         </a>
-                                                        <a href="contactSupport?orderId=${order.orderId}" class="btn btn-warning btn-custom">
+                                                        <a href="https://www.facebook.com/tran.uc.kien.588942" class="btn btn-warning btn-custom">
                                                             <i class="fa fa-phone"></i> Liên hệ
                                                         </a>
                                                     </div>
@@ -650,6 +699,89 @@
                                             <div class="col-md-6 text-right">
                                                 <span class="order-status status-completed status-badge">
                                                     <i class="fa fa-check-circle"></i> ${order.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-content">
+                                        <c:forEach var="item" items="${order.items}">
+                                            <div class="product-row">
+                                                <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
+                                                    <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                </a>
+                                                <div style="flex: 1;">
+                                                    <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
+                                                    <p style="margin: 5px 0 0 0; color: #666;">Số lượng: ${item.quantity}</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <strong style="color: #333; font-size: 16px;">
+                                                        <fmt:formatNumber value="${item.unitPrice}" type="currency" currencySymbol="₫"/>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <div style="margin-top:5px; padding-top: 5px;">
+                                            <div class="order-info-section">
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-map-marker"></i>
+                                                    <strong>Địa chỉ giao hàng:</strong>
+                                                    <span>${order.deliveryAddress}</span>
+                                                </div>
+                                                <div class="order-info-item">
+                                                    <i class="fa fa-phone"></i>
+                                                    <strong>Số điện thoại:</strong>
+                                                    <span>${order.deliveryPhone}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <h6 style="color: #333; font-weight: 600; margin-bottom: 10px; display: inline-block; margin-right: 0px; font-size: 14px;">
+                                                        <i class="fa fa-money"></i> Tổng tiền  :
+                                                    </h6>
+                                                    <p class="order-total" style="margin: 10px 10px; display: inline-block;">
+                                                        <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
+                                                    </p>
+                                                    <div style="margin-top: 10px;">
+                                                        <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
+                                                            <i class="fa fa-eye"></i> Chi tiết
+                                                        </a>
+                                                        <a href="reorder?orderId=${order.orderId}" class="btn btn-success btn-custom">
+                                                            <i class="fa fa-refresh"></i> Mua lại
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+
+                        <!-- Cancelled Orders Tab -->
+                        <div role="tabpanel" class="tab-pane" id="cancelled">
+                            <c:if test="${empty cancelledOrders}">
+                                <div class="empty-state">
+                                    <i class="fa fa-times-circle"></i>
+                                    <h4>Đã hủy</h4>
+                                    <p>Các đơn hàng đã hủy sẽ hiển thị ở đây</p>
+                                </div>
+                            </c:if>
+                            <c:forEach var="order" items="${cancelledOrders}">
+                                <div class="order-card">
+                                    <div class="order-header">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4 style="margin: 0; color: #333;">
+                                                    <i class="fa fa-file-text-o"></i> Đơn hàng #${order.orderCode}
+                                                </h4>
+                                                <p style="margin: 5px 0 0 0; color: #666;">
+                                                    Đặt ngày: <fmt:parseDate value="${order.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
+                                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <span class="order-status status-cancelled status-badge">
+                                                    <i class="fa fa-times-circle"></i> ${order.status}
                                                 </span>
                                             </div>
                                         </div>

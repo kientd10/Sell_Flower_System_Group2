@@ -36,17 +36,102 @@
 		/* ===== SIDEBAR STYLES ===== */
 		.sidebar {
 			width: var(--sidebar-width);
-			background: linear-gradient(135deg, var(--dark-gray) 0%, #495057 100%);
-			position: fixed; height: 100vh; overflow-y: auto; z-index: 1000;
-			box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+			background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+			position: fixed;
+			height: 100vh;
+			overflow-y: auto;
+			z-index: 1000;
+			box-shadow: 2px 0 15px rgba(0,0,0,0.15);
 		}
-		.sidebar-brand { padding: 1.5rem; color: white; text-decoration: none; font-weight: 700; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: block; text-align: center; }
-		.sidebar-user { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; }
-		.sidebar-nav { list-style: none; padding: 1rem 0; margin: 0; }
-		.sidebar-header { padding: 1rem 1.5rem 0.5rem; color: rgba(255,255,255,0.6); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
-		.sidebar-link { display: flex; align-items: center; padding: 0.8rem 1.5rem; color: rgba(255,255,255,0.8); text-decoration: none; transition: all 0.3s ease; }
-		.sidebar-link:hover, .sidebar-link.active { background: var(--primary-red); color: white; transform: translateX(5px); }
-		.sidebar-link i { margin-right: 0.8rem; width: 18px; }
+		.sidebar-brand {
+			padding: 1.8rem 1.5rem;
+			color: white;
+			text-decoration: none;
+			font-weight: 700;
+			font-size: 1.4rem;
+			border-bottom: 1px solid rgba(255,255,255,0.1);
+			display: block;
+			text-align: center;
+			background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+			text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+			letter-spacing: 0.5px;
+		}
+		.sidebar-profile {
+			padding: 1.5rem;
+			border-bottom: 1px solid rgba(255,255,255,0.1);
+			background: rgba(255,255,255,0.03);
+		}
+		.profile-avatar {
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			border: 3px solid rgba(255,255,255,0.2);
+			object-fit: cover;
+			margin-bottom: 0.8rem;
+		}
+		.profile-welcome {
+			color: white;
+			font-size: 0.9rem;
+			margin-bottom: 0.5rem;
+		}
+		.profile-role {
+			color: #ecf0f1;
+			font-size: 0.8rem;
+			font-weight: 500;
+			margin-bottom: 1rem;
+			padding: 0.3rem 0.8rem;
+			background: rgba(255,255,255,0.1);
+			border-radius: 15px;
+			display: inline-block;
+		}
+		.logout-link {
+			color: #c44d58;
+			text-decoration: none;
+			font-size: 0.95rem;
+			font-weight: 500;
+			transition: all 0.3s ease;
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+		.logout-link:hover {
+			color: #a03d4a;
+			transform: translateX(3px);
+		}
+		.sidebar-nav {
+			list-style: none;
+			padding: 1rem 0;
+			margin: 0;
+		}
+		.sidebar-header {
+			padding: 1rem 1.5rem 0.5rem;
+			color: rgba(255,255,255,0.7);
+			font-size: 0.8rem;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+		.sidebar-link {
+			display: flex;
+			align-items: center;
+			padding: 0.9rem 1.5rem;
+			color: rgba(255,255,255,0.85);
+			text-decoration: none;
+			transition: all 0.3s ease;
+			border-left: 3px solid transparent;
+			margin: 0.2rem 0;
+		}
+		.sidebar-link:hover, .sidebar-link.active {
+			background: linear-gradient(90deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
+			color: white;
+			border-left-color: #e74c3c;
+			transform: translateX(3px);
+		}
+		.sidebar-link i {
+			margin-right: 0.9rem;
+			width: 18px;
+			font-size: 1rem;
+		}
 		
 		/* ===== MAIN CONTENT STYLES ===== */
 		.main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); min-height: 100vh; }
@@ -177,53 +262,66 @@
 
 <body>
 	<div class="wrapper">
-		<!-- ===== SIDEBAR NAVIGATION ===== -->
-		<nav class="sidebar">
-			<a href="home" class="sidebar-brand" style="font-size:27px ; color: #d4d4d4">
-				<i class="fas fa-seedling me-2" style="color: #dc3545;" ></i>Menu quản lý
-			</a>
+            <!-- ===== SIDEBAR NAVIGATION ===== -->
+            <nav class="sidebar">
+                <a href="home" class="sidebar-brand">
+                    <i style="color: #2c3e50;"></i>Menu Quản Lý
+                </a>
 
-			<div class="sidebar-user">
-				<div class="d-flex align-items-center">
-					<img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
-					<div>
-						<div style="font-weight: 600;">Admin User</div>
-						<small style="opacity: 0.8;">System Manager</small>
-					</div>
-				</div>
-			</div>
-                    
-			<ul class="sidebar-nav">
-				<li class="sidebar-header">Menu Chính</li>
-				<!-- Chỉ hiển thị nếu là Staff -->
-                                <c:if test="${sessionScope.user.roleId == 2}">                                            
-					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
-					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
-					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-					<li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-				</c:if> 
+                <div class="sidebar-profile text-center">
+                    <img src="images/default-avatar.png" class="profile-avatar" alt="User Avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=3498db&color=fff&size=60&font-size=0.4'">
+                    <div class="profile-welcome">
+                        Chào mừng: 
+                        <c:choose>
+                            <c:when test="${sessionScope.user.roleId == 2}">
+                                <span class="profile-role">Nhân viên</span>
+                            </c:when>
+                            <c:when test="${sessionScope.user.roleId == 3}">
+                                <span class="profile-role">Quản lý</span>
+                            </c:when>
+                            <c:when test="${sessionScope.user.roleId == 4}">
+                                <span class="profile-role">Shipper</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="profile-role">Người dùng</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                    <a href="login.jsp" class="logout-link">
+                        <i class="fas fa-sign-out-alt"></i>Đăng xuất
+                    </a>
+                </div>
 
-				<!-- Chỉ hiển thị nếu là Manager -->
-				<c:if test="${sessionScope.user.roleId == 3}"> 
-					<li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
-					<li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
-					<li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
-					<li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-					<li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-					<li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
-					<li class="sidebar-header">Hệ Thống</li>
-					<li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-					<li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
-					<li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
-				</c:if> 
-                    
-				<!-- Chỉ hiển thị nếu là Shipper -->                        
-				<c:if test="${sessionScope.user.roleId == 4}">
-					<li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-				</c:if>                   
-			</ul>
-		</nav>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-header">Menu Chính</li>
+                    <!-- Chỉ hiển thị nếu là Staff -->
+                    <c:if test="${sessionScope.user.roleId == 2}">                                             
+                        <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+                        <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+                        <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+                        <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                    </c:if> 
 
+                    <!-- Chỉ hiển thị nếu là Manager -->
+                    <c:if test="${sessionScope.user.roleId == 3}"> 
+                        <li><a href="statistics" class="sidebar-link active" id="menu-management"><i class="fas fa-chart-bar"></i>Quản Lý</a></li>
+                        <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+                        <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
+                        <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
+                        <li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                        <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
+                        <li class="sidebar-header">Hệ Thống</li>
+                        <li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+                        <li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
+                        <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
+                    </c:if> 
+
+                    <!-- Chỉ hiển thị nếu là Shipper -->                        
+                    <c:if test="${sessionScope.user.roleId == 4}">
+                        <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                    </c:if>                   
+                </ul>
+            </nav>
 		<!-- ===== MAIN CONTENT AREA ===== -->
 		<div class="main-content">
 			<!-- Top Navigation Bar -->
@@ -237,15 +335,10 @@
 							<input type="hidden" name="priceRange" value="${param.priceRange}"/>
 							<input type="hidden" name="province" value="${param.province}"/>
 							<input type="hidden" name="dateFilter" value="${param.dateFilter}"/>
-							<input type="text" class="form-control me-2" name="search" value="${param.search}" placeholder="mã đơn, tên, email, sđt..."/>
+							<input type="text" class="form-control me-2" name="search" value="${param.search}" placeholder="Mã đơn, tên, email, sđt..."/>
 							<button type="submit" class="btn btn-outline-primary" style="color: #e4cbce; background-color: #c7606e; border: #c7606e;"><i class="fas fa-search"></i></button>
 						</form>						
 					</div>					
-					<div class="d-flex align-items-center gap-3">
-						<a href="purchase-order.jsp" class="btn btn-success">
-							<i class="fas fa-shopping-cart me-2"></i>Purchase Order
-						</a>
-					</div>
 				</div>
 			</div>
 
@@ -266,7 +359,7 @@
 				<!-- QUAN LY -->
 				<c:if test="${sessionScope.user.roleId == 3}">
 				<div class="row mb-4">
-					<div class="col-md-3">
+					<div class="col">
 						<a href="orderManagement?status=Chờ xác nhận&pageSize=${pageSize}" style="text-decoration:none">
 							<div class="inventory-stats text-center">
 								<i class="fa-solid fa-clock fa-2x text-primary mb-2"></i>
@@ -275,16 +368,16 @@
 							</div>
 						</a>
 					</div>
-					<div class="col-md-3">
+					<div class="col">
 						<a href="orderManagement?status=Đang chuẩn bị&pageSize=${pageSize}" style="text-decoration:none">
 							<div class="inventory-stats text-center">
-								<i class="fa-solid fa-cog fa-2x mb-2" style="color: #d84c4c;"></i>
-								<h4 class="text-danger">${preparingCount}</h4>
+								<i class="fa-solid fa-cog fa-2x mb-2" style="color: #55e2db;"></i>
+								<h4 style="color: #55e2db;">${preparingCount}</h4>
 								<p class="mb-0">Đơn hàng đang chuẩn bị</p>
 							</div>
 						</a>
 					</div>
-					<div class="col-md-3">
+					<div class="col">
 						<a href="orderManagement?status=Chờ giao hàng&pageSize=${pageSize}" style="text-decoration:none">
 							<div class="inventory-stats text-center">
 								<i class="fa-solid fa-truck fa-2x mb-2" style="color: #2d771e;"></i>
@@ -293,12 +386,21 @@
 							</div>
 						</a>
 					</div>
-					<div class="col-md-3">
+					<div class="col">
 						<a href="orderManagement?status=Đã mua&pageSize=${pageSize}" style="text-decoration:none">
 							<div class="inventory-stats text-center">
 								<i class="fa-solid fa-check-circle fa-2x mb-2" style="color: #f0e052;"></i>
 								<h4 class="text-warning">${completedCount}</h4>
 								<p class="mb-0">Đơn hàng đã giao</p>
+							</div>
+						</a>
+					</div>
+					<div class="col">
+						<a href="orderManagement?status=Đã hủy&pageSize=${pageSize}" style="text-decoration:none">
+							<div class="inventory-stats text-center">
+								<i class="fa-solid fa-times-circle fa-2x mb-2" style="color: #c74e4e;"></i>
+								<h4 style="color: #c74e4e;">${canceledCount}</h4>
+								<p class="mb-0">Đơn đã hủy</p>
 							</div>
 						</a>
 					</div>
@@ -310,8 +412,8 @@
 					<div class="col-md-6 offset-md-3">
 						<a href="orderManagement?status=Đang chuẩn bị&pageSize=${pageSize}" style="text-decoration:none">
 							<div class="inventory-stats text-center">
-								<i class="fa-solid fa-cog fa-2x mb-2" style="color: #d84c4c;"></i>
-								<h4 class="text-danger">${preparingCount}</h4>
+								<i class="fa-solid fa-cog fa-2x mb-2" style="color: #55e2db;"></i>
+								<h4 style="color: #55e2db;">${preparingCount}</h4>
 								<p class="mb-0">Đơn hàng đang chuẩn bị</p>
 							</div>
 						</a>
@@ -376,10 +478,40 @@
 						<label class="form-label">Tỉnh thành</label>
 						<select class="form-select" name="province">
 							<option value="">Tất cả</option>
-							<option value="Hà Nội" ${param.province == 'Hà Nội' ? 'selected' : ''}>Hà Nội</option>
-							<option value="TP. Hồ Chí Minh" ${param.province == 'TP. Hồ Chí Minh' ? 'selected' : ''}>TP. Hồ Chí Minh</option>
-							<option value="Đà Nẵng" ${param.province == 'Đà Nẵng' ? 'selected' : ''}>Đà Nẵng</option>
-							<option value="Cần Thơ" ${param.province == 'Cần Thơ' ? 'selected' : ''}>Cần Thơ</option>
+							<option value="TP Hà Nội" ${param.province == 'Hà Nội' ? 'selected' : ''}>Hà Nội</option>
+							<option value="TP Huế" ${param.province == 'Huế' ? 'selected' : ''}>Huế</option>
+							<option value="Quảng Ninh" ${param.province == 'Quảng Ninh' ? 'selected' : ''}>Quảng Ninh</option>
+							<option value="Cao Bằng" ${param.province == 'Cao Bằng' ? 'selected' : ''}>Cao Bằng</option>
+							<option value="Lạng Sơn" ${param.province == 'Lạng Sơn' ? 'selected' : ''}>Lạng Sơn</option>
+							<option value="Lai Châu" ${param.province == 'Lai Châu' ? 'selected' : ''}>Lai Châu</option>
+							<option value="Điện Biên" ${param.province == 'Điện Biên' ? 'selected' : ''}>Điện Biên</option>
+							<option value="Sơn La" ${param.province == 'Sơn La' ? 'selected' : ''}>Sơn La</option>
+							<option value="Thanh Hóa" ${param.province == 'Thanh Hóa' ? 'selected' : ''}>Thanh Hóa</option>
+							<option value="Nghệ An" ${param.province == 'Nghệ An' ? 'selected' : ''}>Nghệ An</option>
+							<option value="Hà Tĩnh" ${param.province == 'Hà Tĩnh' ? 'selected' : ''}>Hà Tĩnh</option>
+							<option value="Tuyên Quang" ${param.province == 'Tuyên Quang' ? 'selected' : ''}>Tuyên Quang</option>
+							<option value="Lào Cai" ${param.province == 'Lào Cai' ? 'selected' : ''}>Lào Cai</option>
+							<option value="Thái Nguyên" ${param.province == 'Thái Nguyên' ? 'selected' : ''}>Thái Nguyên</option>
+							<option value="Phú Thọ" ${param.province == 'Phú Thọ' ? 'selected' : ''}>Phú Thọ</option>
+							<option value="Bắc Ninh" ${param.province == 'Bắc Ninh' ? 'selected' : ''}>Bắc Ninh</option>
+							<option value="Hưng Yên" ${param.province == 'Hưng Yên' ? 'selected' : ''}>Hưng Yên</option>
+							<option value="TP Hải Phòng" ${param.province == 'TP Hải Phòng' ? 'selected' : ''}>TP Hải Phòng</option>
+							<option value="Ninh Bình" ${param.province == 'Ninh Bình' ? 'selected' : ''}>Ninh Bình</option>
+							<option value="Quảng Trị" ${param.province == 'Quảng Trị' ? 'selected' : ''}>Quảng Trị</option>
+							<option value="TP Đà Nẵng" ${param.province == 'TP Đà Nẵng' ? 'selected' : ''}>TP Đà Nẵng</option>
+							<option value="Quảng Ngãi" ${param.province == 'Quảng Ngãi' ? 'selected' : ''}>Quảng Ngãi</option>
+							<option value="Gia Lai" ${param.province == 'Gia Lai' ? 'selected' : ''}>Gia Lai</option>
+							<option value="Khánh Hòa" ${param.province == 'Khánh Hòa' ? 'selected' : ''}>Khánh Hòa</option>
+							<option value="Lâm Đồng" ${param.province == 'Lâm Đồng' ? 'selected' : ''}>Lâm Đồng</option>
+							<option value="Đắk Lắk" ${param.province == 'Đắk Lắk' ? 'selected' : ''}>Đắk Lắk</option>
+							<option value="TPHCM" ${param.province == 'TPHCM' ? 'selected' : ''}>TPHCM</option>
+							<option value="Đồng Nai" ${param.province == 'Đồng Nai' ? 'selected' : ''}>Đồng Nai</option>
+							<option value="Tây Ninh" ${param.province == 'Tây Ninh' ? 'selected' : ''}>Tây Ninh</option>
+							<option value="TP Cần Thơ" ${param.province == 'TP Cần Thơ' ? 'selected' : ''}>TP Cần Thơ</option>
+							<option value="Vĩnh Long" ${param.province == 'Vĩnh Long' ? 'selected' : ''}>Vĩnh Long</option>
+							<option value="Đồng Tháp" ${param.province == 'Đồng Tháp' ? 'selected' : ''}>Đồng Tháp</option>
+							<option value="Cà Mau" ${param.province == 'Cà Mau' ? 'selected' : ''}>Cà Mau</option>
+							<option value="An Giang" ${param.province == 'An Giang' ? 'selected' : ''}>An Giang</option>
 						</select>
 					</div>
 					<div class="col-md-2">
@@ -461,6 +593,9 @@
 													</c:when>
 													<c:when test="${order.status eq 'Chờ giao hàng'}">
 														<span class="badge bg-primary text-white">${order.status}</span>
+													</c:when>
+													<c:when test="${order.status eq 'Đã hủy'}">
+														<span class="badge" style="background-color: #c74e4e; color: white;">${order.status}</span>
 													</c:when>
 													<c:otherwise>
 														<span class="badge bg-success text-white">${order.status}</span>

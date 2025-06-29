@@ -68,9 +68,6 @@ public class OrderServlet extends HttpServlet {
         Integer userId = (Integer) session.getAttribute("userId");
         Integer roleId = (Integer) session.getAttribute("roleId"); // Lấy role từ session dưới dạng Integer
         
-        System.out.println("UserId from session: " + userId);
-        System.out.println("Role from session: " + roleId);
-        
         if (userId == null || roleId == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -103,6 +100,7 @@ public class OrderServlet extends HttpServlet {
             List<Order> preparingOrders = new ArrayList<>();
             List<Order> shippingOrders = new ArrayList<>();
             List<Order> completedOrders = new ArrayList<>();
+            List<Order> cancelledOrders = new ArrayList<>();
 
             for (Order order : allOrders) {
                 switch (order.getStatus()) {
@@ -110,6 +108,7 @@ public class OrderServlet extends HttpServlet {
                     case "Đang chuẩn bị" -> preparingOrders.add(order);
                     case "Chờ giao hàng" -> shippingOrders.add(order);
                     case "Đã mua" -> completedOrders.add(order);
+                    case "Đã hủy" -> cancelledOrders.add(order);
                 }
             }
 
@@ -117,6 +116,7 @@ public class OrderServlet extends HttpServlet {
             request.setAttribute("preparingOrders", preparingOrders);
             request.setAttribute("shippingOrders", shippingOrders);
             request.setAttribute("completedOrders", completedOrders);
+            request.setAttribute("cancelledOrders", cancelledOrders);
             request.setAttribute("userRole", roleId);
 
             // Lấy danh sách trạng thái để hiển thị trong dropdown
@@ -142,17 +142,44 @@ public class OrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute("userId");
         Integer roleId = (Integer) session.getAttribute("roleId");
         
-        // Chỉ Manager, Staff và Shipper mới được update trạng thái
-        if (roleId == null || (roleId != 3 && roleId != 2 && roleId != 4)) { // 3 = Manager, 2 = Staff, 4 = Shipper
+        // Chỉ Customer mới được hủy đơn hàng
+        if (userId == null || roleId == null || roleId != 1) {
             response.sendRedirect("accessDenied.jsp");
             return;
         }
         
         String action = request.getParameter("action");
         
-        if ("updateStatus".equals(action)) {
+        if ("cancelOrder".equals(action)) {
+            try {
+                int orderId = Integer.parseInt(request.getParameter("orderId"));
+                
+                // Kiểm tra xem đơn hàng có thể hủy không
+                if (orderDAO.canCancelOrder(orderId, userId)) {
+                    boolean cancelled = orderDAO.cancelOrder(orderId, userId);
+                    if (cancelled) {
+                        session.setAttribute("message", "Hủy đơn hàng thành công!");
+                    } else {
+                        session.setAttribute("error", "Không thể hủy đơn hàng!");
+                    }
+                } else {
+                    session.setAttribute("error", "Đơn hàng không thể hủy hoặc không thuộc về bạn!");
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                session.setAttribute("error", "Lỗi khi hủy đơn hàng!");
+            }
+        } else if ("updateStatus".equals(action)) {
+            // Chỉ Manager, Staff và Shipper mới được update trạng thái
+            if (roleId != 3 && roleId != 2 && roleId != 4) { // 3 = Manager, 2 = Staff, 4 = Shipper
+                response.sendRedirect("accessDenied.jsp");
+                return;
+            }
+            
             try {
                 int orderId = Integer.parseInt(request.getParameter("orderId"));
                 String newStatus = request.getParameter("newStatus");

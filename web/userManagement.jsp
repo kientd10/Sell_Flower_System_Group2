@@ -2,6 +2,7 @@
 <%@page import="dal.UserDAO" %>
 <%@page import="Model.User" %>
 <%@page import="java.util.List" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -26,7 +27,7 @@
             }
 
             body {
-                font-family: 'Inter', sans-serif;
+                font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
                 background: var(--light-gray);
                 margin: 0;
                 padding: 0;
@@ -40,29 +41,74 @@
             /* ===== SIDEBAR STYLES ===== */
             .sidebar {
                 width: var(--sidebar-width);
-                background: linear-gradient(135deg, var(--dark-gray) 0%, #495057 100%);
+                background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
                 position: fixed;
                 height: 100vh;
                 overflow-y: auto;
                 z-index: 1000;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                box-shadow: 2px 0 15px rgba(0,0,0,0.15);
             }
 
             .sidebar-brand {
-                padding: 1.5rem;
+                padding: 1.8rem 1.5rem;
                 color: white;
                 text-decoration: none;
                 font-weight: 700;
-                font-size: 1.2rem;
+                font-size: 1.4rem;
                 border-bottom: 1px solid rgba(255,255,255,0.1);
                 display: block;
                 text-align: center;
+                background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                letter-spacing: 0.5px;
             }
 
-            .sidebar-user {
+            .sidebar-profile {
                 padding: 1.5rem;
                 border-bottom: 1px solid rgba(255,255,255,0.1);
+                background: rgba(255,255,255,0.03);
+            }
+
+            .profile-avatar {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                border: 3px solid rgba(255,255,255,0.2);
+                object-fit: cover;
+                margin-bottom: 0.8rem;
+            }
+
+            .profile-welcome {
                 color: white;
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .profile-role {
+                color: #ecf0f1;
+                font-size: 0.8rem;
+                font-weight: 500;
+                margin-bottom: 1rem;
+                padding: 0.3rem 0.8rem;
+                background: rgba(255,255,255,0.1);
+                border-radius: 15px;
+                display: inline-block;
+            }
+
+            .logout-link {
+                color: #c44d58;
+                text-decoration: none;
+                font-size: 0.95rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .logout-link:hover {
+                color: #a03d4a;
+                transform: translateX(3px);
             }
 
             .sidebar-nav {
@@ -73,30 +119,35 @@
 
             .sidebar-header {
                 padding: 1rem 1.5rem 0.5rem;
-                color: rgba(255,255,255,0.6);
-                font-size: 0.85rem;
+                color: rgba(255,255,255,0.7);
+                font-size: 0.8rem;
                 font-weight: 600;
                 text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
 
             .sidebar-link {
                 display: flex;
                 align-items: center;
-                padding: 0.8rem 1.5rem;
-                color: rgba(255,255,255,0.8);
+                padding: 0.9rem 1.5rem;
+                color: rgba(255,255,255,0.85);
                 text-decoration: none;
                 transition: all 0.3s ease;
+                border-left: 3px solid transparent;
+                margin: 0.2rem 0;
             }
 
             .sidebar-link:hover, .sidebar-link.active {
-                background: var(--primary-red);
+                background: linear-gradient(90deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
                 color: white;
-                transform: translateX(5px);
+                border-left-color: #e74c3c;
+                transform: translateX(3px);
             }
 
             .sidebar-link i {
-                margin-right: 0.8rem;
+                margin-right: 0.9rem;
                 width: 18px;
+                font-size: 1rem;
             }
 
             /* ===== MAIN CONTENT STYLES ===== */
@@ -155,98 +206,39 @@
                 bottom: 0;
                 background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
                 transform: translateX(-100%);
-                transition: transform 0.6s;
+                animation: shimmer 2s infinite;
             }
 
-            .card:hover .card-header::before {
-                transform: translateX(100%);
+            @keyframes shimmer {
+                0% {
+                    transform: translateX(-100%);
+                }
+                100% {
+                    transform: translateX(100%);
+                }
             }
 
             .card-body {
                 padding: 2rem;
             }
 
-            /* ===== ENHANCED BUTTON STYLES ===== */
-            .btn {
-                border-radius: 8px;
-                font-weight: 500;
-                padding: 0.625rem 1.25rem;
-                transition: all 0.3s ease;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .btn::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-                transition: left 0.5s;
-            }
-
-            .btn:hover::before {
-                left: 100%;
-            }
-
-            .btn-primary {
-                background: var(--primary-red);
-                border-color: var(--primary-red);
-                color: white;
-            }
-
-            .btn-primary:hover {
-                background: var(--primary-red-dark);
-                border-color: var(--primary-red-dark);
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(196, 77, 88, 0.4);
-                color: white;
-            }
-
-            .btn-warning {
-                background: #ffc107;
-                border-color: #ffc107;
-                color: #212529;
-            }
-
-            .btn-warning:hover {
-                background: #ffb300;
-                border-color: #ffb300;
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
-                color: #212529;
-            }
-
-            .btn-danger {
-                background: #dc3545;
-                border-color: #dc3545;
-            }
-
-            .btn-danger:hover {
-                background: #c82333;
-                border-color: #c82333;
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
-            }
-
             /* ===== ENHANCED TABLE STYLES ===== */
             .table-container {
-                background: white;
-                border-radius: 15px;
-                overflow: hidden;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+                overflow-x: auto;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             }
 
             .table {
-                margin: 0;
+                margin-bottom: 0;
+                background: white;
+                border-radius: 10px;
+                overflow: hidden;
             }
 
             .table th {
-                background: var(--light-gray);
-                font-weight: 600;
-                border-top: none;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border: none;
                 border-bottom: 2px solid #dee2e6;
                 padding: 1.2rem;
                 color: var(--dark-gray);
@@ -310,15 +302,6 @@
                 background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
                 transform: translateX(-100%);
                 animation: shimmer 2s infinite;
-            }
-
-            @keyframes shimmer {
-                0% {
-                    transform: translateX(-100%);
-                }
-                100% {
-                    transform: translateX(100%);
-                }
             }
 
             .modal-body {
@@ -447,52 +430,66 @@
 
             /* ===== USER AVATAR STYLES ===== */
             .user-avatar {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 border-radius: 50%;
-                background: linear-gradient(135deg, var(--primary-red), #e91e63);
+                background: linear-gradient(135deg, var(--primary-red), var(--primary-red-dark));
+                color: white;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: white;
                 font-weight: 600;
                 font-size: 0.9rem;
-                margin-right: 0.75rem;
-                box-shadow: 0 3px 10px rgba(196, 77, 88, 0.3);
+                margin-right: 0.8rem;
+                box-shadow: 0 2px 8px rgba(196, 77, 88, 0.3);
             }
 
-            /* ===== RESPONSIVE DESIGN ===== */
-            @media (max-width: 1024px) {
-                .sidebar {
-                    width: 250px;
-                }
-                .main-content {
-                    margin-left: 250px;
-                    width: calc(100% - 250px);
-                }
+            /* ===== ENHANCED BUTTON STYLES ===== */
+            .btn {
+                border-radius: 10px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                border: none;
+                padding: 0.6rem 1.2rem;
             }
 
-            @media (max-width: 768px) {
-                .sidebar {
-                    transform: translateX(-100%);
-                    transition: transform 0.3s ease;
-                }
-                .sidebar.show {
-                    transform: translateX(0);
-                }
-                .main-content {
-                    margin-left: 0;
-                    width: 100%;
-                }
-                .content-area {
-                    padding: 1rem;
-                }
-                .table-responsive {
-                    font-size: 0.875rem;
-                }
+            .btn-primary {
+                background: var(--primary-red);
+                border-color: var(--primary-red);
+                border-radius: 6px;
             }
 
-            /* ===== ANIMATIONS ===== */
+            .btn-primary:hover {
+                background: var(--primary-red-dark);
+                transform: translateY(-1px);
+            }
+
+            .btn-warning {
+                background: linear-gradient(135deg, #ffc107, #e0a800);
+                color: #212529;
+                box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            }
+
+            .btn-warning:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+            }
+
+            .btn-danger {
+                background: linear-gradient(135deg, #dc3545, #c82333);
+                box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+            }
+
+            .btn-danger:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+            }
+
+            /* ===== ANIMATION STYLES ===== */
+            .fade-in-up {
+                animation: fadeInUp 0.6s ease-out;
+            }
+
             @keyframes fadeInUp {
                 from {
                     opacity: 0;
@@ -504,79 +501,103 @@
                 }
             }
 
-            .fade-in-up {
-                animation: fadeInUp 0.6s ease-out;
+            .pulse-animation {
+                animation: pulse 2s infinite;
             }
 
             @keyframes pulse {
                 0% {
-                    transform: scale(1);
+                    box-shadow: 0 0 0 0 rgba(196, 77, 88, 0.7);
                 }
-                50% {
-                    transform: scale(1.05);
+                70% {
+                    box-shadow: 0 0 0 10px rgba(196, 77, 88, 0);
                 }
                 100% {
-                    transform: scale(1);
+                    box-shadow: 0 0 0 0 rgba(196, 77, 88, 0);
                 }
             }
 
-            .pulse-animation {
-                animation: pulse 2s infinite;
+            /* ===== RESPONSIVE STYLES ===== */
+            @media (max-width: 768px) {
+                .sidebar {
+                    width: 250px;
+                }
+                .main-content {
+                    margin-left: 250px;
+                    width: calc(100% - 250px);
+                }
+                .content-area {
+                    padding: 1rem;
+                }
             }
         </style>
     </head>
     <body>
-        <div class="wrapper">
-            <% 
-                Integer role = (Integer) request.getSession().getAttribute("roleId"); 
-                UserDAO userDAO = new UserDAO();
-                User userToEdit = (User) request.getAttribute("user");
-                String error = request.getParameter("error");
-            %>
+        <%
+            UserDAO userDAO = new UserDAO();
+            Integer role = (Integer) session.getAttribute("roleId");
+            User userToEdit = (User) request.getAttribute("userToEdit");
+            String error = request.getParameter("error");
+        %>
 
-            <!-- ===== SIDEBAR NAVIGATION ===== -->
+        <div class="wrapper">
+            <!-- ===== SIDEBAR ===== -->
             <nav class="sidebar">
                 <a href="home" class="sidebar-brand">
-                    <i class="fas fa-seedling me-2"></i>Flower Management
+                    <i style="color: #2c3e50;"></i>Menu Quản Lý
                 </a>
 
-                <div class="sidebar-user">
-                    <div class="d-flex align-items-center">
-                        <img src="https://via.placeholder.com/45" class="rounded me-2" alt="Admin">
-                        <div>
-                            <div style="font-weight: 600;">Admin User</div>
-                            <small style="opacity: 0.8;">System Manager</small>
-                        </div>
+                <div class="sidebar-profile text-center">
+                    <img src="images/default-avatar.png" class="profile-avatar" alt="User Avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=3498db&color=fff&size=60&font-size=0.4'">
+                    <div class="profile-welcome">
+                        Chào mừng: 
+                        <%
+                            Integer userRole = (Integer) session.getAttribute("roleId");
+                            String roleDisplay = "";
+                            if (userRole != null) {
+                                switch(userRole) {
+                                    case 1: roleDisplay = "Khách hàng"; break;
+                                    case 2: roleDisplay = "Nhân viên"; break;
+                                    case 3: roleDisplay = "Quản lý"; break;
+                                    case 4: roleDisplay = "Shipper"; break;
+                                    default: roleDisplay = "Người dùng"; break;
+                                }
+                            }
+                        %>
+                        <span class="profile-role"><%= roleDisplay %></span>
                     </div>
+                    <a href="login.jsp" class="logout-link">
+                        <i class="fas fa-sign-out-alt"></i>Đăng xuất
+                    </a>
                 </div>
 
                 <ul class="sidebar-nav">
                     <li class="sidebar-header">Menu Chính</li>
-
+                    <!-- Chỉ hiển thị nếu là Staff -->
                     <c:if test="${sessionScope.user.roleId == 2}">                                             
                         <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
                         <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
                         <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-                        <li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                        <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                     </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Manager -->
                     <c:if test="${sessionScope.user.roleId == 3}"> 
-                        <li><a href="management.jsp" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Thống Kê</a></li>
+                        <li><a href="statistics" class="sidebar-link" id="menu-management"><i class="fas fa-chart-bar"></i>Quản Lý</a></li>
                         <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
                         <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
                         <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
-                        <li><a href="orderManagement.jsp" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                        <li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                         <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
                         <li class="sidebar-header">Hệ Thống</li>
-                        <li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-                        <li><a href="feedbackManagement.jsp" class="sidebar-link active" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
+                        <li><a href="userManagement.jsp" class="sidebar-link active" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+                        <li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
                         <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
                     </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Shipper -->                        
                     <c:if test="${sessionScope.user.roleId == 4}">
-                        <li><a href="orderManagement.jsp" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                        <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                     </c:if>                   
                 </ul>
             </nav>
@@ -591,11 +612,25 @@
             <div class="main-content">
                 <nav class="top-navbar">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">User Management</h5>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm người dùng..." id="searchUser">
+                            <button class="btn btn-outline-secondary" onclick="searchUser()"><i class="fas fa-search"></i></button>
+                        </div>
                     </div>
                 </nav>
 
                 <div class="content-area fade-in-up">
+                    <!-- Page Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="page-title">Quản Lý Người Dùng</h2>
+                            <p class="text-muted">Quản lý thông tin người dùng hệ thống</p>
+                        </div>
+                        <div class="text-muted">
+                            Ngày cập nhật: <%= new java.text.SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new java.util.Date()) %>
+                        </div>
+                    </div>
+
                     <!-- Hiển thị thông báo lỗi nếu có -->
                     <% if ("invalidId".equals(error)) { %>
                     <div class="alert alert-danger">
@@ -733,7 +768,7 @@
                                                     <a href="UserManagementServlet?action=edit&id=<%= u.getUserId() %>" class="btn btn-warning btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <a href="UserManagementServlet?action=delete&id=<%= u.getUserId() %>" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn?')">
+                                                    <a href="UserManagementServlet?action=delete&id=<%= u.getUserId() %>" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </div>
@@ -896,43 +931,68 @@
 
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <% if (userToEdit != null) { %>
         <script>
-            <% if (userToEdit != null) { %>
-                                                    document.addEventListener('DOMContentLoaded', function () {
-                                                        var myModal = new bootstrap.Modal(document.getElementById('editUserModal'));
-                                                        myModal.show();
-                                                    });
-            <% } %>
+            document.addEventListener('DOMContentLoaded', function () {
+                var myModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                myModal.show();
+            });
+        </script>
+        <% } %>
+        
+        <script>
+            // Search functionality
+            function searchUser() {
+                const searchTerm = document.getElementById('searchUser').value;
+                console.log('Tìm kiếm người dùng:', searchTerm);
+                // Add logic to filter user data if needed
+            }
 
-                                                    // Auto hide alerts after 5 seconds
-                                                    document.addEventListener('DOMContentLoaded', function () {
-                                                        const alerts = document.querySelectorAll('.alert');
-                                                        alerts.forEach(function (alert) {
-                                                            setTimeout(function () {
-                                                                alert.style.opacity = '0';
-                                                                alert.style.transform = 'translateY(-20px)';
-                                                                setTimeout(function () {
-                                                                    alert.remove();
-                                                                }, 300);
-                                                            }, 5000);
-                                                        });
-                                                    });
+            // Auto hide alerts after 5 seconds
+            document.addEventListener('DOMContentLoaded', function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function (alert) {
+                    setTimeout(function () {
+                        alert.style.opacity = '0';
+                        alert.style.transform = 'translateY(-20px)';
+                        setTimeout(function () {
+                            alert.remove();
+                        }, 300);
+                    }, 5000);
+                });
+            });
 
-                                                    // Mobile sidebar toggle
-                                                    function toggleSidebar() {
-                                                        const sidebar = document.querySelector('.sidebar');
-                                                        sidebar.classList.toggle('show');
-                                                    }
+            // Mobile sidebar toggle
+            function toggleSidebar() {
+                const sidebar = document.querySelector('.sidebar');
+                sidebar.classList.toggle('show');
+            }
 
-                                                    // Add mobile menu button for small screens
-                                                    if (window.innerWidth <= 768) {
-                                                        const navbar = document.querySelector('.top-navbar .d-flex');
-                                                        const menuButton = document.createElement('button');
-                                                        menuButton.className = 'btn btn-outline-primary d-md-none';
-                                                        menuButton.innerHTML = '<i class="fas fa-bars"></i>';
-                                                        menuButton.onclick = toggleSidebar;
-                                                        navbar.insertBefore(menuButton, navbar.firstChild);
-                                                    }
+            // Add mobile menu button for small screens
+            if (window.innerWidth <= 768) {
+                const navbar = document.querySelector('.top-navbar .d-flex');
+                const menuButton = document.createElement('button');
+                menuButton.className = 'btn btn-outline-primary d-md-none';
+                menuButton.innerHTML = '<i class="fas fa-bars"></i>';
+                menuButton.onclick = toggleSidebar;
+                navbar.insertBefore(menuButton, navbar.firstChild);
+            }
+
+            // Highlight current menu
+            document.addEventListener('DOMContentLoaded', function () {
+                var currentUrl = window.location.href;
+                document.querySelectorAll('.sidebar-link').forEach(function (link) {
+                    link.classList.remove('active');
+                });
+                
+                if (currentUrl.includes('userManagement.jsp')) {
+                    var userLink = document.getElementById('menu-userManagement');
+                    if (userLink) {
+                        userLink.classList.add('active');
+                    }
+                }
+            });
         </script>
     </body>
 </html>

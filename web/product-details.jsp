@@ -260,7 +260,7 @@
                                             <input type="hidden" name="templateId" value="${bouquet.templateId}" />
                                             <button type="submit" class="btn btn-fefault cart" style="border-radius: 4px;margin-left: 23px;">
                                                 <i class="fa fa-shopping-cart"></i>
-                                                Mua ngay
+                                                Thêm vào giỏ hàng
                                             </button>
                                         </form>
                                     </span>
@@ -339,7 +339,7 @@
                                                             <img src="${template.imageUrl}" alt="${template.templateName}" />
                                                             <h2>${template.basePrice} VND</h2>
                                                             <p>${template.templateName}</p>
-                                                            <button type="button" class="btn btn-default add-to-cart">
+                                                            <button type="button" class="btn btn-default add-to-cart" style="border-radius: 4px;">
                                                                 <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
                                                             </button>
                                                             <a href="bouquet-detail?templateId=${template.templateId}" class="btn btn-default">Xem chi tiết</a>

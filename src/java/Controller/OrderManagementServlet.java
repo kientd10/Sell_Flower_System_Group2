@@ -69,6 +69,7 @@ public class OrderManagementServlet extends HttpServlet {
         int preparingCount = orderDAO.countOrdersForManagement(roleId, "Đang chuẩn bị", category, priceRange, province, search, dateFilter);
         int shippingCount = orderDAO.countOrdersForManagement(roleId, "Chờ giao hàng", category, priceRange, province, search, dateFilter);
         int completedCount = orderDAO.countOrdersForManagement(roleId, "Đã mua", category, priceRange, province, search, dateFilter);
+        int canceledCount = orderDAO.countOrdersForManagement(roleId, "Đã hủy", category, priceRange, province, search, dateFilter);
 
         // Lấy danh sách danh mục
         List<Category> categories = orderDAO.getAllCategories();
@@ -88,6 +89,7 @@ public class OrderManagementServlet extends HttpServlet {
         request.setAttribute("preparingCount", preparingCount);
         request.setAttribute("shippingCount", shippingCount);
         request.setAttribute("completedCount", completedCount);
+        request.setAttribute("canceledCount", canceledCount);
 
         // Lấy danh sách trạng thái cho dropdown
         try {

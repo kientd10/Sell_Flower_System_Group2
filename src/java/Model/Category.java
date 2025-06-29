@@ -12,6 +12,7 @@ public class Category {
 
     private int categoryId;
     private String categoryName;
+    private int productCount;
 
     public Category() {
     }
@@ -35,5 +36,13 @@ public class Category {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+    
+    public int getProductCount() {
+        return productCount;
+    }
+    
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
     }
 }
