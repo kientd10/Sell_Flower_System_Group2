@@ -160,6 +160,63 @@ public class PaymentDAO {
         }
         return list;
     }
+    
+    //search
+    public List<Invoice> Search(String value){
+        List<Invoice> list = new ArrayList<>();
+        String sql = "SELECT \n"
+                + "    \n"
+                + "    p.payment_status,\n"
+                + "    \n"
+                + "    p.payment_id,\n"
+                + "    p.payment_method,\n"
+                + "\n"
+                + "    \n"
+                + "    o.order_code,\n"
+                + "    \n"
+                + "    o.created_at,\n"
+                + "    o.total_amount,\n"
+                + "    \n"
+                + "    u.username\n"
+                + "	\n"
+                + "FROM \n"
+                + "      flower_shop_db.payments p\n"
+                + "JOIN \n"
+                + "    orders o ON p.order_id = o.order_id\n"
+                + "JOIN \n"
+                + "    users u ON o.customer_id = u.user_id\n"
+                + "    \n"
+                + "where u.username like ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + value + "%");
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setStatus(rs.getString(1));
+                invoice.setPayment_id(rs.getString(2));
+                invoice.setPayment(rs.getString(3));
+                invoice.setOrder_code(rs.getString(4));
+                invoice.setDate(rs.getDate(5));
+                invoice.setTotalPayment(rs.getDouble(6));
+                invoice.setCustomer_name(rs.getString(7));
+                list.add(invoice);
+            }
+        } catch (Exception e) {
+        }
+        
+        return list;
+    }
+    
+    public List<Invoice> getListByPage(List<Invoice> list,
+            int start, int end) {
+        ArrayList<Invoice> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
     public static void main(String[] args) {
         PaymentDAO d = new PaymentDAO();
         List<Invoice> list = d.FilterInvoice("quarter", "price3");
