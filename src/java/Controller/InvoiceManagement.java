@@ -73,12 +73,27 @@ public class InvoiceManagement extends HttpServlet {
             request.setCharacterEncoding("UTF-8");
             response.setContentType("text/html;charset=UTF-8");
             String action = request.getParameter("action");
-            List<Invoice> listInvoice = new  ArrayList<>();
+            List<Invoice> ListInvoice = new  ArrayList<>();
             dal.PaymentDAO paymentDao = new PaymentDAO();
             //in ra list invoice
             if(action.equals("displayAll")){
-                listInvoice = paymentDao.DisplayInvoice();
+                ListInvoice = paymentDao.DisplayInvoice();
+                int page, numperpage = 5;
+            int size = ListInvoice.size();
+            int num = (size % 5 == 0 ? (size / 5) : ((size / 5)) + 1);//number of pages
+            String xpage = request.getParameter("page");//selected page
+            if (xpage == null) {
+                page = 1;
+            } else {
+                page = Integer.parseInt(xpage);
+            }
+            int start, end;
+            start = (page - 1) * numperpage;
+            end = Math.min(page * numperpage, size);
+            List<Invoice> listInvoice = paymentDao.getListByPage(ListInvoice, start, end);
                 request.setAttribute("listInvoice", listInvoice);
+                request.setAttribute("page", page);
+            request.setAttribute("num", num);
                 request.getRequestDispatcher("invoiceManagement.jsp").forward(request, response);
                 return;
             }
@@ -88,12 +103,49 @@ public class InvoiceManagement extends HttpServlet {
                 String date =  request.getParameter("date");
                 String price = request.getParameter("priceRange");
                 
-                listInvoice = paymentDao.FilterInvoice(date, price);
-                
-                request.setAttribute("listInvoice", listInvoice);
+                ListInvoice = paymentDao.FilterInvoice(date, price);
+//                int page, numperpage = 5;
+//            int size = ListInvoice.size();
+//            int num = (size % 5 == 0 ? (size / 5) : ((size / 5)) + 1);//number of pages
+//            String xpage = request.getParameter("page");//selected page
+//            if (xpage == null) {
+//                page = 1;
+//            } else {
+//                page = Integer.parseInt(xpage);
+//            }
+//            int start, end;
+//            start = (page - 1) * numperpage;
+//            end = Math.min(page * numperpage, size);
+//                List<Invoice> listInvoice = paymentDao.getListByPage(ListInvoice, start, end);
+                request.setAttribute("listInvoice", ListInvoice);
                 request.setAttribute("selectedRange", date);
                 request.setAttribute("selectedPrice", price);
-                
+//                request.setAttribute("page", page);
+//            request.setAttribute("num", num);
+                request.getRequestDispatcher("invoiceManagement.jsp").forward(request, response);
+                return;
+            }
+            
+            //search
+            if(action.equals("Search")){
+                String search =  request.getParameter("value");
+                ListInvoice = paymentDao.Search(search);
+//                int page, numperpage = 5;
+//            int size = ListInvoice.size();
+//            int num = (size % 5 == 0 ? (size / 5) : ((size / 5)) + 1);//number of pages
+//            String xpage = request.getParameter("page");//selected page
+//            if (xpage == null) {
+//                page = 1;
+//            } else {
+//                page = Integer.parseInt(xpage);
+//            }
+//            int start, end;
+//            start = (page - 1) * numperpage;
+//            end = Math.min(page * numperpage, size);
+//                List<Invoice> listInvoice = paymentDao.getListByPage(ListInvoice, start, end);
+                request.setAttribute("listInvoice", ListInvoice);
+//                request.setAttribute("page", page);
+//            request.setAttribute("num", num);
                 request.getRequestDispatcher("invoiceManagement.jsp").forward(request, response);
                 return;
             }
@@ -102,7 +154,10 @@ public class InvoiceManagement extends HttpServlet {
 
     }
 
-
+    //in ra excel file
+    public void ExportWord(List<Invoice> list ,String filePath){
+        
+    }
 
     /** 
      * Returns a short description of the servlet.

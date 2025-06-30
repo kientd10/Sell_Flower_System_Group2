@@ -366,7 +366,7 @@
                         <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
                         <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
                         <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-                    </c:if> 
+                        </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Manager -->
                     <c:if test="${sessionScope.user.roleId == 3}"> 
@@ -380,12 +380,12 @@
                         <li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
                         <li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
                         <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
-                    </c:if> 
+                        </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Shipper -->                        
                     <c:if test="${sessionScope.user.roleId == 4}">
                         <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-                    </c:if>                   
+                        </c:if>                   
                 </ul>
             </nav>
 
@@ -395,18 +395,12 @@
                 <div class="top-navbar">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="input-group" style="width: 300px;">
-                            <input type="text" class="form-control" placeholder="Tìm kiếm hóa đơn..." id="invoiceSearch">
+                            <input type="text"  class="form-control" placeholder="Tìm kiếm hóa đơn..." id="invoiceSearch">
                             <button class="btn btn-outline-secondary" onclick="searchInvoices()"><i class="fas fa-search"></i></button>
                         </div>
 
                         <div class="d-flex align-items-center gap-3">
-                            <a href="create-invoice.jsp" class="btn btn-primary">
-                                <i class="fas fa-plus me-2"></i>Tạo Hóa Đơn Mới
-                            </a>
-                            <button class="btn btn-success" onclick="exportInvoices()">
-                                <i class="fas fa-file-export me-2"></i>Xuất Excel
-                            </button>
-                            <button class="btn btn-outline-secondary" onclick="printInvoices()">
+                            <button class="btn btn-outline-secondary" onclick="myApp.printTable()">
                                 <i class="fas fa-print me-2"></i>In Hóa Đơn
                             </button>
                         </div>
@@ -432,6 +426,7 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="row align-items-center">
+                                <!--  
                                 <div class="col-md-3">
                                     <label class="form-label">Trạng Thái Hóa Đơn:</label>
                                     <select class="form-select" onchange="filterByStatus(this.value)">
@@ -447,6 +442,7 @@
                                         <option value="transfer">Chuyển Khoản (28)</option>
                                     </select>
                                 </div>
+                                -->
                                 <div class="col-md-3">
                                     <label class="form-label">Khoảng Thời Gian:</label>
                                     <select class="form-select" name="date" onchange="filterAll()">
@@ -482,7 +478,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover">
+                                <table class="table table-hover" id="sampleTable">
                                     <thead>
                                         <tr>
                                             <th>Mã Hóa Đơn</th>
@@ -491,7 +487,6 @@
                                             <th>Tổng Tiền</th>
                                             <th>Trạng Thái</th>
                                             <th>Phương Thức</th>
-                                            <th>Thao Tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -521,16 +516,7 @@
                                                 </td>
                                                 <td><span class="invoice-status paid">${listI.status}</span></td>
                                                 <td><span class="payment-method card">${listI.payment}</span></td>
-                                                <td>
-                                                    <div class="invoice-actions">
-                                                        <button class="btn btn-sm btn-outline-success" onclick="printInvoice(1)" title="In Hóa Đơn">
-                                                            <i class="fas fa-print"></i>
-                                                        </button>
-                                                        <a href="edit-invoice.jsp?id=1" class="btn btn-sm btn-outline-warning" title="Xóa">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
+
                                             </tr>
                                         </c:forEach>
 
@@ -549,18 +535,19 @@
 
                             <!-- ===== PAGINATION ===== -->
                             <nav aria-label="Invoice pagination" class="mt-3">
-                                <ul class="pagination">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="invoices.jsp?page=2">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="invoices.jsp?page=3">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="invoices.jsp?page=4">4</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="invoices.jsp?page=2"><i class="fas fa-chevron-right"></i></a>
-                                    </li>
-                                </ul>
+                                <c:set var="page" value="${page}"/>
+                                <div class="shop_toolbar t_bottom" style="border: none;">
+                                    <div class="pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <c:forEach begin="1" end="${num}" var="i">
+                                                <li class="page-item ${i == page ? 'active' : ''}">
+                                                    <a class="page-link" href="InvoiceManagement?action=displayAll&page=${i}">${i}</a>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+
+                                    </div>
+                                </div>
                             </nav>
                         </div>
                     </div>
@@ -572,230 +559,260 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-                                                            // ===== INVOICE MANAGEMENT FUNCTIONALITY =====
+                                        // ===== INVOICE MANAGEMENT FUNCTIONALITY =====
 
-                                                            // Search invoices
-                                                            function searchInvoices() {
-                                                                // Implementation would filter invoices based on search term
-                                                            }
+                                        // Search invoices
+                                        function searchInvoices() {
+                                            var search = document.getElementById('invoiceSearch').value.trim();
+                                            if (search !== '') {
+                                                window.location.href = 'InvoiceManagement?action=Search&value=' + encodeURIComponent(search);
+                                            } else {
+                                                alert('Vui lòng nhập từ khóa để tìm kiếm.');
 
-                                                            // Filter functions
-                                                            function filterByStatus(status) {
-                                                                console.log('Lọc theo trạng thái:', status);
-                                                            }
-                                                            function filterByPaymentMethod(method) {
-                                                                console.log('Lọc theo phương thức:', method);
-                                                            }
-                                                            function filterAll() {
-                                                                const date = document.querySelector('select[name="date"]').value;
-                                                                const priceRange = document.querySelector('select[name="priceRange"]').value;
+                                            }
+                                            // Implementation would filter invoices based on search term
+                                        }
 
-                                                                const url = new URL(window.location.href);
-                                                                url.searchParams.set('action', 'filterAll');
+                                        // Filter functions
+                                        function filterByStatus(status) {
+                                            console.log('Lọc theo trạng thái:', status);
+                                        }
+                                        function filterByPaymentMethod(method) {
+                                            console.log('Lọc theo phương thức:', method);
+                                        }
+                                        function filterAll() {
+                                            const date = document.querySelector('select[name="date"]').value;
+                                            const priceRange = document.querySelector('select[name="priceRange"]').value;
 
-                                                                if (date && date !== "all") {
-                                                                    url.searchParams.set('date', date);
-                                                                } else {
-                                                                    url.searchParams.delete('date');
-                                                                }
+                                            const url = new URL(window.location.href);
+                                            url.searchParams.set('action', 'filterAll');
 
-                                                                if (priceRange && priceRange !== "all") {
-                                                                    url.searchParams.set('priceRange', priceRange);
-                                                                } else {
-                                                                    url.searchParams.delete('priceRange');
-                                                                }
+                                            if (date && date !== "all") {
+                                                url.searchParams.set('date', date);
+                                            } else {
+                                                url.searchParams.delete('date');
+                                            }
 
-                                                                window.location.href = url.toString(); // ✅ chuyển trang
-                                                            }
+                                            if (priceRange && priceRange !== "all") {
+                                                url.searchParams.set('priceRange', priceRange);
+                                            } else {
+                                                url.searchParams.delete('priceRange');
+                                            }
 
+                                            window.location.href = url.toString(); // ✅ chuyển trang
+                                        }
 
+                                        //In dữ liệu
+                                        var myApp = new function () {
+                                            this.printTable = function () {
+                                                var tab = document.getElementById('sampleTable');
+                                                var win = window.open('', '', 'height=700,width=700');
+                                                win.document.write(tab.outerHTML);
+                                                win.document.close();
+                                                win.print();
+                                            };
+                                        };
 
-                                                            // Invoice actions
-                                                            function printInvoice(invoiceId) {
-                                                                console.log('In hóa đơn:', invoiceId);
-                                                                window.open(`print-invoice.jsp?id=${invoiceId}`, '_blank');
-                                                            }
+                                        // Invoice actions
+                                        function printInvoice(invoiceId) {
+                                            console.log('In hóa đơn:', invoiceId);
+                                            window.open(`print-invoice.jsp?id=${invoiceId}`, '_blank');
+                                        }
 
-                                                            function sendInvoice(invoiceId) {
-                                                                console.log('Gửi hóa đơn qua email:', invoiceId);
-                                                                if (confirm('Gửi hóa đơn này qua email cho khách hàng?')) {
-                                                                    alert('Hóa đơn đã được gửi thành công!');
-                                                                }
-                                                            }
+                                        function sendInvoice(invoiceId) {
+                                            console.log('Gửi hóa đơn qua email:', invoiceId);
+                                            if (confirm('Gửi hóa đơn này qua email cho khách hàng?')) {
+                                                alert('Hóa đơn đã được gửi thành công!');
+                                            }
+                                        }
 
-                                                            function markAsPaid(invoiceId) {
-                                                                if (confirm('Đánh dấu hóa đơn này là đã thanh toán?')) {
-                                                                    console.log('Đánh dấu đã thanh toán:', invoiceId);
-                                                                    alert('Hóa đơn đã được cập nhật trạng thái!');
-                                                                    location.reload();
-                                                                }
-                                                            }
+                                        function markAsPaid(invoiceId) {
+                                            if (confirm('Đánh dấu hóa đơn này là đã thanh toán?')) {
+                                                console.log('Đánh dấu đã thanh toán:', invoiceId);
+                                                alert('Hóa đơn đã được cập nhật trạng thái!');
+                                                location.reload();
+                                            }
+                                        }
 
-                                                            function sendReminder(invoiceId) {
-                                                                console.log('Gửi nhắc nhở:', invoiceId);
-                                                                if (confirm('Gửi email nhắc nhở thanh toán cho khách hàng?')) {
-                                                                    alert('Email nhắc nhở đã được gửi!');
-                                                                }
-                                                            }
+                                        function sendReminder(invoiceId) {
+                                            console.log('Gửi nhắc nhở:', invoiceId);
+                                            if (confirm('Gửi email nhắc nhở thanh toán cho khách hàng?')) {
+                                                alert('Email nhắc nhở đã được gửi!');
+                                            }
+                                        }
 
-                                                            function sendUrgentReminder(invoiceId) {
-                                                                console.log('Gửi nhắc nhở khẩn cấp:', invoiceId);
-                                                                if (confirm('Gửi thông báo khẩn cấp về hóa đơn quá hạn?')) {
-                                                                    alert('Thông báo khẩn cấp đã được gửi!');
-                                                                }
-                                                            }
+                                        function sendUrgentReminder(invoiceId) {
+                                            console.log('Gửi nhắc nhở khẩn cấp:', invoiceId);
+                                            if (confirm('Gửi thông báo khẩn cấp về hóa đơn quá hạn?')) {
+                                                alert('Thông báo khẩn cấp đã được gửi!');
+                                            }
+                                        }
 
-                                                            function negotiatePayment(invoiceId) {
-                                                                console.log('Thương lượng thanh toán:', invoiceId);
-                                                                window.location.href = `payment-negotiation.jsp?invoiceId=${invoiceId}`;
-                                                            }
+                                        function negotiatePayment(invoiceId) {
+                                            console.log('Thương lượng thanh toán:', invoiceId);
+                                            window.location.href = `payment-negotiation.jsp?invoiceId=${invoiceId}`;
+                                        }
 
-                                                            function finalizeInvoice(invoiceId) {
-                                                                if (confirm('Hoàn tất hóa đơn này và gửi cho khách hàng?')) {
-                                                                    console.log('Hoàn tất hóa đơn:', invoiceId);
-                                                                    alert('Hóa đơn đã được hoàn tất và gửi!');
-                                                                    location.reload();
-                                                                }
-                                                            }
+                                        function finalizeInvoice(invoiceId) {
+                                            if (confirm('Hoàn tất hóa đơn này và gửi cho khách hàng?')) {
+                                                console.log('Hoàn tất hóa đơn:', invoiceId);
+                                                alert('Hóa đơn đã được hoàn tất và gửi!');
+                                                location.reload();
+                                            }
+                                        }
 
-                                                            function deleteInvoice(invoiceId) {
-                                                                if (confirm('Xóa hóa đơn này? Hành động này không thể hoàn tác.')) {
-                                                                    console.log('Xóa hóa đơn:', invoiceId);
-                                                                    alert('Hóa đơn đã được xóa!');
-                                                                    location.reload();
-                                                                }
-                                                            }
+                                        function deleteInvoice(invoiceId) {
+                                            if (confirm('Xóa hóa đơn này? Hành động này không thể hoàn tác.')) {
+                                                console.log('Xóa hóa đơn:', invoiceId);
+                                                alert('Hóa đơn đã được xóa!');
+                                                location.reload();
+                                            }
+                                        }
 
-                                                            function viewCancelReason(invoiceId) {
-                                                                console.log('Xem lý do hủy:', invoiceId);
-                                                                alert('Lý do hủy: Khách hàng thay đổi ý định, không cần sản phẩm nữa.');
-                                                            }
+                                        function viewCancelReason(invoiceId) {
+                                            console.log('Xem lý do hủy:', invoiceId);
+                                            alert('Lý do hủy: Khách hàng thay đổi ý định, không cần sản phẩm nữa.');
+                                        }
 
-                                                            function recreateInvoice(invoiceId) {
-                                                                if (confirm('Tạo lại hóa đơn mới dựa trên hóa đơn đã hủy này?')) {
-                                                                    console.log('Tạo lại hóa đơn:', invoiceId);
-                                                                    window.location.href = `create-invoice.jsp?baseId=${invoiceId}`;
-                                                                }
-                                                            }
+                                        function recreateInvoice(invoiceId) {
+                                            if (confirm('Tạo lại hóa đơn mới dựa trên hóa đơn đã hủy này?')) {
+                                                console.log('Tạo lại hóa đơn:', invoiceId);
+                                                window.location.href = `create-invoice.jsp?baseId=${invoiceId}`;
+                                            }
+                                        }
 
-                                                            // Bulk actions
-                                                            function selectAllInvoices(checkbox) {
-                                                                const invoiceCheckboxes = document.querySelectorAll('.invoice-checkbox');
-                                                                invoiceCheckboxes.forEach(cb => cb.checked = checkbox.checked);
-                                                                updateBulkActionButtons();
-                                                            }
+                                        // Bulk actions
+                                        function selectAllInvoices(checkbox) {
+                                            const invoiceCheckboxes = document.querySelectorAll('.invoice-checkbox');
+                                            invoiceCheckboxes.forEach(cb => cb.checked = checkbox.checked);
+                                            updateBulkActionButtons();
+                                        }
 
-                                                            function updateBulkActionButtons() {
-                                                                const selectedInvoices = document.querySelectorAll('.invoice-checkbox:checked');
-                                                                const bulkButtons = ['bulkPaidBtn', 'bulkReminderBtn', 'bulkPrintBtn', 'bulkCancelBtn'];
+                                        function updateBulkActionButtons() {
+                                            const selectedInvoices = document.querySelectorAll('.invoice-checkbox:checked');
+                                            const bulkButtons = ['bulkPaidBtn', 'bulkReminderBtn', 'bulkPrintBtn', 'bulkCancelBtn'];
 
-                                                                bulkButtons.forEach(btnId => {
-                                                                    document.getElementById(btnId).disabled = selectedInvoices.length === 0;
-                                                                });
-                                                            }
+                                            bulkButtons.forEach(btnId => {
+                                                document.getElementById(btnId).disabled = selectedInvoices.length === 0;
+                                            });
+                                        }
 
-                                                            function bulkMarkAsPaid() {
-                                                                const selected = document.querySelectorAll('.invoice-checkbox:checked');
-                                                                const ids = Array.from(selected).map(cb => cb.value);
-                                                                if (confirm(`Đánh dấu ${ids.length} hóa đơn đã chọn là đã thanh toán?`)) {
-                                                                    console.log('Bulk đánh dấu đã thanh toán:', ids);
-                                                                    alert('Các hóa đơn đã được cập nhật!');
-                                                                    location.reload();
-                                                                }
-                                                            }
+                                        function bulkMarkAsPaid() {
+                                            const selected = document.querySelectorAll('.invoice-checkbox:checked');
+                                            const ids = Array.from(selected).map(cb => cb.value);
+                                            if (confirm(`Đánh dấu ${ids.length} hóa đơn đã chọn là đã thanh toán?`)) {
+                                                console.log('Bulk đánh dấu đã thanh toán:', ids);
+                                                alert('Các hóa đơn đã được cập nhật!');
+                                                location.reload();
+                                            }
+                                        }
 
-                                                            function bulkSendReminder() {
-                                                                const selected = document.querySelectorAll('.invoice-checkbox:checked');
-                                                                const ids = Array.from(selected).map(cb => cb.value);
-                                                                if (confirm(`Gửi email nhắc nhở cho ${ids.length} hóa đơn đã chọn?`)) {
-                                                                    console.log('Bulk gửi nhắc nhở:', ids);
-                                                                    alert('Email nhắc nhở đã được gửi!');
-                                                                }
-                                                            }
+                                        function bulkSendReminder() {
+                                            const selected = document.querySelectorAll('.invoice-checkbox:checked');
+                                            const ids = Array.from(selected).map(cb => cb.value);
+                                            if (confirm(`Gửi email nhắc nhở cho ${ids.length} hóa đơn đã chọn?`)) {
+                                                console.log('Bulk gửi nhắc nhở:', ids);
+                                                alert('Email nhắc nhở đã được gửi!');
+                                            }
+                                        }
 
-                                                            function bulkPrint() {
-                                                                const selected = document.querySelectorAll('.invoice-checkbox:checked');
-                                                                const ids = Array.from(selected).map(cb => cb.value);
-                                                                console.log('Bulk in hóa đơn:', ids);
-                                                                window.open(`bulk-print-invoices.jsp?ids=${ids.join(',')}`, '_blank');
-                                                            }
+                                        function bulkPrint() {
+                                            const selected = document.querySelectorAll('.invoice-checkbox:checked');
+                                            const ids = Array.from(selected).map(cb => cb.value);
+                                            console.log('Bulk in hóa đơn:', ids);
+                                            window.open(`bulk-print-invoices.jsp?ids=${ids.join(',')}`, '_blank');
+                                        }
 
-                                                            function bulkCancel() {
-                                                                const selected = document.querySelectorAll('.invoice-checkbox:checked');
-                                                                const ids = Array.from(selected).map(cb => cb.value);
-                                                                if (confirm(`Hủy ${ids.length} hóa đơn đã chọn? Hành động này không thể hoàn tác.`)) {
-                                                                    console.log('Bulk hủy hóa đơn:', ids);
-                                                                    alert('Các hóa đơn đã được hủy!');
-                                                                    location.reload();
-                                                                }
-                                                            }
+                                        function bulkCancel() {
+                                            const selected = document.querySelectorAll('.invoice-checkbox:checked');
+                                            const ids = Array.from(selected).map(cb => cb.value);
+                                            if (confirm(`Hủy ${ids.length} hóa đơn đã chọn? Hành động này không thể hoàn tác.`)) {
+                                                console.log('Bulk hủy hóa đơn:', ids);
+                                                alert('Các hóa đơn đã được hủy!');
+                                                location.reload();
+                                            }
+                                        }
 
-                                                            // Export and print functions
-                                                            function exportInvoices() {
-                                                                console.log('Xuất danh sách hóa đơn...');
-                                                                window.location.href = 'export-invoices.jsp?format=excel';
-                                                            }
+                                        // Export and print functions
+                                        function exportInvoices() {
+                                            console.log('Xuất danh sách hóa đơn...');
+                                            window.location.href = 'export-invoices.jsp?format=excel';
+                                        }
 
-                                                            function printInvoices() {
-                                                                console.log('In danh sách hóa đơn...');
-                                                                window.print();
-                                                            }
+                                        function printInvoices() {
+                                            console.log('In danh sách hóa đơn...');
+                                            window.print();
+                                        }
 
-                                                            // Initialize page
-                                                            document.addEventListener('DOMContentLoaded', function () {
-                                                                // Add event listeners to invoice checkboxes
-                                                                document.querySelectorAll('.invoice-checkbox').forEach(checkbox => {
-                                                                    checkbox.addEventListener('change', updateBulkActionButtons);
-                                                                });
+                                        // Initialize page
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            // Add event listeners to invoice checkboxes
+                                            document.querySelectorAll('.invoice-checkbox').forEach(checkbox => {
+                                                checkbox.addEventListener('change', updateBulkActionButtons);
+                                            });
 
-                                                                // Enable real-time search
-                                                                document.getElementById('invoiceSearch').addEventListener('keyup', function (e) {
-                                                                    if (e.key === 'Enter') {
-                                                                        searchInvoices();
-                                                                    }
-                                                                });
+                                            // Enable real-time search
+                                            document.getElementById('invoiceSearch').addEventListener('keyup', function (e) {
+                                                if (e.key === 'Enter') {
+                                                    searchInvoices();
+                                                }
+                                            });
 
-                                                                console.log('Trang quản lý hóa đơn đã được khởi tạo');
-                                                            });
+                                            console.log('Trang quản lý hóa đơn đã được khởi tạo');
+                                        });
 
-                                                            // Tự động highlight menu item dựa trên URL hiện tại
-                                                            document.addEventListener('DOMContentLoaded', function() {
-                                                                // Highlight menu item based on URL path
-                                                                var path = window.location.pathname.toLowerCase();
-                                                                document.querySelectorAll('.sidebar-link').forEach(function(link) {
-                                                                    link.classList.remove('active');
-                                                                });
+                                        // Tự động highlight menu item dựa trên URL hiện tại
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            // Highlight menu item based on URL path
+                                            var path = window.location.pathname.toLowerCase();
+                                            document.querySelectorAll('.sidebar-link').forEach(function (link) {
+                                                link.classList.remove('active');
+                                            });
 
-                                                                if (path.includes('/category')) {
-                                                                    var categoryLink = document.getElementById('menu-categoryManagement');
-                                                                    if (categoryLink) categoryLink.classList.add('active');
-                                                                } else if (path.includes('/productmanagement')) {
-                                                                    var productLink = document.getElementById('menu-productManagement');
-                                                                    if (productLink) productLink.classList.add('active');
-                                                                } else if (path.includes('/storagemanagement')) {
-                                                                    var storageLink = document.getElementById('menu-storageManagement');
-                                                                    if (storageLink) storageLink.classList.add('active');
-                                                                } else if (path.includes('/ordermanagement')) {
-                                                                    var orderLink = document.getElementById('menu-orderManagement');
-                                                                    if (orderLink) orderLink.classList.add('active');
-                                                                } else if (path.includes('/invoicemanagement')) {
-                                                                    var invoiceLink = document.getElementById('menu-invoiceManagement');
-                                                                    if (invoiceLink) invoiceLink.classList.add('active');
-                                                                } else if (path.includes('usermanagement.jsp')) {
-                                                                    var userLink = document.getElementById('menu-userManagement');
-                                                                    if (userLink) userLink.classList.add('active');
-                                                                } else if (path.includes('feedbackmanagement.jsp')) {
-                                                                    var feedbackLink = document.getElementById('menu-feedbackManagement');
-                                                                    if (feedbackLink) feedbackLink.classList.add('active');
-                                                                } else if (path.includes('notificationmanagement.jsp')) {
-                                                                    var notificationLink = document.getElementById('menu-notificationManagement');
-                                                                    if (notificationLink) notificationLink.classList.add('active');
-                                                                } else if (path.includes('/statistics')) {
-                                                                    var managementLink = document.getElementById('menu-management');
-                                                                    if (managementLink) managementLink.classList.add('active');
-                                                                }
-                                                            });
+                                            if (path.includes('/category')) {
+                                                var categoryLink = document.getElementById('menu-categoryManagement');
+                                                if (categoryLink)
+                                                    categoryLink.classList.add('active');
+                                            } else if (path.includes('/productmanagement')) {
+                                                var productLink = document.getElementById('menu-productManagement');
+                                                if (productLink)
+                                                    productLink.classList.add('active');
+                                            } else if (path.includes('/storagemanagement')) {
+                                                var storageLink = document.getElementById('menu-storageManagement');
+                                                if (storageLink)
+                                                    storageLink.classList.add('active');
+                                            } else if (path.includes('/ordermanagement')) {
+                                                var orderLink = document.getElementById('menu-orderManagement');
+                                                if (orderLink)
+                                                    orderLink.classList.add('active');
+                                            } else if (path.includes('/invoicemanagement')) {
+                                                var invoiceLink = document.getElementById('menu-invoiceManagement');
+                                                if (invoiceLink)
+                                                    invoiceLink.classList.add('active');
+                                            } else if (path.includes('usermanagement.jsp')) {
+                                                var userLink = document.getElementById('menu-userManagement');
+                                                if (userLink)
+                                                    userLink.classList.add('active');
+                                            } else if (path.includes('feedbackmanagement.jsp')) {
+                                                var feedbackLink = document.getElementById('menu-feedbackManagement');
+                                                if (feedbackLink)
+                                                    feedbackLink.classList.add('active');
+                                            } else if (path.includes('notificationmanagement.jsp')) {
+                                                var notificationLink = document.getElementById('menu-notificationManagement');
+                                                if (notificationLink)
+                                                    notificationLink.classList.add('active');
+                                            } else if (path.includes('/statistics')) {
+                                                var managementLink = document.getElementById('menu-management');
+                                                if (managementLink)
+                                                    managementLink.classList.add('active');
+                                            }
+                                        });
+
         </script>
-    </body>
+
+
+    </script>       
+
+</body>
 </html>
 
