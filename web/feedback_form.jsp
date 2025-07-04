@@ -1,16 +1,21 @@
 <%-- 
-    Document   : feedback_list
-    Created on : Jun 27, 2025, 8:49:14 AM
+    Document   : feedback_form.jsp
+    Created on : Jul 4, 2025, 4:42:38 PM
     Author     : Admin
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="Model.ProductFeedback" %>
+<%@ page import="Model.User" %>
+<%@ page import="dal.ProductFeedbackDAO" %>
 <%
-    int productId = (Integer) request.getAttribute("productId");
-    ProductFeedback feedback = (ProductFeedback) request.getAttribute("feedback");
+    int productId = Integer.parseInt(request.getParameter("productId"));
+    User user = (User) session.getAttribute("user");
+
+    ProductFeedbackDAO dao = new ProductFeedbackDAO();
+    ProductFeedback existingFeedback = dao.getFeedback(productId, user.getUserId());
 %>
-<!DOCTYPE html>
+
 <html>
 <head>
     <title>Đánh giá sản phẩm</title>
@@ -42,19 +47,19 @@
         <input type="hidden" name="productId" value="<%= productId %>">
 
         <p>
-            <label>Số sao:</label><br>
+            <label>Chọn số sao:</label><br>
             <div class="star-rating">
                 <% for (int i = 5; i >= 1; i--) { %>
                     <input type="radio" id="star<%= i %>" name="rating" value="<%= i %>"
-                        <%= (feedback != null && feedback.getRating() == i) ? "checked" : "" %> >
+                        <%= (existingFeedback != null && existingFeedback.getRating() == i) ? "checked" : "" %> >
                     <label for="star<%= i %>">&#9733;</label>
                 <% } %>
             </div>
         </p>
 
         <p>
-            <label>Nhận xét:</label><br>
-            <textarea name="comment" rows="5" cols="50" required><%= (feedback != null ? feedback.getComment() : "") %></textarea>
+            <label>Viết nhận xét:</label><br>
+            <textarea name="comment" rows="4" cols="50" required><%= (existingFeedback != null ? existingFeedback.getComment() : "") %></textarea>
         </p>
 
         <button type="submit">Gửi đánh giá</button>
