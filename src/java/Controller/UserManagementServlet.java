@@ -13,10 +13,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -75,38 +77,76 @@ public class UserManagementServlet extends HttpServlet {
             return;
         }
 
-        if ("edit".equals(action)) {
-            String idParam = request.getParameter("id");
-            if (idParam != null && !idParam.isEmpty()) {
-                int userId = Integer.parseInt(idParam);
-                User user = u.getInfoUserByID(userId);
-                request.setAttribute("user", user);
+        UserDAO userDAO = new UserDAO();
+        String searchTerm = request.getParameter("searchTerm");
+        String pageSizeParam = request.getParameter("pageSize");
+        String pageParam = request.getParameter("page");
+
+        // Mặc định giá trị cho page và pageSize
+        int page = pageParam != null ? Integer.parseInt(pageParam) : 1;
+        int pageSize = pageSizeParam != null ? Integer.parseInt(pageSizeParam) : 25;
+
+        try {
+            if ("search".equals(action)) {
+                List<User> users = userDAO.searchUsers(searchTerm, page, pageSize);
+                int totalUsers = userDAO.getTotalUsers(searchTerm);
+                int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
+
+                request.setAttribute("users", users);
+                request.setAttribute("currentPage", page);
+                request.setAttribute("pageSize", pageSize);
+                request.setAttribute("totalPages", totalPages);
+                request.setAttribute("searchTerm", searchTerm);
                 request.getRequestDispatcher("userManagement.jsp").forward(request, response);
-            } else {
-                response.sendRedirect("userManagement.jsp?error=invalidId");
-            }
-        } else if ("delete".equals(action)) {
-            String idParam = request.getParameter("id");
-            if (idParam != null && !idParam.isEmpty()) {
-                int userId = Integer.parseInt(idParam);
-                try {
-                    boolean deleted = u.deleteUser(userId);
+            } else if ("edit".equals(action)) {
+                String idParam = request.getParameter("id");
+                if (idParam != null && !idParam.isEmpty()) {
+                    int userId = Integer.parseInt(idParam);
+                    User user = userDAO.getInfoUserByID(userId);
+                    request.setAttribute("userToEdit", user);
+                    List<User> users = userDAO.searchUsers(searchTerm, page, pageSize);
+                    int totalUsers = userDAO.getTotalUsers(searchTerm);
+                    int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
+
+                    request.setAttribute("users", users);
+                    request.setAttribute("currentPage", page);
+                    request.setAttribute("pageSize", pageSize);
+                    request.setAttribute("totalPages", totalPages);
+                    request.setAttribute("searchTerm", searchTerm);
+                    request.getRequestDispatcher("userManagement.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect("userManagement.jsp?error=invalidId");
+                }
+            } else if ("delete".equals(action)) {
+                String idParam = request.getParameter("id");
+                if (idParam != null && !idParam.isEmpty()) {
+                    int userId = Integer.parseInt(idParam);
+                    boolean deleted = userDAO.deleteUser(userId);
                     if (!deleted) {
                         response.sendRedirect("userManagement.jsp?error=deleteFailed");
                         return;
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(UserManagementServlet.class.getName()).log(Level.SEVERE, null, ex);
-                    response.sendRedirect("userManagement.jsp?error=deleteFailed");
-                    return;
+                    response.sendRedirect("userManagement.jsp?success=delete&page=" + page + "&pageSize=" + pageSize + (searchTerm != null ? "&searchTerm=" + URLEncoder.encode(searchTerm, "UTF-8") : ""));
+                } else {
+                    response.sendRedirect("userManagement.jsp?error=invalidId");
                 }
-                response.sendRedirect("userManagement.jsp");
             } else {
-                response.sendRedirect("userManagement.jsp?error=invalidId");
+                List<User> users = userDAO.searchUsers(searchTerm, page, pageSize);
+                int totalUsers = userDAO.getTotalUsers(searchTerm);
+                int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
+
+                request.setAttribute("users", users);
+                request.setAttribute("currentPage", page);
+                request.setAttribute("pageSize", pageSize);
+                request.setAttribute("totalPages", totalPages);
+                request.setAttribute("searchTerm", searchTerm);
+                request.getRequestDispatcher("userManagement.jsp").forward(request, response);
             }
-        } else {
-            response.sendRedirect("userManagement.jsp");
+        } catch (SQLException ex) {
+            Logger.getLogger(UserManagementServlet.class.getName()).log(Level.SEVERE, null, ex);
+            response.sendRedirect("userManagement.jsp?error=operationFailed");
         }
+
     }
 
     /**
