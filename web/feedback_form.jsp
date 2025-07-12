@@ -8,14 +8,12 @@
 <%@ page import="Model.ProductFeedback" %>
 <%@ page import="Model.User" %>
 <%@ page import="dal.ProductFeedbackDAO" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="Model.ProductFeedback" %>
 <%
-    int productId = Integer.parseInt(request.getParameter("productId"));
-    User user = (User) session.getAttribute("user");
-
-    ProductFeedbackDAO dao = new ProductFeedbackDAO();
-    ProductFeedback existingFeedback = dao.getFeedback(productId, user.getUserId());
+    int productId = Integer.parseInt(request.getParameter("product_id"));
+    ProductFeedback feedback = (ProductFeedback) request.getAttribute("feedback");
 %>
-
 <html>
 <head>
     <title>Đánh giá sản phẩm</title>
@@ -51,7 +49,7 @@
             <div class="star-rating">
                 <% for (int i = 5; i >= 1; i--) { %>
                     <input type="radio" id="star<%= i %>" name="rating" value="<%= i %>"
-                        <%= (existingFeedback != null && existingFeedback.getRating() == i) ? "checked" : "" %> >
+                        <%= (feedback != null && feedback.getRating() == i) ? "checked" : "" %> >
                     <label for="star<%= i %>">&#9733;</label>
                 <% } %>
             </div>
@@ -59,7 +57,7 @@
 
         <p>
             <label>Viết nhận xét:</label><br>
-            <textarea name="comment" rows="4" cols="50" required><%= (existingFeedback != null ? existingFeedback.getComment() : "") %></textarea>
+            <textarea name="comment" rows="4" cols="50" required><%= (feedback != null ? feedback.getComment() : "") %></textarea>
         </p>
 
         <button type="submit">Gửi đánh giá</button>

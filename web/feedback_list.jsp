@@ -3,61 +3,45 @@
     Created on : Jun 27, 2025, 8:49:14 AM
     Author     : Admin
 --%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Model.BouquetTemplate" %>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="Model.ProductFeedback" %>
 <%
-    int productId = (Integer) request.getAttribute("productId");
-    ProductFeedback feedback = (ProductFeedback) request.getAttribute("feedback");
+    List<BouquetTemplate> purchasedProducts = (List<BouquetTemplate>) request.getAttribute("purchasedProducts");
 %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Đánh giá sản phẩm</title>
-    <style>
-        .star-rating {
-            direction: rtl;
-            font-size: 30px;
-            unicode-bidi: bidi-override;
-            display: inline-flex;
-        }
-        .star-rating input {
-            display: none;
-        }
-        .star-rating label {
-            color: #ccc;
-            cursor: pointer;
-        }
-        .star-rating input:checked ~ label,
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: gold;
-        }
-    </style>
+    <title>Danh sách đánh giá</title>
 </head>
 <body>
-    <h2>Đánh giá sản phẩm mã: <%= productId %></h2>
+    <h2>Sản phẩm bạn đã mua và có thể đánh giá</h2>
 
-    <form action="submit-feedback" method="post">
-        <input type="hidden" name="productId" value="<%= productId %>">
+    <c:if test="${purchasedProducts == null || purchasedProducts.size() == 0}">
+        <p>Bạn chưa có sản phẩm nào để đánh giá.</p>
+    </c:if>
 
-        <p>
-            <label>Số sao:</label><br>
-            <div class="star-rating">
-                <% for (int i = 5; i >= 1; i--) { %>
-                    <input type="radio" id="star<%= i %>" name="rating" value="<%= i %>"
-                        <%= (feedback != null && feedback.getRating() == i) ? "checked" : "" %> >
-                    <label for="star<%= i %>">&#9733;</label>
-                <% } %>
-            </div>
-        </p>
-
-        <p>
-            <label>Nhận xét:</label><br>
-            <textarea name="comment" rows="5" cols="50" required><%= (feedback != null ? feedback.getComment() : "") %></textarea>
-        </p>
-
-        <button type="submit">Gửi đánh giá</button>
-    </form>
+    <c:if test="${purchasedProducts != null && purchasedProducts.size() > 0}">
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="item" items="${purchasedProducts}">
+                    <tr>
+                        <td>${item.templateName}</td>
+                        <td>
+                            <a href="feedback-form?product_id=${item.templateId}">Đánh giá / Sửa đánh giá</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+    </c:if>
 </body>
 </html>
