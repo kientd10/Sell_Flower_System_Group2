@@ -6,7 +6,10 @@
 package Controller;
 
 import Model.BouquetTemplate;
+import Model.ProductFeedback;
+import Model.User;
 import dal.OrderDAO;
+import dal.ProductFeedbackDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,7 +17,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -55,48 +60,51 @@ public class FeedbackListServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+   @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         // Lấy user từ session
-        Model.User user = (Model.User) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
         }
 
         OrderDAO dao = new OrderDAO();
+        ProductFeedbackDAO fdao = new ProductFeedbackDAO();
+
         try {
+            // Danh sách sản phẩm đã mua
             List<BouquetTemplate> list = dao.getPurchasedProductsByUser(user.getUserId());
             request.setAttribute("purchasedProducts", list);
+
+            // Map lưu đánh giá đã có của user
+            Map<Integer, ProductFeedback> userFeedbackMap = new HashMap<>();
+            for (BouquetTemplate b : list) {
+                ProductFeedback feedback = fdao.getFeedback(b.getTemplateId(), user.getUserId());
+                if (feedback != null) {
+                    userFeedbackMap.put(b.getTemplateId(), feedback);
+                }
+            }
+            request.setAttribute("userFeedbackMap", userFeedbackMap);
+
             request.getRequestDispatcher("feedback_list.jsp").forward(request, response);
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("error.jsp");
         }
     }
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Hiển thị danh sách sản phẩm đã mua và cho phép đánh giá";
+    }
 }
