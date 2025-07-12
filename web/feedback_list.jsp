@@ -7,10 +7,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Model.BouquetTemplate" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="Model.BouquetTemplate" %>
+<%@ page import="Model.ProductFeedback" %>
 
 <%
-    List<BouquetTemplate> purchasedProducts = (List<BouquetTemplate>) request.getAttribute("purchasedProducts");
+    String message = (String) session.getAttribute("message");
+    if (message != null) {
 %>
+    <p style="color: green;"><%= message %></p>
+<%
+        session.removeAttribute("message");
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,7 +47,14 @@
                     <tr>
                         <td>${item.templateName}</td>
                         <td>
-                            <a href="feedback-form?product_id=${item.templateId}">Đánh giá / Sửa đánh giá</a>
+                            <c:choose>
+                                <c:when test="${userFeedbackMap[item.templateId] != null}">
+                                    <a href="feedback-form?product_id=${item.templateId}">Sửa đánh giá</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="feedback-form?product_id=${item.templateId}">Đánh giá</a>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                     </tr>
                 </c:forEach>

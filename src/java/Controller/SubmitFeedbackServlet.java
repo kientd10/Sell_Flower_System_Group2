@@ -69,13 +69,14 @@ public class SubmitFeedbackServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-     protected void doPost(HttpServletRequest request, HttpServletResponse response)
+       @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
+
             if (user == null) {
                 response.sendRedirect("login.jsp");
                 return;
@@ -96,25 +97,22 @@ public class SubmitFeedbackServlet extends HttpServlet {
 
             if (existing == null) {
                 dao.insertFeedback(feedback);
+                session.setAttribute("message", "Đã gửi đánh giá!");
             } else {
                 dao.updateFeedback(feedback);
+                session.setAttribute("message", "Đã cập nhật đánh giá!");
             }
 
             response.sendRedirect("feedbacklistservlet"); // về lại danh sách
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("error.jsp");
         }
     }
 
-
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Xử lý submit đánh giá sản phẩm từ người dùng";
+    }
 }
