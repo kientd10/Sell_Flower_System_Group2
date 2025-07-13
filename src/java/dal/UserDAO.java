@@ -330,8 +330,8 @@ public class UserDAO {
         }
         return users;
     }
-    
-     public List<User> searchUsers(String searchTerm, int page, int pageSize) throws SQLException {
+
+    public List<User> searchUsers(String searchTerm, int page, int pageSize) throws SQLException {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE username LIKE ? OR email LIKE ? OR full_name LIKE ? ORDER BY user_id LIMIT ? OFFSET ?";
         try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -373,6 +373,16 @@ public class UserDAO {
                 return rs.getInt(1);
             }
             return 0;
+        }
+    }
+
+    // Vô hiệu hóa người dùng (thay vì xóa)
+    public boolean deactivateUser(int userId) throws SQLException {
+        String sql = "UPDATE users SET is_active = false, updated_at = NOW() WHERE user_id = ?";
+        try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
         }
     }
 }

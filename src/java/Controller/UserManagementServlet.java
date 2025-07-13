@@ -84,10 +84,10 @@ public class UserManagementServlet extends HttpServlet {
 
         // Mặc định giá trị cho page và pageSize
         int page = pageParam != null ? Integer.parseInt(pageParam) : 1;
-        int pageSize = pageSizeParam != null ? Integer.parseInt(pageSizeParam) : 25;
+        int pageSize = pageSizeParam != null ? Integer.parseInt(pageSizeParam) : 10;
 
         try {
-            if ("search".equals(action)) {
+            if ("search".equals(action) || action == null) {
                 List<User> users = userDAO.searchUsers(searchTerm, page, pageSize);
                 int totalUsers = userDAO.getTotalUsers(searchTerm);
                 int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
@@ -117,30 +117,44 @@ public class UserManagementServlet extends HttpServlet {
                 } else {
                     response.sendRedirect("userManagement.jsp?error=invalidId");
                 }
-            } else if ("delete".equals(action)) {
+            } else if ("deactivate".equals(action)) {
                 String idParam = request.getParameter("id");
                 if (idParam != null && !idParam.isEmpty()) {
                     int userId = Integer.parseInt(idParam);
-                    boolean deleted = userDAO.deleteUser(userId);
-                    if (!deleted) {
-                        response.sendRedirect("userManagement.jsp?error=deleteFailed");
-                        return;
+                    boolean deactivated = userDAO.deactivateUser(userId);
+                    if (!deactivated) {
+                        request.setAttribute("error", "deactivateFailed");
+                    } else {
+                        request.setAttribute("success", "deactivate");
                     }
-                    response.sendRedirect("userManagement.jsp?success=delete&page=" + page + "&pageSize=" + pageSize + (searchTerm != null ? "&searchTerm=" + URLEncoder.encode(searchTerm, "UTF-8") : ""));
-                } else {
-                    response.sendRedirect("userManagement.jsp?error=invalidId");
-                }
-            } else {
-                List<User> users = userDAO.searchUsers(searchTerm, page, pageSize);
-                int totalUsers = userDAO.getTotalUsers(searchTerm);
-                int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
+                    // Lấy lại danh sách người dùng sau khi vô hiệu hóa
+                    List<User> users = userDAO.searchUsers(searchTerm, page, pageSize);
+                    int totalUsers = userDAO.getTotalUsers(searchTerm);
+                    int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
 
-                request.setAttribute("users", users);
-                request.setAttribute("currentPage", page);
-                request.setAttribute("pageSize", pageSize);
-                request.setAttribute("totalPages", totalPages);
-                request.setAttribute("searchTerm", searchTerm);
-                request.getRequestDispatcher("userManagement.jsp").forward(request, response);
+                    // Set các thuộc tính cần thiết
+                    request.setAttribute("users", users);
+                    request.setAttribute("currentPage", page);
+                    request.setAttribute("pageSize", pageSize);
+                    request.setAttribute("totalPages", totalPages);
+                    request.setAttribute("searchTerm", searchTerm);
+
+                    // Chuyển tiếp đến JSP
+                    request.getRequestDispatcher("userManagement.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("error", "invalidId");
+                    // Lấy danh sách người dùng ngay cả khi lỗi
+                    List<User> users = userDAO.searchUsers(searchTerm, page, pageSize);
+                    int totalUsers = userDAO.getTotalUsers(searchTerm);
+                    int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
+
+                    request.setAttribute("users", users);
+                    request.setAttribute("currentPage", page);
+                    request.setAttribute("pageSize", pageSize);
+                    request.setAttribute("totalPages", totalPages);
+                    request.setAttribute("searchTerm", searchTerm);
+                    request.getRequestDispatcher("userManagement.jsp").forward(request, response);
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserManagementServlet.class.getName()).log(Level.SEVERE, null, ex);

@@ -351,7 +351,7 @@
                         <li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                         <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
                         <li class="sidebar-header">Hệ Thống</li>
-                        <li><a href="userManagement.jsp" class="sidebar-link active" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+                        <li><a href="UserManagementServlet?action=search" class="sidebar-link active" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
                         <li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
                         <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
                         </c:if>
@@ -379,9 +379,6 @@
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
                                 <i class="fas fa-plus me-2"></i>Thêm người dùng
                             </button>
-                            <button class="btn btn-outline-secondary" onclick="exportUsers()">
-                                <i class="fas fa-file-export me-2"></i>Xuất file
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -404,7 +401,7 @@
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle me-2"></i>ID không hợp lệ!
                     </div>
-                    <% } else if ("deleteFailed".equals(error)) { %>
+                    <% } else if ("deactivateFailed".equals(error)) { %>
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle me-2"></i>Xóa người dùng thất bại!
                     </div>
@@ -464,7 +461,7 @@
                     <div class="alert alert-success">
                         <i class="fas fa-check-circle me-2"></i>Cập nhật người dùng thành công!
                     </div>
-                    <% } else if ("delete".equals(success)) { %>
+                    <% } else if ("deactivate".equals(success)) { %>
                     <div class="alert alert-success">
                         <i class="fas fa-check-circle me-2"></i>Xóa người dùng thành công!
                     </div>
@@ -477,8 +474,8 @@
                             <div class="d-flex align-items-center gap-3">
                                 <span class="text-light">Hiển thị:</span>
                                 <select class="form-select form-select-sm" style="width: auto;" onchange="changePageSize(this)">
-                                    <option value="10" <%= "10".equals(request.getParameter("pageSize")) ? "selected" : "" %>>10</option>
-                                    <option value="25" <%= "25".equals(request.getParameter("pageSize")) || request.getParameter("pageSize") == null ? "selected" : "" %>>25</option>
+                                    <option value="10" <%= "10".equals(request.getParameter("pageSize")) || request.getParameter("pageSize") == null ? "selected" : "" %>>10</option>
+                                    <option value="25" <%= "25".equals(request.getParameter("pageSize")) ? "selected" : "" %>>25</option>
                                     <option value="50" <%= "50".equals(request.getParameter("pageSize")) ? "selected" : "" %>>50</option>
                                     <option value="100" <%= "100".equals(request.getParameter("pageSize")) ? "selected" : "" %>>100</option>
                                 </select>
@@ -537,7 +534,7 @@
                                                             <a href="UserManagementServlet?action=edit&id=${u.userId}" class="btn btn-sm btn-outline-primary" title="Sửa">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <a href="UserManagementServlet?action=delete&id=${u.userId}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')" title="Xóa">
+                                                            <a href="UserManagementServlet?action=deactivate&id=${u.userId}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')" title="Xóa">
                                                                 <i class="fas fa-trash"></i>
                                                             </a>
                                                         </div>
