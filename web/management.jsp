@@ -11,6 +11,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap&subset=vietnamese" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Chart.js for bar chart -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
         <style>
             /* ===== SHARED STYLES ===== */
@@ -250,7 +252,7 @@
                         <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
                         <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
                         <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-                    </c:if> 
+                        </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Manager -->
                     <c:if test="${sessionScope.user.roleId == 3}"> 
@@ -264,12 +266,12 @@
                         <li><a href="userManagement.jsp" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
                         <li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
                         <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
-                    </c:if> 
+                        </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Shipper -->                        
                     <c:if test="${sessionScope.user.roleId == 4}">
                         <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
-                    </c:if>                   
+                        </c:if>                   
                 </ul>
             </nav>
 
@@ -281,6 +283,19 @@
                         <div class="input-group" style="width: 300px;">
                             <input type="text" class="form-control" placeholder="Tìm kiếm quản lý..." id="searchManagement">
                             <button class="btn btn-outline-secondary" onclick="searchManagement()"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div class="input-group">
+                            <form method="get" action="statistics" class="d-flex gap-2">
+                                <select class="form-select" name="viewType" id="viewType" onchange="changeView()">
+                                    <option value="daily" ${viewType == 'daily' ? 'selected' : ''}>Theo ngày</option>
+                                    <option value="monthly" ${viewType == 'monthly' ? 'selected' : ''}>Theo tháng</option>
+                                    <option value="yearly" ${viewType == 'yearly' ? 'selected' : ''}>Theo năm</option>
+                                </select>
+                                <input type="number" class="form-control" name="day" id="dayInput" placeholder="Ngày" value="${day}" style="display: ${viewType == 'daily' ? 'block' : 'none'};" min="1" max="31">
+                                <input type="number" class="form-control" name="month" id="monthInput" placeholder="Tháng" value="${month}" min="1" max="12">
+                                <input type="number" class="form-control" name="year" id="yearInput" placeholder="Năm" value="${year}" min="2000" max="2100">
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -301,7 +316,14 @@
                     <!-- ===== STATISTICS SUMMARY ===== -->
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0">Tổng Quan Thống Kê - Tháng ${month}/${year}</h5>
+                            <h5 class="mb-0">
+                                Tổng Quan Thống Kê - 
+                                <c:choose>
+                                    <c:when test="${viewType == 'daily'}">Ngày ${day}/${month}/${year}</c:when>
+                                    <c:when test="${viewType == 'yearly'}">Năm ${year}</c:when>
+                                    <c:otherwise>Tháng ${month}/${year}</c:otherwise>
+                                </c:choose>
+                            </h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -320,6 +342,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- ===== REVENUE CHART ===== -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Biểu Đồ Doanh Thu Theo Tháng - Năm ${year}</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueChart" height="100"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -327,24 +359,88 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
             <script>
-                // Search functionality (placeholder)
-                function searchManagement() {
-                    const searchTerm = document.getElementById('searchManagement').value;
-                    console.log('Tìm kiếm quản lý:', searchTerm);
-                    // Add logic to filter management data if needed
-                }
+                                    // Search functionality
+                                    function searchManagement() {
+                                        const searchTerm = document.getElementById('searchManagement').value;
+                                        console.log('Tìm kiếm quản lý:', searchTerm);
+                                    }
 
-                // Auto-highlight active menu item
-                document.addEventListener('DOMContentLoaded', function () {
-                    var currentPage = window.location.pathname.split('/').pop();
-                    document.querySelectorAll('.sidebar-link').forEach(function (link) {
-                        link.classList.remove('active');
-                    });
-                    var activeLink = document.querySelector('a[href="' + currentPage + '"]');
-                    if (activeLink) {
-                        activeLink.classList.add('active');
-                    }
-                });
+                                    // Update statistics based on user input
+                                    function updateStatistics() {
+                                        const viewType = document.getElementById('viewType').value;
+                                        const day = document.getElementById('dayInput').value;
+                                        const month = document.getElementById('monthInput').value;
+                                        const year = document.getElementById('yearInput').value;
+
+                                        // Thêm log kiểm tra
+                                        console.log("Updating with:", {viewType, day, month, year});
+
+                                        window.location.href = `statistics?viewType=${viewType}&day=${day}&month=${month}&year=${year}`;
+                                    }
+
+
+                                    // Show/hide day input based on view type
+                                    function changeView() {
+                                        const viewType = document.getElementById('viewType').value;
+                                        document.getElementById('dayInput').style.display = viewType === 'daily' ? 'block' : 'none';
+                                    }
+
+                                    // Auto-highlight active menu item
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        var currentPage = window.location.pathname.split('/').pop();
+                                        document.querySelectorAll('.sidebar-link').forEach(function (link) {
+                                            link.classList.remove('active');
+                                        });
+                                        var activeLink = document.querySelector('a[href="' + currentPage + '"]');
+                                        if (activeLink) {
+                                            activeLink.classList.add('active');
+                                        }
+
+                                        // Initialize Chart.js
+                                        const ctx = document.getElementById('revenueChart').getContext('2d');
+                                        const monthlyRevenues = [
+                <c:forEach items="${monthlyRevenues}" var="revenue" varStatus="loop">
+                    ${revenue}${!loop.last ? ',' : ''}
+                </c:forEach>
+                                        ];
+                                        new Chart(ctx, {
+                                            type: 'bar',
+                                            data: {
+                                                labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+                                                    'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+                                                datasets: [{
+                                                        label: 'Doanh Thu (VND)',
+                                                        data: monthlyRevenues,
+                                                        backgroundColor: 'rgba(196, 77, 88, 0.6)',
+                                                        borderColor: 'rgba(196, 77, 88, 1)',
+                                                        borderWidth: 1
+                                                    }]
+                                            },
+                                            options: {
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        title: {
+                                                            display: true,
+                                                            text: 'Doanh Thu (VND)'
+                                                        }
+                                                    },
+                                                    x: {
+                                                        title: {
+                                                            display: true,
+                                                            text: 'Tháng'
+                                                        }
+                                                    }
+                                                },
+                                                plugins: {
+                                                    legend: {
+                                                        display: true,
+                                                        position: 'top'
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    });
             </script>
         </div>
     </body>
