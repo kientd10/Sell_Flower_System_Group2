@@ -56,27 +56,28 @@ public class OrderDAO {
 
     // Lấy sản phẩm đã mua thành công (đã giao hàng)
     public List<BouquetTemplate> getPurchasedProductsByUser(int userId) {
-        List<BouquetTemplate> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT od.template_id, bt.template_name "
-                + "FROM orders o "
-                + "JOIN order_status s ON o.status_id = s.status_id "
-                + "JOIN order_details od ON o.order_id = od.order_id "
-                + "JOIN bouquet_templates bt ON od.template_id = bt.template_id "
-                + "WHERE o.customer_id = ? AND s.status_name = 'Delivered'";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                BouquetTemplate b = new BouquetTemplate();
-                b.setTemplateId(rs.getInt("template_id"));
-                b.setTemplateName(rs.getString("template_name"));
-                list.add(b);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    List<BouquetTemplate> list = new ArrayList<>();
+    String sql = "SELECT DISTINCT od.template_id, bt.template_name "
+            + "FROM orders o "
+            + "JOIN order_status s ON o.status_id = s.status_id "
+            + "JOIN order_details od ON o.order_id = od.order_id "
+            + "JOIN bouquet_templates bt ON od.template_id = bt.template_id "
+            + "WHERE o.customer_id = ? AND s.status_name = 'Đã mua'"; // ✅ sửa tại đây
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            BouquetTemplate b = new BouquetTemplate();
+            b.setTemplateId(rs.getInt("template_id"));
+            b.setTemplateName(rs.getString("template_name"));
+            list.add(b);
         }
-        return list;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return list;
+}
 
     public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmount, String deliveryAddress, String deliveryPhone) {
         int orderId = -1;

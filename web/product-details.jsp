@@ -273,11 +273,11 @@
                                 </div><!--/product-information-->
                                 <h3>Đánh giá từ người mua</h3>
 
-                                <c:if test="${empty feedbacks}">
+                                <c:if test="${empty feedbackList}">
                                     <p>Chưa có đánh giá nào cho sản phẩm này.</p>
                                 </c:if>
 
-                                <c:forEach var="fb" items="${feedbacks}">
+                                <c:forEach var="fb" items="${feedbackList}">
                                     <div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:5px;">
                                         <strong>${fb.customerName}</strong>
                                         <em style="float:right;">${fb.createdAt}</em><br/>

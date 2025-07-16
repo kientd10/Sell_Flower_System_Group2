@@ -257,20 +257,7 @@
 
                             </c:if>
                         </c:if>
-                        <c:if test="${not empty purchasedProducts}">
-                            <hr/>
-                            <h4>Sản phẩm bạn đã mua và có thể đánh giá:</h4>
-                            <ul>
-                                <c:forEach var="p" items="${purchasedProducts}">
-                                    <li style="margin-bottom: 10px;">
-                                        <strong>${p.templateName}</strong>
-                                        <a class="btn btn-info btn-sm" href="feedbackservlet?product_id=${p.templateId}">
-                                            Đánh giá / Sửa đánh giá
-                                        </a>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </c:if>
+ 
                     </form>
                 </c:if>
             </div>

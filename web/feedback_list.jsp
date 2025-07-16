@@ -25,6 +25,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Trang chủ</a></li>                            
+
     <title>Danh sách đánh giá</title>
 </head>
 <body>
