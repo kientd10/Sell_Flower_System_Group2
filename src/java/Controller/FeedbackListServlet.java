@@ -17,6 +17,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,66 +26,37 @@ import java.util.Map;
  *
  * @author Admin
  */
-@WebServlet(name="FeedbackListServlet", urlPatterns={"/feedbacklistservlet"})
+@WebServlet(name = "FeedbackListServlet", urlPatterns = {"/feedbacklistservlet"})
 public class FeedbackListServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet FeedbackListServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet FeedbackListServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-   @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Lấy user từ session
-        User user = (User) request.getSession().getAttribute("user");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        OrderDAO dao = new OrderDAO();
-        ProductFeedbackDAO fdao = new ProductFeedbackDAO();
+        OrderDAO orderDAO = new OrderDAO();
+        ProductFeedbackDAO feedbackDAO = new ProductFeedbackDAO();
 
         try {
-            // Danh sách sản phẩm đã mua
-            List<BouquetTemplate> list = dao.getPurchasedProductsByUser(user.getUserId());
-            request.setAttribute("purchasedProducts", list);
+            // Lấy danh sách sản phẩm đã giao thành công
+            List<BouquetTemplate> purchasedProducts = orderDAO.getPurchasedProductsByUser(user.getUserId());
+            
 
-            // Map lưu đánh giá đã có của user
+            request.setAttribute("purchasedProducts", purchasedProducts);
+
+            // Lấy feedback nếu người dùng đã đánh giá
             Map<Integer, ProductFeedback> userFeedbackMap = new HashMap<>();
-            for (BouquetTemplate b : list) {
-                ProductFeedback feedback = fdao.getFeedback(b.getTemplateId(), user.getUserId());
+            for (BouquetTemplate bt : purchasedProducts) {
+                ProductFeedback feedback = feedbackDAO.getFeedback(bt.getTemplateId(), user.getUserId());
                 if (feedback != null) {
-                    userFeedbackMap.put(b.getTemplateId(), feedback);
+                    userFeedbackMap.put(bt.getTemplateId(), feedback);
                 }
             }
             request.setAttribute("userFeedbackMap", userFeedbackMap);
@@ -105,6 +77,6 @@ public class FeedbackListServlet extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Hiển thị danh sách sản phẩm đã mua và cho phép đánh giá";
+        return "Hiển thị danh sách sản phẩm đã được giao và cho phép đánh giá";
     }
 }

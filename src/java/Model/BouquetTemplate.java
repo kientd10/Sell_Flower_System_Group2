@@ -102,4 +102,11 @@ public class BouquetTemplate {
     public void setIngredients(List<TemplateIngredient> ingredients) {
         this.ingredients = ingredients;
     }
+    private double avgRating;
+public double getAvgRating() {
+    return avgRating;
+}
+public void setAvgRating(double avgRating) {
+    this.avgRating = avgRating;
+}
 }

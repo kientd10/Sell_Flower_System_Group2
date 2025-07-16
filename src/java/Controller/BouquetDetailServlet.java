@@ -6,8 +6,10 @@ package Controller;
 
 import Model.BouquetTemplate;
 import Model.Category;
+import Model.ProductFeedback;
 import dal.BouquetDAO;
 import dal.CategoryDAO;
+import dal.ProductFeedbackDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -58,36 +60,41 @@ public class BouquetDetailServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String idRaw = request.getParameter("templateId");
-        try {
-            int id = Integer.parseInt(idRaw);
-            BouquetDAO bouquetDAO = new BouquetDAO();
-            BouquetTemplate bouquet = bouquetDAO.getBouquetById(id);
-            List<BouquetTemplate> recommendations = bouquetDAO.getRecommendedTemplates(id); // Thêm gợi ý
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    String idRaw = request.getParameter("templateId");
+    try {
+        int id = Integer.parseInt(idRaw);
+        BouquetDAO bouquetDAO = new BouquetDAO();
+        BouquetTemplate bouquet = bouquetDAO.getBouquetById(id);
+        List<BouquetTemplate> recommendations = bouquetDAO.getRecommendedTemplates(id);
 
-            CategoryDAO categoryDAO = new CategoryDAO();
-            List<Category> categories = categoryDAO.getAllCategories();
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<Category> categories = categoryDAO.getAllCategories();
 
-            String minPrice = request.getParameter("minPrice");
-            String maxPrice = request.getParameter("maxPrice");
+        // 💬 Lấy feedback cho sản phẩm
+        ProductFeedbackDAO feedbackDAO = new ProductFeedbackDAO();
+        List<ProductFeedback> feedbackList = feedbackDAO.getFeedbacksByProductId(id);
 
-            if (bouquet != null) {
-                request.setAttribute("bouquet", bouquet);
-                request.setAttribute("recommendations", recommendations); // Set recommendations
-                request.setAttribute("categories", categories);
-                request.setAttribute("minPrice", minPrice);
-                request.setAttribute("maxPrice", maxPrice);
-                request.getRequestDispatcher("product-details.jsp").forward(request, response);
-            } else {
-                response.sendRedirect("error.jsp");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        String minPrice = request.getParameter("minPrice");
+        String maxPrice = request.getParameter("maxPrice");
+
+        if (bouquet != null) {
+            request.setAttribute("bouquet", bouquet);
+            request.setAttribute("recommendations", recommendations);
+            request.setAttribute("categories", categories);
+            request.setAttribute("feedbackList", feedbackList); // ⚠️ Thêm dòng này
+            request.setAttribute("minPrice", minPrice);
+            request.setAttribute("maxPrice", maxPrice);
+            request.getRequestDispatcher("product-details.jsp").forward(request, response);
+        } else {
             response.sendRedirect("error.jsp");
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        response.sendRedirect("error.jsp");
     }
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.

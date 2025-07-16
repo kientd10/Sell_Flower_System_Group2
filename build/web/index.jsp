@@ -2,6 +2,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <html lang="en">
 
     <head>
@@ -70,9 +72,7 @@
                                     <c:if test="${sessionScope.user != null}">
                                         <li><a href="profile"><i class="fa fa-user"></i> Hồ sơ</a></li>
                                         <li><a href="orders"><i class="fa fa-truck"></i> Đơn hàng</a></li>
-                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
-                                        <li><a href="feedback_list.jsp"><i class="fa fa-comments"></i> Đánh giá</a></li>
-                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
                                         </c:if> 
                                         <c:if test="${sessionScope.user == null}">
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
@@ -241,7 +241,7 @@
                                 <img style="width:264px ; height: 430px ; margin-top:40px; border-radius: 5px " src="https://4kwallpapers.com/images/wallpapers/teddy-bear-rose-cute-toy-gift-valentines-day-5k-2160x3840-441.jpg" alt="" />
                             </div><!--/shipping-->
                         </div>
-                                           
+
                     </div>
                     <div class="col-sm-9 padding-right">                       
                         <div class="features_items"> <!--features_items-->
@@ -286,6 +286,14 @@
                                                         </a>
                                                         <h2>${bou.basePrice} đ</h2>
                                                         <p>${bou.templateName}</p>
+                                                        <c:choose>
+                                                            <c:when test="${bou.avgRating > 0}">
+                                                                <p style="color: #f39c12;">🌟 <fmt:formatNumber value="${bou.avgRating}" maxFractionDigits="1"/> / 5</p>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <p style="color: gray;">Chưa có đánh giá</p>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                         <form action="${pageContext.request.contextPath}/add" method="get">
                                                             <input type="hidden" name="templateId" value="${bou.templateId}" />
                                                             <button type="submit"
