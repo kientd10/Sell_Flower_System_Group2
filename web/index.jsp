@@ -74,7 +74,7 @@
                                         <li class="notification-bell" style="position:relative;">
                                             <a href="javascript:void(0);" id="notifBell" onclick="toggleNotifDropdown()">
                                                 <i class="fa fa-bell"></i> Thông báo
-                                                <span class="notification-badge">2</span>
+                                                <span class="notification-badge"></span>
                                             </a>
                                             <ul id="notifDropdown" class="notif-dropdown-menu">
                                                 <c:choose>
