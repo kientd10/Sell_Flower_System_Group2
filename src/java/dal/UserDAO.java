@@ -202,6 +202,7 @@ public class UserDAO {
                 h.setUserId(rs.getInt("user_id"));
                 h.setPassword(rs.getString("password"));
                 h.setRoleId(rs.getInt("role_id"));
+                h.setArea(rs.getString("area"));
 
             }
         } catch (SQLException e) {
@@ -297,6 +298,7 @@ public class UserDAO {
                 u.setIsActive(rs.getBoolean("is_active"));
                 u.setCreatedAt(rs.getTimestamp("created_at"));
                 u.setUpdatedAt(rs.getTimestamp("updated_at"));
+                u.setArea(rs.getString("area"));
                 users.add(u);
             }
         }
@@ -325,6 +327,7 @@ public class UserDAO {
                 u.setIsActive(rs.getBoolean("is_active"));
                 u.setCreatedAt(rs.getTimestamp("created_at"));
                 u.setUpdatedAt(rs.getTimestamp("updated_at"));
+                u.setArea(rs.getString("area"));
                 users.add(u);
             }
         }
@@ -355,6 +358,7 @@ public class UserDAO {
                 u.setIsActive(rs.getBoolean("is_active"));
                 u.setCreatedAt(rs.getTimestamp("created_at"));
                 u.setUpdatedAt(rs.getTimestamp("updated_at"));
+                u.setArea(rs.getString("area"));
                 users.add(u);
             }
         }

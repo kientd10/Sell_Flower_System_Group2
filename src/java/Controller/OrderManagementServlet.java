@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import Model.User;
+import java.util.ArrayList;
 
 @WebServlet("/orderManagement")
 public class OrderManagementServlet extends HttpServlet {
@@ -25,12 +27,14 @@ public class OrderManagementServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("userId");
-        Integer roleId = (Integer) session.getAttribute("roleId");
-        if (userId == null || roleId == null || (roleId != 2 && roleId != 3 && roleId != 4)) {
-            response.sendRedirect("accessDenied.jsp"); 
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login.jsp");
             return;
         }
+        int userId = user.getUserId();
+        String area = user.getArea();
+        int roleId = user.getRoleId();
         String role = "";
         if (roleId == 2) role = "Staff";
         else if (roleId == 3) role = "Manager";
@@ -60,7 +64,19 @@ public class OrderManagementServlet extends HttpServlet {
         }
 
         // Lấy danh sách đơn hàng theo role và filter
-        List<Order> orders = orderDAO.getOrdersForManagement(roleId, status, category, priceRange, province, search, dateFilter, sortPrice, page, pageSize);
+        List<Order> orders = new ArrayList<>();
+        try {
+            if (roleId == 2) { // Staff
+                orders = orderDAO.getOrdersByStatus("Đang chuẩn bị");
+            } else if (roleId == 4) { // Shipper
+                orders = orderDAO.getOrdersByStatus("Chờ giao hàng");
+            } else {
+                orders = orderDAO.getOrdersForManagement(roleId, status, category, priceRange, province, search, dateFilter, sortPrice, page, pageSize);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi khi lấy danh sách đơn hàng: " + e.getMessage());
+        }
         int totalOrders = orderDAO.countOrdersForManagement(roleId, status, category, priceRange, province, search, dateFilter);
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
 

@@ -388,16 +388,6 @@
 								</select>
 							</div>
 						</div>
-						<!-- XÓA ĐOẠN NÀY: -->
-						<!--
-						<div class="col-md-4">
-							<div class="d-flex justify-content-end">
-								<button type="button" class="btn btn-danger btn-sm" onclick="bulkDelete()" id="bulkDeleteBtn" disabled>
-									<i class="fas fa-trash me-1"></i>Xóa đã chọn
-								</button>
-							</div>
-						</div>
-						-->
 					</div>
 				</div>
 

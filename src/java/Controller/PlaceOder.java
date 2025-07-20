@@ -162,7 +162,7 @@ public class PlaceOder extends HttpServlet {
 
         // ✅ Lưu đơn hàng
         OrderDAO dao = new OrderDAO();
-        int orderId = dao.insertOrder(userId, selectedItems, total, fullDeliveryAddress, receiverPhone);
+        int orderId = dao.insertOrder(userId, selectedItems, total, fullDeliveryAddress, receiverPhone, receiverName);
         System.out.println("===> Đã tạo đơn hàng với ID: " + orderId);
 
         // ✅ Xóa giỏ hàng khỏi session sau khi lưu đơn

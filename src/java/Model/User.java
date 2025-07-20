@@ -18,6 +18,7 @@ public class User {
     private String fullName;
     private String phone;
     private String address;
+    private String area;
     private int RoleId; 
     private Role role;
     private boolean isActive;
@@ -102,6 +103,13 @@ public class User {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getArea() {
+        return area;
+    }
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public int getRoleId() {

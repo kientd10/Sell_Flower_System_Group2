@@ -478,7 +478,7 @@
 						<label class="form-label">Tỉnh thành</label>
 						<select class="form-select" name="province">
 							<option value="">Tất cả</option>
-							<option value="TP Hà Nội" ${param.province == 'Hà Nội' ? 'selected' : ''}>Hà Nội</option>
+							<option value="Hà Nội" ${param.province == 'Hà Nội' ? 'selected' : ''}>Hà Nội</option>
 							<option value="TP Huế" ${param.province == 'Huế' ? 'selected' : ''}>Huế</option>
 							<option value="Quảng Ninh" ${param.province == 'Quảng Ninh' ? 'selected' : ''}>Quảng Ninh</option>
 							<option value="Cao Bằng" ${param.province == 'Cao Bằng' ? 'selected' : ''}>Cao Bằng</option>
@@ -554,9 +554,10 @@
 										<th style="width: 120px;">Trạng thái</th>
 										<th style="width: 180px;">Thông tin khách hàng</th>
 										<th style="width: 150px;">Địa chỉ giao hàng</th>
+										<th style="width: 180px;">Phụ trách</th>
 										<th style="width: 120px;">Tổng tiền</th>
 										<th style="width: 100px;">Ngày tạo</th>
-										<th style="width: 150px;">Actions</th>
+										<th style="width: 150px;">Cập nhật trạng thái</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -604,11 +605,11 @@
 											</td>
 											<td>
 												<div>
-													<div class="text-truncate" title="${order.customerName}">
-														<strong>${order.customerName}</strong>
+													<div class="text-truncate" title="${order.deliveryName}">
+														<strong>${order.deliveryName}</strong>
 													</div>
-													<div class="small text-muted text-truncate" title="${order.phone}">
-														📞 ${order.phone}
+													<div class="small text-muted text-truncate" title="${order.deliveryPhone}">
+														📞 ${order.deliveryPhone}
 													</div>
 													<div class="small text-muted text-truncate" title="${order.email}">
 														📧 ${order.email}
@@ -616,8 +617,25 @@
 												</div>
 											</td>
 											<td>
-												<div class="text-truncate" title="${order.deliveryAddress}" style="max-width: 150px;">
+												<div title="${order.deliveryAddress}">
 													📍 ${order.deliveryAddress}
+												</div>
+											</td>
+											<td>
+												<div>
+													<c:if test="${not empty order.staffName}">
+														<div class="small text-success text-truncate" title="Nhân viên phụ trách: ${order.staffName}">
+															👨‍💼 ${order.staffName}
+														</div>
+													</c:if>
+													<c:if test="${not empty order.shipperName}">
+														<div class="small text-primary text-truncate" title="Shipper: ${order.shipperName}">
+															🚚 ${order.shipperName}
+														</div>
+													</c:if>
+													<c:if test="${empty order.staffName && empty order.shipperName}">
+														<div class="small text-muted">Chưa phân công</div>
+													</c:if>
 												</div>
 											</td>
 											<td>

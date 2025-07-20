@@ -25,9 +25,12 @@ public class Order {
     private String createdAt;
     private String deliveryAddress;
     private String deliveryPhone;
+    private String deliveryName;
     private List<OrderItem> items;
     private String phone;
     private String email;
+    private String staffName;
+    private String shipperName;
 
     public Order() {
         this.items = new ArrayList<>();
@@ -106,6 +109,14 @@ public void setCreatedAt(String createdAt) {
         this.deliveryPhone = deliveryPhone;
     }
 
+    public String getDeliveryName() {
+        return deliveryName;
+    }
+
+    public void setDeliveryName(String deliveryName) {
+        this.deliveryName = deliveryName;
+    }
+
     public List<OrderItem> getItems() {
         return items;
     }
@@ -128,5 +139,18 @@ public void setCreatedAt(String createdAt) {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
+    public String getShipperName() {
+        return shipperName;
+    }
+    public void setShipperName(String shipperName) {
+        this.shipperName = shipperName;
     }
 }

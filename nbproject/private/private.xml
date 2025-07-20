@@ -3,18 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Controller/BouquetDetailServlet.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/dal/ProductFeedbackDAO.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Controller/OrderDetailsServlet.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Controller/BouquetServlet.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/dal/BouquetDAO.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/web/order.jsp</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/web/cart.jsp</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/web/feedback_list.jsp</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Controller/FeedbackListServlet.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Controller/OrderServlet.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Model/BouquetTemplate.java</file>
-            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/web/product-details.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/src/java/dal/DBcontext.java</file>
         </group>
     </open-files>
 </project-private>

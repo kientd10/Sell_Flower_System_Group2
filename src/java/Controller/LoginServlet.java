@@ -93,6 +93,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user);
             session.setAttribute("roleId", user.getRoleId());
             session.setAttribute("userId", user.getUserId());
+            session.setAttribute("area", user.getArea());
             
             // Debug: In ra thông tin session sau khi lưu
             System.out.println("=== Login Debug ===");
