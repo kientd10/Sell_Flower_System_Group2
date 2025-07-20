@@ -139,6 +139,78 @@
         <servlet-name>PlaceOder</servlet-name>
         <url-pattern>/placeOrder</url-pattern>
     </servlet-mapping>
+    
+<servlet>
+    <servlet-name>FlowerRequestServlet</servlet-name>
+    <servlet-class>Controller.FlowerRequestServlet</servlet-class>
+    <multipart-config>
+        <location></location>
+        <max-file-size>5242880</max-file-size> <!-- 5MB -->
+        <max-request-size>20971520</max-request-size> <!-- 20MB -->
+        <file-size-threshold>0</file-size-threshold>
+    </multipart-config>
+</servlet>
+<servlet-mapping>
+    <servlet-name>FlowerRequestServlet</servlet-name>
+    <url-pattern>/flower-request</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>SendReplyServlet</servlet-name>
+    <servlet-class>Controller.SendReplyServlet</servlet-class>
+    <multipart-config>
+        <location></location>
+        <max-file-size>5242880</max-file-size>
+        <max-request-size>20971520</max-request-size>
+        <file-size-threshold>0</file-size-threshold>
+    </multipart-config>
+</servlet>
+<servlet-mapping>
+    <servlet-name>SendReplyServlet</servlet-name>
+    <url-pattern>/send-reply</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>ConfirmOrderServlet</servlet-name>
+    <servlet-class>Controller.ConfirmOrderServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>ConfirmOrderServlet</servlet-name>
+    <url-pattern>/confirm-order</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>CancelRequestServlet</servlet-name>
+    <servlet-class>Controller.CancelRequestServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>CancelRequestServlet</servlet-name>
+    <url-pattern>/cancel-request</url-pattern>
+</servlet-mapping>
+    <servlet>
+        <servlet-name>NotificationManagementServlet</servlet-name>
+        <servlet-class>Controller.NotificationManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotificationManagementServlet</servlet-name>
+        <url-pattern>/notificationManagement</url-pattern>
+    </servlet-mapping>
+  <servlet>
+      <servlet-name>ViewRequestDetailServlet</servlet-name>
+      <servlet-class>Controller.ViewRequestDetailServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>ViewRequestDetailServlet</servlet-name>
+      <url-pattern>/viewRequestDetail</url-pattern>
+  </servlet-mapping>
+    <servlet>
+      <servlet-name>ViewShopReplyServlet</servlet-name>
+      <servlet-class>Controller.ViewShopReplyServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>ViewShopReplyServlet</servlet-name>
+      <url-pattern>/viewShopReply</url-pattern>
+  </servlet-mapping>
+
     <filter>
         <filter-name>RoleFilter</filter-name>
         <filter-class>Controller.RoleFilter</filter-class>

@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 /**
  *
- * @author tuanh
+ * @author Kien Tran Duc
  */
 public class User {
     private int userId;
@@ -28,7 +28,7 @@ public class User {
     public User() {
     }
 
-    public User(int userId, String username, String email, String password, String fullName, String phone, String address, int RoleId, boolean isActive, Timestamp createdAt, Timestamp updatedAt) {
+    public User(int userId, String username, String email, String password, String fullName, String phone, String address, String area, int RoleId, boolean isActive, Timestamp createdAt, Timestamp updatedAt) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -36,6 +36,7 @@ public class User {
         this.fullName = fullName;
         this.phone = phone;
         this.address = address;
+        this.area = area;
         this.RoleId = RoleId;
         this.isActive = isActive;
         this.createdAt = createdAt;

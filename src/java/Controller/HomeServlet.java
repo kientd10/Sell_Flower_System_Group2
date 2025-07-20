@@ -16,6 +16,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import dal.FlowerRequestDAO;
+import Model.FlowerRequest;
+import Model.User;
 
 /**
  *
@@ -155,6 +158,18 @@ public class HomeServlet extends HttpServlet {
             session.removeAttribute("searchResults");
             session.removeAttribute("searchQuery");
             session.removeAttribute("error");
+
+            User user = (User) request.getSession().getAttribute("user");
+            List<FlowerRequest> shopReplies = null;
+            if (user != null) {
+                try {
+                    FlowerRequestDAO dao = new FlowerRequestDAO();
+                    shopReplies = dao.getShopRepliesForUser(user.getUserId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            request.setAttribute("shopReplies", shopReplies);
 
             request.getRequestDispatcher("index.jsp").forward(request, response);
 

@@ -19,6 +19,7 @@ import java.lang.*;
 import java.sql.Connection;
 import java.sql.Statement;
 import Model.Category;
+import java.math.BigDecimal;
 
 public class OrderDAO {
 
@@ -837,4 +838,18 @@ public class OrderDAO {
         return orders;
     }
 
+    // Tạo order mới cho hoa theo yêu cầu
+    public int createOrderForCustomRequest(int userId, BigDecimal price, int requestId) throws Exception {
+        String sql = "INSERT INTO orders (user_id, total_price, status, order_date, request_id) VALUES (?, ?, 'pending', NOW(), ?)";
+        PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        ps.setInt(1, userId);
+        ps.setBigDecimal(2, price);
+        ps.setInt(3, requestId);
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+        int orderId = -1;
+        if (rs.next()) orderId = rs.getInt(1);
+        rs.close(); ps.close();
+        return orderId;
+    }
 }

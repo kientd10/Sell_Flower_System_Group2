@@ -71,6 +71,30 @@
                                 <ul class="nav navbar-nav">
                                     <c:if test="${sessionScope.user != null}">
                                         <li><a href="profile"><i class="fa fa-user"></i> Hồ sơ</a></li>
+                                        <li class="notification-bell" style="position:relative;">
+                                            <a href="javascript:void(0);" id="notifBell" onclick="toggleNotifDropdown()">
+                                                <i class="fa fa-bell"></i> Thông báo
+                                                <span class="notification-badge">2</span>
+                                            </a>
+                                            <ul id="notifDropdown" class="notif-dropdown-menu">
+                                                <c:choose>
+                                                    <c:when test="${not empty shopReplies}">
+                                                        <c:forEach var="reply" items="${shopReplies}">
+                                                            <li>
+                                                                <a href="viewShopReply?requestId=${reply.requestId}">
+                                                                    <img src="${pageContext.request.contextPath}/${reply.sampleImageUrl}" class="notif-img-mini" alt="Shop gửi" />
+                                                                    <span class="notif-dot"></span>
+                                                                    <c:out value="${fn:substring(reply.shopReply, 0, 40)}" />...
+                                                                </a>
+                                                            </li>
+                                                        </c:forEach>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <li class="notif-empty">Không có thông báo mới</li>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </ul>
+                                        </li>
                                         <li><a href="orders"><i class="fa fa-truck"></i> Đơn hàng</a></li>
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
                                         </c:if> 
@@ -192,6 +216,26 @@
                                 </c:forEach>
                             </div><!--/category-products-->
 
+                            <!-- Nút Hoa mẫu theo yêu cầu đặt ngay dưới phần danh mục, trên phần lọc giá -->
+                            <div style="margin: 16px 0; text-align: center; max-width: 250px; margin-left: auto; margin-right: auto;">
+                                <a href="flowerRequestForm.jsp" class="btn btn-custom-request" style="background: #ce426c; color: #fff; font-weight: bold; padding: 12px 0; border-radius: 8px; font-size: 1.08rem; box-shadow: 0 2px 8px rgba(233,30,99,0.15); transition: background 0.2s; width: 100%; display: inline-block; letter-spacing: 0.5px;">
+                                    <i class="fa fa-magic"></i> Hoa mẫu theo yêu cầu
+                                </a>
+                            </div>
+                            <style>
+                                .btn-custom-request {
+                                    width: 100%;
+                                    max-width: 220px;
+                                    font-size: 1.08rem;
+                                    padding: 12px 0;
+                                    letter-spacing: 0.5px;
+                                }
+                                .btn-custom-request:hover {
+                                    background: #d44071;
+                                    color: #fff;
+                                    text-decoration: none;
+                                }
+                            </style>
                             <div class="price-range"><!--/Filter-->
                                 <h2 style="text-align: center; color: #c44d58;">KHOẢNG GIÁ</h2>
                                 <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 2px solid #aeafb0; border-radius: 5px; max-width: 250px; margin: auto;">
@@ -442,5 +486,83 @@
                 }
             </style>
         </c:if>
+        <style>
+    .notif-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 38px;
+        right: 0;
+        min-width: 240px;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(44,62,80,0.13);
+        z-index: 9999;
+        padding: 6px 0;
+        list-style: none;
+        max-height: 260px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #ce426c #f3f3f3;
+    }
+    .notif-dropdown-menu::-webkit-scrollbar {
+        width: 8px;
+        background: #f3f3f3;
+        border-radius: 8px;
+    }
+    .notif-dropdown-menu::-webkit-scrollbar-thumb {
+        background: #ce426c;
+        border-radius: 8px;
+    }
+    .notif-dropdown-menu li { display: block; }
+    /* ĐÃ XÓA: .notif-dropdown-menu li:nth-child(n+6) { display: none; } */
+    .notification-bell.open .notif-dropdown-menu {
+        display: block;
+    }
+    .notif-dropdown-menu li a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px 8px 12px;
+        color: #333;
+        font-size: 1rem;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background 0.15s;
+    }
+    .notif-dropdown-menu li a:hover {
+        background: #f8f9fa;
+    }
+    .notif-img-mini {
+        width: 32px; height: 32px; object-fit: cover; border-radius: 6px; box-shadow: 0 1px 4px rgba(206,66,108,0.08);
+        flex-shrink: 0;
+    }
+    .notif-dot {
+        width: 7px;
+        height: 7px;
+        background: #ce426c;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 4px;
+    }
+    .notif-empty {
+        text-align: center;
+        color: #888;
+        padding: 12px 0;
+        font-size: 1rem;
+    }
+</style>
+<script>
+function toggleNotifDropdown() {
+    var bell = document.querySelector('.notification-bell');
+    bell.classList.toggle('open');
+}
+document.addEventListener('click', function(event) {
+    var bell = document.querySelector('.notification-bell');
+    if (!bell.contains(event.target)) {
+        bell.classList.remove('open');
+    }
+});
+</script>
     </body>
 </html>

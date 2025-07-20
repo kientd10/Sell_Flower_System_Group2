@@ -202,6 +202,144 @@
 			color: #a03d4a;
 			transform: translateX(3px);
 		}
+        /* Chỉ bổ sung/tinh chỉnh cho phần request hoa mẫu */
+        .request-title { font-size: 1.18rem; font-weight: 600; margin-bottom: 8px; }
+        .request-desc { color: #444; font-size: 1.08rem; margin-bottom: 12px; }
+        .status {
+            padding: 2px 12px; border-radius: 7px; font-size: 1.05rem; font-weight: 700;
+            margin-left: 8px;
+        }
+        .status.pending { background: #fff3cd; color: #b8860b; }
+        .status.sample_sent { background: #e3fcec; color: #218838; }
+        .status.accepted { background: #d1ecf1; color: #0c5460; }
+        .status.rejected { background: #f8d7da; color: #721c24; }
+        .status.completed { background: #e2e3e5; color: #383d41; }
+        .request-actions .btn {
+            margin-right: 10px; padding: 8px 20px; border-radius: 7px; font-size: 1.08rem; font-weight: 600;
+        }
+        .btn-view { background: #ce426c; color: #fff; border: none; }
+        .btn-reply { background: #fff; color: #ce426c; border: 2px solid #ce426c; }
+        .btn-reply:hover, .btn-view:hover { opacity: 0.88; }
+        /* Modal chỉnh nhẹ cho rõ ràng */
+        .modal-content label { font-weight: 600; color: #324d7a; margin-top: 8px; }
+        .modal-content textarea { font-size: 1.08rem; border-radius: 6px; border: 1.5px solid #aeafb0; padding: 10px; }
+        .modal-content .btn-send-reply { font-size: 1.13rem; font-weight: 600; }
+        .notification-list {
+            width: 100%;
+            max-width: none;
+            margin: 0 0 40px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .notification-item {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(206,66,108,0.07);
+            padding: 22px 28px 18px 28px;
+            position: relative;
+            margin-bottom: 0;
+        }
+        .notification-title {
+            font-size: 1.18rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ce426c;
+        }
+        .notification-desc {
+            color: #444;
+            font-size: 1.08rem;
+            margin-bottom: 12px;
+        }
+        .notification-actions {
+            margin-top: 10px;
+        }
+        .notification-actions .btn {
+            margin-right: 10px;
+            padding: 8px 20px;
+            border-radius: 7px;
+            font-size: 1.08rem;
+            font-weight: 600;
+        }
+        .btn-detail { background: #ce426c; color: #fff; border: none; }
+        .btn-detail:hover { opacity: 0.88; }
+        .reply-form-inline {
+            margin-top: 18px;
+            background: #fdf6f8;
+            border-radius: 8px;
+            padding: 18px 18px 10px 18px;
+            box-shadow: 0 1px 6px rgba(206,66,108,0.06);
+        }
+        .reply-form-inline label { font-weight: 600; color: #324d7a; margin-top: 8px; }
+        .reply-form-inline textarea { font-size: 1.08rem; border-radius: 6px; border: 1.5px solid #aeafb0; padding: 10px; width: 100%; margin-bottom: 10px; }
+        .reply-form-inline .dropzone { width: 100%; min-height: 100px; border: 2px dashed #ce426c; border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; color: #ce426c; font-size: 1.08rem; margin-bottom: 12px; cursor: pointer; transition: border 0.2s; text-align: center; }
+        .reply-form-inline .dropzone.dragover { border: 2.5px solid #d44071; background: #fff0f6; }
+        .reply-form-inline .preview-img { max-width: 100%; max-height: 90px; margin-bottom: 8px; border-radius: 8px; box-shadow: 0 1px 6px rgba(206,66,108,0.08); }
+        .flower-request-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin: 0 0 40px 0;
+        }
+        .flower-request-item {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(206,66,108,0.07);
+            padding: 24px 32px 18px 32px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-left: 5px solid #ce426c;
+        }
+        .flower-request-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 32px;
+            margin-bottom: 6px;
+        }
+        .flower-request-title {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #ce426c;
+            margin-right: 24px;
+        }
+        .flower-request-info {
+            color: #324d7a;
+            font-size: 1.08rem;
+            margin-right: 18px;
+            font-weight: 500;
+        }
+        .flower-request-status {
+            display: inline-block;
+            padding: 2px 14px;
+            border-radius: 7px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        .status-pending { background: #fff3cd; color: #b8860b; }
+        .status-sample_sent { background: #e3fcec; color: #218838; }
+        .status-accepted { background: #d1ecf1; color: #0c5460; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+        .status-completed { background: #e2e3e5; color: #383d41; }
+        .btn-detail {
+            background: #ce426c;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 8px 22px;
+            font-size: 1.08rem;
+            font-weight: 600;
+            transition: background 0.2s;
+            margin-top: 8px;
+            width: fit-content;
+        }
+        .btn-detail:hover {
+            background: #d44071;
+            color: #fff;
+        }
 	</style>
 </head>
 
@@ -381,398 +519,17 @@
 				</div>
 
 				<!-- ===== NOTIFICATIONS LIST ===== -->
-				<div class="notifications-container">
-					<!-- Critical Inventory Alert -->
-					<div class="notification-item unread">
-						<div class="d-flex align-items-start">
-							<div class="notification-icon critical">
-								<i class="fas fa-exclamation-triangle"></i>
-							</div>
-							<div class="flex-grow-1">
-								<div class="d-flex justify-content-between align-items-start mb-2">
-									<div>
-										<h6 class="mb-1">Critical Stock Alert: Purple Orchid Pot</h6>
-										<div class="d-flex gap-2 mb-2">
-											<span class="notification-priority high">High Priority</span>
-											<span class="notification-category inventory">Inventory</span>
-										</div>
-									</div>
-									<small class="text-muted">2 minutes ago</small>
-								</div>
-								<p class="mb-2">Purple Orchid Pot (SKU: OP-001) is completely out of stock. This item has pending orders and requires immediate restocking to prevent customer dissatisfaction.</p>
-								<div class="notification-actions">
-									<button class="btn btn-sm btn-danger" onclick="urgentRestock('OP-001')">
-										<i class="fas fa-shopping-cart me-1"></i>Urgent Restock
-									</button>
-									<button class="btn btn-sm btn-outline-primary" onclick="viewInventory('OP-001')">
-										<i class="fas fa-eye me-1"></i>View Details
-									</button>
-									<button class="btn btn-sm btn-outline-secondary" onclick="markAsRead(1)">
-										<i class="fas fa-check me-1"></i>Mark Read
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Order Processing Alert -->
-					<div class="notification-item unread">
-						<div class="d-flex align-items-start">
-							<div class="notification-icon warning">
-								<i class="fas fa-clock"></i>
-							</div>
-							<div class="flex-grow-1">
-								<div class="d-flex justify-content-between align-items-start mb-2">
-									<div>
-										<h6 class="mb-1">Urgent Order Requires Attention</h6>
-										<div class="d-flex gap-2 mb-2">
-											<span class="notification-priority high">High Priority</span>
-											<span class="notification-category orders">Orders</span>
-										</div>
-									</div>
-									<small class="text-muted">15 minutes ago</small>
-								</div>
-								<p class="mb-2">Order #ORD-2024-004 (Funeral Wreath) requires same-day delivery by 6:00 PM. Customer Emily Davis has requested urgent processing for funeral service.</p>
-								<div class="notification-actions">
-									<button class="btn btn-sm btn-warning" onclick="prioritizeOrder('ORD-2024-004')">
-										<i class="fas fa-bolt me-1"></i>Prioritize
-									</button>
-									<button class="btn btn-sm btn-outline-primary" onclick="viewOrder('ORD-2024-004')">
-										<i class="fas fa-eye me-1"></i>View Order
-									</button>
-									<button class="btn btn-sm btn-outline-secondary" onclick="markAsRead(2)">
-										<i class="fas fa-check me-1"></i>Mark Read
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- New Customer Registration -->
-					<div class="notification-item unread">
-						<div class="d-flex align-items-start">
-							<div class="notification-icon success">
-								<i class="fas fa-user-plus"></i>
-							</div>
-							<div class="flex-grow-1">
-								<div class="d-flex justify-content-between align-items-start mb-2">
-									<div>
-										<h6 class="mb-1">New VIP Customer Registration</h6>
-										<div class="d-flex gap-2 mb-2">
-											<span class="notification-priority medium">Medium Priority</span>
-											<span class="notification-category customers">Customers</span>
-										</div>
-									</div>
-									<small class="text-muted">1 hour ago</small>
-								</div>
-								<p class="mb-2">Emily Davis has registered as a new customer and placed a high-value order ($120). Consider offering VIP welcome package and personalized service.</p>
-								<div class="notification-actions">
-									<button class="btn btn-sm btn-success" onclick="sendWelcomePackage('CUST-004')">
-										<i class="fas fa-gift me-1"></i>Welcome Package
-									</button>
-									<button class="btn btn-sm btn-outline-primary" onclick="viewCustomer('CUST-004')">
-										<i class="fas fa-user me-1"></i>View Profile
-									</button>
-									<button class="btn btn-sm btn-outline-secondary" onclick="markAsRead(3)">
-										<i class="fas fa-check me-1"></i>Mark Read
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- System Maintenance -->
-					<div class="notification-item unread">
-						<div class="d-flex align-items-start">
-							<div class="notification-icon system">
-								<i class="fas fa-tools"></i>
-							</div>
-							<div class="flex-grow-1">
-								<div class="d-flex justify-content-between align-items-start mb-2">
-									<div>
-										<h6 class="mb-1">Scheduled System Maintenance</h6>
-										<div class="d-flex gap-2 mb-2">
-											<span class="notification-priority low">Low Priority</span>
-											<span class="notification-category system">System</span>
-										</div>
-									</div>
-									<small class="text-muted">2 hours ago</small>
-								</div>
-								<p class="mb-2">System maintenance is scheduled for tonight at 2:00 AM - 4:00 AM EST. The system will be temporarily unavailable during this period. Please plan accordingly.</p>
-								<div class="notification-actions">
-									<button class="btn btn-sm btn-info" onclick="viewMaintenanceDetails()">
-										<i class="fas fa-info-circle me-1"></i>Details
-									</button>
-									<button class="btn btn-sm btn-outline-warning" onclick="notifyStaff()">
-										<i class="fas fa-users me-1"></i>Notify Staff
-									</button>
-									<button class="btn btn-sm btn-outline-secondary" onclick="markAsRead(4)">
-										<i class="fas fa-check me-1"></i>Mark Read
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Read Notifications -->
-					<div class="notification-item read">
-						<div class="d-flex align-items-start">
-							<div class="notification-icon info">
-								<i class="fas fa-chart-line"></i>
-							</div>
-							<div class="flex-grow-1">
-								<div class="d-flex justify-content-between align-items-start mb-2">
-									<div>
-										<h6 class="mb-1">Weekly Sales Report Available</h6>
-										<div class="d-flex gap-2 mb-2">
-											<span class="notification-priority low">Low Priority</span>
-											<span class="notification-category system">System</span>
-										</div>
-									</div>
-									<small class="text-muted">3 hours ago</small>
-								</div>
-								<p class="mb-2">Your weekly sales report for January 8-15, 2024 is now available. Total revenue: $12,450 (+15.3% vs last week).</p>
-								<div class="notification-actions">
-									<button class="btn btn-sm btn-info" onclick="viewReport('weekly-sales')">
-										<i class="fas fa-chart-bar me-1"></i>View Report
-									</button>
-									<button class="btn btn-sm btn-outline-secondary" onclick="archiveNotification(5)">
-										<i class="fas fa-archive me-1"></i>Archive
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="notification-item read">
-						<div class="d-flex align-items-start">
-							<div class="notification-icon success">
-								<i class="fas fa-truck"></i>
-							</div>
-							<div class="flex-grow-1">
-								<div class="d-flex justify-content-between align-items-start mb-2">
-									<div>
-										<h6 class="mb-1">Supplier Delivery Completed</h6>
-										<div class="d-flex gap-2 mb-2">
-											<span class="notification-priority low">Low Priority</span>
-											<span class="notification-category inventory">Inventory</span>
-										</div>
-									</div>
-									<small class="text-muted">5 hours ago</small>
-								</div>
-								<p class="mb-2">Delivery from Rose Garden Co. has been completed successfully. 20 units of Red Roses (SKU: RR-012) have been added to inventory.</p>
-								<div class="notification-actions">
-									<button class="btn btn-sm btn-success" onclick="viewDelivery('DEL-001')">
-										<i class="fas fa-clipboard-check me-1"></i>View Delivery
-									</button>
-									<button class="btn btn-sm btn-outline-secondary" onclick="archiveNotification(6)">
-										<i class="fas fa-archive me-1"></i>Archive
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="notification-item read">
-						<div class="d-flex align-items-start">
-							<div class="notification-icon info">
-								<i class="fas fa-star"></i>
-							</div>
-							<div class="flex-grow-1">
-								<div class="d-flex justify-content-between align-items-start mb-2">
-									<div>
-										<h6 class="mb-1">Customer Review Received</h6>
-										<div class="d-flex gap-2 mb-2">
-											<span class="notification-priority low">Low Priority</span>
-											<span class="notification-category customers">Customers</span>
-										</div>
-									</div>
-									<small class="text-muted">1 day ago</small>
-								</div>
-								<p class="mb-2">Sarah Johnson left a 5-star review for Red Roses (12 pieces): "Beautiful flowers, excellent quality and fast delivery. Highly recommended!"</p>
-								<div class="notification-actions">
-									<button class="btn btn-sm btn-info" onclick="viewReview('REV-001')">
-										<i class="fas fa-star me-1"></i>View Review
-									</button>
-									<button class="btn btn-sm btn-outline-success" onclick="thankCustomer('CUST-002')">
-										<i class="fas fa-heart me-1"></i>Thank Customer
-									</button>
-									<button class="btn btn-sm btn-outline-secondary" onclick="archiveNotification(7)">
-										<i class="fas fa-archive me-1"></i>Archive
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- ===== PAGINATION ===== -->
-				<div class="d-flex justify-content-center mt-4">
-					<nav aria-label="Notifications pagination">
-						<ul class="pagination">
-							<li class="page-item disabled">
-								<a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
-							</li>
-							<li class="page-item active"><a class="page-link" href="#">1</a></li>
-							<li class="page-item"><a class="page-link" href="notifications.jsp?page=2">2</a></li>
-							<li class="page-item"><a class="page-link" href="notifications.jsp?page=3">3</a></li>
-							<li class="page-item">
-								<a class="page-link" href="notifications.jsp?page=2"><i class="fas fa-chevron-right"></i></a>
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Bootstrap JS -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-	
-	<script>
-		// ===== NOTIFICATION MANAGEMENT FUNCTIONALITY =====
-		
-		// Filter functions
-		function filterByStatus(status) { console.log('Filter by status:', status); }
-		function filterByCategory(category) { console.log('Filter by category:', category); }
-		function filterByPriority(priority) { console.log('Filter by priority:', priority); }
-		function filterByTime(time) { console.log('Filter by time:', time); }
-		
-		// Notification actions
-		function markAsRead(notificationId) {
-			console.log('Marking notification as read:', notificationId);
-			// Implementation would mark notification as read via AJAX
-			const notification = document.querySelector(`[data-notification-id="${notificationId}"]`);
-			if (notification) {
-				notification.classList.remove('unread');
-				notification.classList.add('read');
-			}
-		}
-		
-		function markAllAsRead() {
-			if (confirm('Mark all notifications as read?')) {
-				console.log('Marking all notifications as read');
-				document.querySelectorAll('.notification-item.unread').forEach(item => {
-					item.classList.remove('unread');
-					item.classList.add('read');
-				});
-				// Update badge count
-				document.querySelector('.badge').textContent = '0 Unread';
-			}
-		}
-		
-		function archiveNotification(notificationId) {
-			console.log('Archiving notification:', notificationId);
-			// Implementation would archive notification via AJAX
-		}
-		
-		function clearAllNotifications() {
-			if (confirm('Clear all notifications? This action cannot be undone.')) {
-				console.log('Clearing all notifications');
-				// Implementation would clear all notifications
-			}
-		}
-		
-		function configureNotifications() {
-			console.log('Opening notification settings');
-			window.location.href = 'notification-settings.jsp';
-		}
-		
-		// Specific action handlers
-		function urgentRestock(sku) {
-			console.log('Creating urgent restock for:', sku);
-			window.location.href = `urgent-restock.jsp?sku=${sku}`;
-		}
-		
-		function viewInventory(sku) {
-			console.log('Viewing inventory for:', sku);
-			window.location.href = `inventory-details.jsp?sku=${sku}`;
-		}
-		
-		function prioritizeOrder(orderId) {
-			console.log('Prioritizing order:', orderId);
-			window.location.href = `prioritize-order.jsp?orderId=${orderId}`;
-		}
-		
-		function viewOrder(orderId) {
-			console.log('Viewing order:', orderId);
-			window.location.href = `order-details.jsp?orderId=${orderId}`;
-		}
-		
-		function sendWelcomePackage(customerId) {
-			console.log('Sending welcome package to:', customerId);
-			window.location.href = `send-welcome-package.jsp?customerId=${customerId}`;
-		}
-		
-		function viewCustomer(customerId) {
-			console.log('Viewing customer:', customerId);
-			window.location.href = `customer-details.jsp?customerId=${customerId}`;
-		}
-		
-		function viewMaintenanceDetails() {
-			console.log('Viewing maintenance details');
-			window.location.href = 'maintenance-schedule.jsp';
-		}
-		
-		function notifyStaff() {
-			console.log('Notifying staff about maintenance');
-			// Implementation would send notifications to staff
-			alert('Staff notification sent successfully!');
-		}
-		
-		function viewReport(reportType) {
-			console.log('Viewing report:', reportType);
-			window.location.href = `${reportType}-report.jsp`;
-		}
-		
-		function viewDelivery(deliveryId) {
-			console.log('Viewing delivery:', deliveryId);
-			window.location.href = `delivery-details.jsp?deliveryId=${deliveryId}`;
-		}
-		
-		function viewReview(reviewId) {
-			console.log('Viewing review:', reviewId);
-			window.location.href = `customer-review.jsp?reviewId=${reviewId}`;
-		}
-		
-		function thankCustomer(customerId) {
-			console.log('Thanking customer:', customerId);
-			window.location.href = `thank-customer.jsp?customerId=${customerId}`;
-		}
-		
-		// Auto-refresh notifications every 30 seconds
-		setInterval(function() {
-			console.log('Auto-refreshing notifications...');
-			// Implementation would check for new notifications via AJAX
-		}, 30000);
-		
-		// Initialize page
-		document.addEventListener('DOMContentLoaded', function() {
-			console.log('Notification center initialized');
-			
-			// Check for new notifications on page load
-			checkForNewNotifications();
-		});
-		
-		function checkForNewNotifications() {
-			// Implementation would check for new notifications via AJAX
-			console.log('Checking for new notifications...');
-		}
-
-		// Highlight current menu
-		document.addEventListener('DOMContentLoaded', function () {
-			var currentUrl = window.location.href;
-			document.querySelectorAll('.sidebar-link').forEach(function (link) {
-				link.classList.remove('active');
-			});
-			
-			if (currentUrl.includes('notificationManagement.jsp')) {
-				var notificationLink = document.getElementById('menu-notificationManagement');
-				if (notificationLink) {
-					notificationLink.classList.add('active');
-				}
-			}
-		});
-	</script>
-</body>
-</html>
+				<div class="flower-request-list">
+    <c:forEach var="req" items="${requests}">
+        <div class="flower-request-item">
+            <div class="flower-request-row">
+                <span class="flower-request-title">Yêu cầu hoa từ khách hàng: ${req.customerName}</span>
+                <span class="flower-request-info">ID: ${req.requestId}</span>
+                <span class="flower-request-info">Trạng thái:
+                    <span class="flower-request-status status-${req.status}">${req.status}</span>
+                </span>
+            </div>
+            <a href="viewRequestDetail?requestId=${req.requestId}" class="btn btn-detail">Xem chi tiết</a>
+        </div>
+    </c:forEach>
+</div>
