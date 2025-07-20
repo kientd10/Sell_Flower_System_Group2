@@ -51,41 +51,62 @@
             </div>
         </div><!--/header_top-->
 
-        <div class="header-middle">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="logo pull-left">
-                            <a href="index.jsp"><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
-                        </div>                       
-                    </div>
-                </div>
-            </div>
-        </div>
+        
+        <div class="header-middle"><!--header-middle-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="logo pull-left">
+                                <a href="${pageContext.request.contextPath}/home?pageNum=1" ><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
+                            </div>
+                        </div>
 
-        <div class="header-bottom">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-9">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-                        <div class="mainmenu pull-left">
-                            <ul class="nav navbar-nav collapse navbar-collapse">
-                                <li><a href="${pageContext.request.contextPath}/home" class="active">Home</a></li>
-                                <li style="padding-left: 0">/</li>
-                                <li style="padding-left: 0">Login</li>
-                            </ul>
+                        <div class="col-sm-8">
+                            <div class="shop-menu pull-right">
+                                <ul class="nav navbar-nav">
+                                    <c:if test="${sessionScope.user != null}">
+                                        <li><a href="profile"><i class="fa fa-user"></i> Hồ sơ</a></li>
+                                        <li><a href="orders"><i class="fa fa-truck"></i> Đơn hàng</a></li>
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
+                                        </c:if> 
+                                        <c:if test="${sessionScope.user == null}">
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+                                        <li><a href="login.jsp"><b>Đăng nhập</b></a></li> 
+                                        </c:if>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div><!--/header-middle-->
+
+        <div class="header-bottom"><!--header-bottom-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                            <div class="mainmenu pull-left">
+                                <ul class="nav navbar-nav collapse navbar-collapse">
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Trang chủ</a></li>                            
+                                    <li><a href="contact-us.jsp">Liên hệ</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        
+
+                    </div>
+                </div>
+            </div><!--/header-bottom-->  
+                                
+                                
     </header>
 
     <section id="form" style="padding: 30px 50px 100px 50px; margin-top: 0 ;margin-bottom: 0">
@@ -97,23 +118,32 @@
                         <%-- FORM LOGIN --%>
                         <div class="col-sm-4 col-sm-offset-4">
                             <div class="login-form">
-                                <h2>Login to your account</h2>
+                                <h2>Đăng nhập vào tài khoản</h2>
                                 <form action="LoginServlet" method="post">
                                     <c:if test="${not empty requestScope.error}">
                                         <p style="color: red;">${requestScope.error}</p>
                                     </c:if>
-                                    <input type="email" name="email" value="${cookie.email.value}" placeholder="Email Address" required />
-                                    <input type="password" name="password" value="${cookie.password.value}" placeholder="Password" required />
+                                    <c:if test="${not empty requestScope.done}">
+                                        <p style="color: red;">${requestScope.done}</p>
+                                    </c:if>
+                                    <input type="email" name="email"
+                                           value="${not empty requestScope.email ? requestScope.email : cookie.email.value}"
+                                           placeholder="Email" required />
+
+                                    <input type="password" name="password"
+                                           value="${not empty requestScope.password ? requestScope.password : cookie.password.value}"
+                                           placeholder="Mật khẩu" required />
                                     <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                         <label style="display: flex; align-items: center;">
-                                            <input type="checkbox" name="remember" value="ON" class="checkbox" 
-                                                   <c:if test="${cookie.remember.value eq 'ON'}">checked</c:if>> 
-                                                   Remember me
+
+                                            <input type="checkbox" name="remember" value="ON"
+                                                   <c:if test="${cookie.remember.value eq 'ON'}">checked</c:if>> Nhớ tài khoản
+
                                             </label>
-                                            <a href="forgot-password.jsp" style="color: black">Forgot password?</a>
+                                            <a href="forgot-password.jsp" style="color: black">Quên mật khẩu?</a>
                                         </span>
-                                        <button type="submit" class="btn btn-default">Login</button>
-                                        <p>You do not have account ? <a href="login.jsp?action=signup">Register</a></p>
+                                        <button type="submit" class="btn btn-default">Đăng nhập</button>
+                                        <p>Chưa có tài khoản ? <a href="login.jsp?action=signup">Đăng ký</a></p>
                                     </form>
                                 </div>
                             </div>
@@ -122,7 +152,7 @@
                     <c:otherwise>  
                         <div class="col-sm-4 col-sm-offset-4">
                             <div class="signup-form">
-                                <h2>New User Signup!</h2>
+                                <h2>Đăng ký tài khoản!</h2>
                                 <form action="Customer?action=signup" method="post">
                                     <c:if test="${not empty requestScope.done}">
                                         <p style="color: green;">${requestScope.done}</p>
@@ -136,14 +166,14 @@
                                     <c:if test="${not empty requestScope.errorpass}">
                                         <p style="color: red;">${requestScope.errorpass}</p>
                                     </c:if>
-                                    <input type="text" name="name" value="${username}" placeholder="Name" required />
-                                    <input type="email" name="Email" value="${email}" placeholder="Email Address" required />
-                                    <input type="password" name="Password" value="${pass}" placeholder="Password" required />
-                                    <input type="password" name="CfPassword" value="${CFpass}" placeholder="Confirm Password" required />
-                                    <input type="text" name="phone" value="${phone}" placeholder="Phone" required />
-                                    <input type="text" name="address" value="${address}" placeholder="Address" required />
-                                    <button type="submit" class="btn btn-default">Signup</button>
-                                    <p>Had account ?<a href="login.jsp?action=login">Login</a></p>
+                                    <input type="text" name="name" value="${username}" placeholder="Tên" required />
+                                    <input type="email" name="Email" value="${email}" placeholder="Email" required />
+                                    <input type="password" name="Password" value="${pass}" placeholder="Mật khẩu" required />
+                                    <input type="password" name="CfPassword" value="${CFpass}" placeholder="Xác nhận mật khẩu" required />
+                                    <input type="text" name="phone" value="${phone}" placeholder="Số điện thoại" required />
+                                    <input type="text" name="address" value="${address}" placeholder="Địa chỉ" required />
+                                    <button type="submit" class="btn btn-default">Đăng ký</button>
+                                    <p>Đã có tài khoản ?<a href="login.jsp?action=login">Đăng nhập</a></p>
                                 </form>
                             </div>
                         </div>

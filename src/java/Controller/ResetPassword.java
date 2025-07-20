@@ -141,16 +141,20 @@ public class ResetPassword extends HttpServlet {
 
                 // Kiểm tra mật khẩu mới có trùng với mật khẩu cũ không
                 String oldPassword = userDAO.getPassword(email);
-                if (oldPassword != null && password.equals(oldPassword)) {
+                String password_hash = Customer.hashPassword(password);
+                if (oldPassword != null && password_hash.equals(oldPassword)) {
                     request.setAttribute("error", "Mật khẩu mới không được trùng với mật khẩu cũ.");
                     request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
                     return;
                 }
 
                 // Update password
-                boolean success = userDAO.updatePassword(email, password);
+                boolean success = userDAO.updatePassword(email, password_hash);
                 if (success) {
                     if (passwordResetDAO.deleteToken(code)) {
+                        request.setAttribute("email", email);
+                        request.setAttribute("password", password);
+                        request.setAttribute("done", "Đổi mặt khẩu thành công");
                         request.setAttribute("message", "Đặt lại mật khẩu thành công. Vui lòng đăng nhập.");
                         request.getRequestDispatcher("/login.jsp").forward(request, response);
                     } else {

@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import javax.mail.Authenticator;
+import javax.mail.internet.MimeUtility;
 
 /**
  *
@@ -122,8 +123,8 @@ public class ForgotPassword extends HttpServlet {
     }
 
     private void sendResetEmail(String email, String token) throws MessagingException {
-        final String username = "tutche180023@fpt.edu.vn"; // Thay bằng email của bạn
-        final String password = "kayq nxrw gbxa rxok"; // Thay bằng mật khẩu ứng dụng
+        final String username = "thangbdhe187283@fpt.edu.vn"; // Thay bằng email của bạn
+        final String password = "h h j l s c m y f v h g j j e t"; // Thay bằng mật khẩu ứng dụng
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -147,6 +148,44 @@ public class ForgotPassword extends HttpServlet {
         Transport.send(message);
         System.out.println("Email sent successfully to " + email);
 
+    }
+
+    public static void sendRegistrationEmail(String toEmail, String username) {
+        // 1. Cấu hình mail server
+        final String fromEmail = "thangbdhe187283@fpt.edu.vn";  // email gửi đi
+        final String password = "h h j l s c m y f v h g j j e t";      // dùng app password nếu là Gmail
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP server
+        props.put("mail.smtp.port", "587");            // TLS port
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true"); // TLS
+
+        // 2. Tạo session
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromEmail, password);
+            }
+        });
+
+        try {
+            // 3. Tạo email message
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(fromEmail, "FlowerShop", "UTF-8")); // Đặt tên người gửi
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            String subject = "Đăng ký thành công tài khoản tại Flower Shop!";
+            String content = "<h2>Chào mừng bạn đến với Flower Shop 🌸</h2>"
+                    + "<p>Cảm ơn bạn đã đăng ký. Hãy ghé thăm website của chúng tôi để đặt hoa nhé!</p>";
+
+            message.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B")); // tiêu đề chuẩn
+            message.setContent(content, "text/html; charset=UTF-8");           // nội dung HTML
+
+            Transport.send(message);
+            System.out.println("Email sent successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

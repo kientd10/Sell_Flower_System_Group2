@@ -78,7 +78,9 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        String password1 = request.getParameter("password");
+        String password = password1.trim();
+        String hasspass = Customer.hashPassword(password);
         String remember = request.getParameter("remember");
 
         if (email == null || password == null) {
@@ -87,7 +89,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        User user = userDAO.loginUser(email, password);
+        User user = userDAO.loginUser(email, hasspass);
         if (user != null && user.isIsActive()) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
@@ -111,9 +113,9 @@ public class LoginServlet extends HttpServlet {
             System.out.println("=== End Login Debug ===");
             
             if ("ON".equals(remember)) {
-                setCookie(response, "email", email, 7 * 24 * 60 * 60);
-                setCookie(response, "password", password, 7 * 24 * 60 * 60);
-                setCookie(response, "remember", "ON", 7 * 24 * 60 * 60);
+                setCookie(response, "email", email, 60 * 60 * 60 * 60);
+                setCookie(response, "password", password, 60 * 60 * 60 * 60);
+                setCookie(response, "remember", "ON", 60 * 60 * 60 * 60);
             } else {
                 deleteCookie(request, response, "email");
                 deleteCookie(request, response, "password");
@@ -140,6 +142,8 @@ public class LoginServlet extends HttpServlet {
                     break;
             }
         } else {
+            request.setAttribute("email", email);
+            request.setAttribute("password", password);
             request.setAttribute("error", "Email hoặc mật khẩu không đúng!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }

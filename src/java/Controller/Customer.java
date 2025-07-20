@@ -18,7 +18,9 @@ import Model.BouquetTemplate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.security.MessageDigest;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet(name = "Customer", urlPatterns = {"/Customer"})
 public class Customer extends HttpServlet {
@@ -45,34 +47,6 @@ public class Customer extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
         UserDAO dao = new UserDAO();
-        //login
-        if (action.equals("signin")) {
-            String email = request.getParameter("email");
-            String pass = request.getParameter("password");
-            String remember = request.getParameter("remember");
-            Model.User a = dao.loginUser(email, pass);
-            if (a == null) {
-                request.setAttribute("error", "Account is not exist!");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                //set cookie
-                HttpSession session = request.getSession();
-                session.setAttribute("user", a);
-                Cookie Email = new Cookie("email", email);
-                Cookie Remember = new Cookie("remember", remember);
-                if (remember != null) {
-                    Email.setMaxAge(60 * 60 * 24 * 30);
-                    Remember.setMaxAge(60 * 60 * 24 * 30);
-                } else {
-                    Email.setMaxAge(0);
-                    Remember.setMaxAge(0);
-                }
-                response.addCookie(Email);
-                response.addCookie(Remember);
-                request.getRequestDispatcher("index.jsp").forward(request, response);
-            }
-
-        }
 
         //Log out
         if (action.equals("logout")) {
@@ -86,16 +60,19 @@ public class Customer extends HttpServlet {
         if (action.equals("signup")) {
             String name = request.getParameter("name");
             String email = request.getParameter("Email");
-            String pass = request.getParameter("Password");
-            String cfPass = request.getParameter("CfPassword");
+            String pass1 = request.getParameter("Password");
+            String pass = pass1.trim();
+            String cfPass1 = request.getParameter("CfPassword");
+            String cfPass = cfPass1.trim();
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
 
             boolean checkemail = dao.emailExists(email);
-            boolean checkusername = dao.isUsernameExists(name);
-            // Kiểm tra username đã tồn tại chưa
-            if (checkusername) {
-                request.setAttribute("errorname", "Username is existed!");
+            // Kiểm tra username 
+            
+            if(dao.isUsernameExists(name)){
+                request.setAttribute("errorpass", "Tên người dùng không hợp lệ!");
+                request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
                 request.setAttribute("address", address);
@@ -104,9 +81,9 @@ public class Customer extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-            
+
             if (name.isBlank()) {
-                request.setAttribute("errorpass", "User name is not valid!");
+                request.setAttribute("errorpass", "Tên người dùng không hợp lệ!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
@@ -122,27 +99,27 @@ public class Customer extends HttpServlet {
                 request.setAttribute("username", name);
                 request.setAttribute("phone", phone);
                 request.setAttribute("address", address);
-                request.setAttribute("emailavailable", "Email is existed!");
+                request.setAttribute("emailavailable", "Email đã tồn tại!");
                 request.setAttribute("pass", pass);
                 request.setAttribute("CFpass", cfPass);
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-            
-            if(!isValidEmail(email)){
+
+            if (!isValidEmail(email)) {
                 request.setAttribute("username", name);
                 request.setAttribute("phone", phone);
                 request.setAttribute("address", address);
                 request.setAttribute("pass", pass);
                 request.setAttribute("CFpass", cfPass);
-                request.setAttribute("emailavailable", "Email is not valid!");
+                request.setAttribute("emailavailable", "Email không hợp lệ!");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
 
             // Kiểm tra mật khẩu và xác nhận mật khẩu
             if (pass.isBlank()) {
-                request.setAttribute("errorpass", "Pass is not valid!");
+                request.setAttribute("errorpass", "Mật khẩu không hợp lệ!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
@@ -150,19 +127,19 @@ public class Customer extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-             if(!cfPass.equals(pass)){//so sánh pass và confirm pass
-                request.setAttribute("errorpass", "Confirm is not true!");
+            if (!cfPass.equals(pass)) {//so sánh pass và confirm pass
+                request.setAttribute("errorpass", "Mật khẩu xác nhận không đúng!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
                 request.setAttribute("address", address);
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
-             }
-             
-             //số điện thoại
-             if (phone.isBlank()) {
-                request.setAttribute("errorpass", "Phone is not valid!");
+            }
+
+            //số điện thoại
+            if (phone.isBlank()) {
+                request.setAttribute("errorpass", "Số điện thoại không hợp lệ!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
@@ -172,9 +149,9 @@ public class Customer extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-             
-             if(!phone.matches("^0\\d{9}$")){
-                 request.setAttribute("errorpass", "Phone must start with 0 and have 10 characters!");
+
+            if (!phone.matches("^0\\d{9}$")) {
+                request.setAttribute("errorpass", "Số điện thoại bắt đầu từ 0 và có 10 chữ số!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
@@ -183,11 +160,11 @@ public class Customer extends HttpServlet {
                 request.setAttribute("CFpass", cfPass);
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
-             }
-             
-             boolean checkPhone = dao.GetPhone(phone);
-             if(checkPhone){//kiểm tra trùng số điện thoại
-                 request.setAttribute("errorpass", "Phone had registered!");
+            }
+
+            boolean checkPhone = dao.GetPhone(phone);
+            if (checkPhone) {//kiểm tra trùng số điện thoại
+                request.setAttribute("errorpass", "Số điện thoại đã tồn tại!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
@@ -197,11 +174,11 @@ public class Customer extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
 
-             }
-             
-             //địa chỉ
-             if (address.isBlank() ) {
-                request.setAttribute("errorpass", "Address is not valid!");
+            }
+
+            //địa chỉ
+            if (address.isBlank()) {
+                request.setAttribute("errorpass", "Địa chỉ không hợp lệ!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
@@ -211,9 +188,9 @@ public class Customer extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-             
-             if (address.length()>30) {
-                request.setAttribute("errorpass", "Address is too long!");
+
+            if (address.length() > 30) {
+                request.setAttribute("errorpass", "Địa chỉ chứa tối đa 30 kí tự!");
                 request.setAttribute("username", name);
                 request.setAttribute("email", email);
                 request.setAttribute("phone", phone);
@@ -223,28 +200,65 @@ public class Customer extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-             
-             
+
+            String hassPassword = hashPassword(pass);
 
             // Nếu qua được tất cả các bước kiểm tra thì thực hiện đăng ký
             User user = new User();
             user.setUsername(name);
             user.setEmail(email);
-            user.setPassword(pass);
+            user.setPassword(hassPassword);
             user.setPhone(phone);
             user.setAddress(address);
             user.setRoleId(1); // Mặc định là Khách hàng
             user.setIsActive(true);
 
-            dao.registerUser(user);
-
-            request.setAttribute("done", "Register successful!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            boolean success = dao.registerUser(user);
+            if (success) {
+                ForgotPassword.sendRegistrationEmail(email, name);
+                request.setAttribute("email", email);
+                request.setAttribute("password", pass);
+                request.setAttribute("done", "Đăng ký thành công!");
+                request.getRequestDispatcher("login.jsp?action=login").forward(request, response);
+            } else {
+                request.setAttribute("errorpass", "Có lỗi xảy ra khi đăng ký, vui lòng thử lại!");
+                request.setAttribute("username", name);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
+                request.setAttribute("pass", pass);
+                request.setAttribute("CFpass", cfPass);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
 
         }
 
     }
-    
+
+    public static String hashPassword(String password) {
+        try {
+            // Tạo đối tượng MessageDigest với SHA-256
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            // Chuyển chuỗi password thành mảng byte
+            byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+
+            // Chuyển byte[] thành chuỗi hex
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0'); // nếu chỉ 1 ký tự thì thêm 0 ở đầu
+                }
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Không tìm thấy thuật toán SHA-256", e);
+        }
+    }
+
     // check emnail
     public boolean isValidEmail(String email) {
         // Biểu thức chính quy cho định dạng email
@@ -265,7 +279,3 @@ public class Customer extends HttpServlet {
         return "Customer Servlet for handling login, logout, and signup";
     }
 }
-
-
-
-

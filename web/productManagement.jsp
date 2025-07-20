@@ -356,20 +356,14 @@
                 <div class="top-navbar">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="input-group" style="width: 300px;">
-                            <input type="text" class="form-control" placeholder="Search products..." id="productSearch">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." id="productSearch">
                             <button class="btn btn-outline-secondary" onclick="searchProducts()"><i class="fas fa-search"></i></button>
                         </div>
 
                         <div class="d-flex align-items-center gap-3">
                             <a href="add-product.jsp" class="btn btn-primary">
-                                <i class="fas fa-plus me-2"></i>Add Product
+                                <i class="fas fa-plus me-2"></i>Thêm sản phẩm
                             </a>
-                            <a href="import-products.jsp" class="btn btn-success">
-                                <i class="fas fa-file-import me-2"></i>Import Products
-                            </a>
-                            <button class="btn btn-outline-secondary" onclick="exportProducts()">
-                                <i class="fas fa-file-export me-2"></i>Export
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -379,11 +373,11 @@
                     <!-- Page Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
-                            <h2 class="page-title">Product Management</h2>
-                            <p class="text-muted">Manage your flower inventory and product catalog</p>
+                            <h2 class="page-title">Quản lí sản phẩm</h2>
+                            
                         </div>
                         <div class="text-muted">
-                            Total Products: <strong>248</strong> | Active: <strong>235</strong>
+                            Tổng sản phẩm: <strong>248</strong> | Active: <strong>235</strong>
                         </div>
                     </div>
 
@@ -392,7 +386,7 @@
                         <div class="row align-items-center">
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center gap-3">
-                                    <label class="form-label mb-0">Filter by Category:</label>
+                                    <label class="form-label mb-0">Lọc theo loại:</label>
                                     <select class="form-select" style="width: auto;" onchange="filterByCategory(this.value)">
                                         <option value="">All Categories</option>
                                         <c:forEach items="${categoryList}" var="line">
@@ -418,7 +412,7 @@
                     <!-- ===== PRODUCT TABLE ===== -->
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Product Inventory</h5>
+                            <h5 class="mb-0">Danh sách sản phẩm</h5>
                             <div class="d-flex align-items-center gap-3">
                                 <span class="text-light">Show:</span>
                                 <select class="form-select form-select-sm" style="width: auto;" onchange="changeEntriesPerPage(this.value)">
@@ -561,17 +555,6 @@
 
                             <!-- ===== BULK ACTIONS ===== -->
                             <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div>
-                                    <button class="btn btn-outline-primary btn-sm" onclick="bulkEdit()" disabled id="bulkEditBtn">
-                                        <i class="fas fa-edit me-2"></i>Bulk Edit
-                                    </button>
-                                    <button class="btn btn-outline-danger btn-sm" onclick="bulkDelete()" disabled id="bulkDeleteBtn">
-                                        <i class="fas fa-trash me-2"></i>Bulk Delete
-                                    </button>
-                                    <button class="btn btn-outline-success btn-sm" onclick="bulkRestock()" disabled id="bulkRestockBtn">
-                                        <i class="fas fa-plus me-2"></i>Bulk Restock
-                                    </button>
-                                </div>
                                 <div class="text-muted">
                                     Showing 1 to 5 of 248 products
                                 </div>

@@ -374,7 +374,7 @@
                             <button class="btn btn-outline-secondary" onclick="searchInventory()"><i class="fas fa-search"></i></button>
                         </div>
 
-                        <div class="d-flex align-items-center gap-3">
+<!--                        <div class="d-flex align-items-center gap-3">
                             <a href="stock-adjustment.jsp" class="btn btn-primary">
                                 <i class="fas fa-edit me-2"></i>Stock Adjustment
                             </a>
@@ -384,7 +384,7 @@
                             <button class="btn btn-outline-secondary" onclick="generateInventoryReport()">
                                 <i class="fas fa-file-export me-2"></i>Export Report
                             </button>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
 

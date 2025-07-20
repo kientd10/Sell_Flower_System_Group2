@@ -14,7 +14,7 @@ import java.util.Date;
 public class Invoice {
     private String Order_code;
     private String Customer_name;
-    private Date Date;
+    private java.sql.Date Date;
     private Double TotalPayment;
     private String Status;
     private String Payment;
@@ -23,7 +23,7 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(String Order_code, String Customer_name, Date Date, Double TotalPayment, String Status, String Payment,String Payment_id) {
+    public Invoice(String Order_code, String Customer_name, java.sql.Date Date, Double TotalPayment, String Status, String Payment,String Payment_id) {
         this.Order_code = Order_code;
         this.Customer_name = Customer_name;
         this.Date = Date;
@@ -49,11 +49,11 @@ public class Invoice {
         this.Customer_name = Customer_name;
     }
 
-    public Date getDate() {
+    public java.sql.Date getDate() {
         return Date;
     }
 
-    public void setDate(Date Date) {
+    public void setDate(java.sql.Date Date) {
         this.Date = Date;
     }
 

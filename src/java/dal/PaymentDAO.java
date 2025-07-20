@@ -1,4 +1,3 @@
-
 package dal;
 
 import Model.Invoice;
@@ -44,26 +43,22 @@ public class PaymentDAO {
     public List<Invoice> DisplayInvoice() {
         List<Invoice> list = new ArrayList<>();
         String sql = "SELECT \n"
-                + "    \n"
                 + "    p.payment_status,\n"
-                + "    \n"
                 + "    p.payment_id,\n"
                 + "    p.payment_method,\n"
-                + "\n"
-                + "    \n"
                 + "    o.order_code,\n"
-                + "    \n"
                 + "    o.created_at,\n"
                 + "    o.total_amount,\n"
-                + "    \n"
                 + "    u.username\n"
-                + "	\n"
                 + "FROM \n"
-                + "      flower_shop_db.payments p\n"
+                + "    flower_shop_db.payments p\n"
                 + "JOIN \n"
                 + "    orders o ON p.order_id = o.order_id\n"
                 + "JOIN \n"
-                + "    users u ON o.customer_id = u.user_id";
+                + "    users u ON o.customer_id = u.user_id\n"
+                + "WHERE \n"
+                + "    p.payment_status = 'success'";
+
         try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Invoice invoice = new Invoice();
@@ -81,33 +76,25 @@ public class PaymentDAO {
         return list;
     }
 
-     //filter 
-    public List<Invoice> FilterInvoice(String Date, String price) {
+    //filter 
+    public List<Invoice> FilterInvoice(String Date, String price, String sortprice) {
         List<Invoice> list = new ArrayList<>();
         String sql = "SELECT \n"
-                + "    \n"
                 + "    p.payment_status,\n"
-                + "    \n"
                 + "    p.payment_id,\n"
                 + "    p.payment_method,\n"
-                + "\n"
-                + "    \n"
                 + "    o.order_code,\n"
-                + "    \n"
                 + "    o.created_at,\n"
                 + "    o.total_amount,\n"
-                + "    \n"
                 + "    u.username\n"
-                + "	\n"
                 + "FROM \n"
-                + "      flower_shop_db.payments p\n"
+                + "    flower_shop_db.payments p\n"
                 + "JOIN \n"
                 + "    orders o ON p.order_id = o.order_id\n"
                 + "JOIN \n"
                 + "    users u ON o.customer_id = u.user_id\n"
-                + "    \n"
-                + "where 1=1";
-
+                + "WHERE 1=1 \n"
+                + "AND p.payment_status = 'success'";
         if (Date != null && !Date.equals("all")) {
             switch (Date) {
                 case "today":
@@ -142,8 +129,18 @@ public class PaymentDAO {
 
             }
         }
-        
-        sql +=" ORDER BY o.total_amount DESC";   
+        if (sortprice != null && !sortprice.equals("all")) {
+            switch (sortprice) {
+                case "asc":
+                    sql += " ORDER BY o.total_amount ASC";
+                    break;
+                case "desc":
+                    sql += " ORDER BY o.total_amount DESC";
+                    break;
+
+            }
+        }
+
         try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Invoice invoice = new Invoice();
@@ -160,9 +157,9 @@ public class PaymentDAO {
         }
         return list;
     }
-    
+
     //search
-    public List<Invoice> Search(String value){
+    public List<Invoice> Search(String value) {
         List<Invoice> list = new ArrayList<>();
         String sql = "SELECT \n"
                 + "    \n"
@@ -189,9 +186,9 @@ public class PaymentDAO {
                 + "where u.username like ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + value + "%");
+            ps.setString(1, value);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 Invoice invoice = new Invoice();
                 invoice.setStatus(rs.getString(1));
@@ -205,10 +202,10 @@ public class PaymentDAO {
             }
         } catch (Exception e) {
         }
-        
+
         return list;
     }
-    
+
     public List<Invoice> getListByPage(List<Invoice> list,
             int start, int end) {
         ArrayList<Invoice> arr = new ArrayList<>();
@@ -217,14 +214,5 @@ public class PaymentDAO {
         }
         return arr;
     }
-    public static void main(String[] args) {
-        PaymentDAO d = new PaymentDAO();
-        List<Invoice> list = d.FilterInvoice("quarter", "price3");
-        System.out.println(list);
-    }
 
-    
-   
 }
-
-

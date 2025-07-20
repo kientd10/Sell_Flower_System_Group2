@@ -415,8 +415,9 @@
                             <h2 class="page-title">Quản Lý Hóa Đơn</h2>
                             <p class="text-muted">Quản lý và theo dõi tất cả hóa đơn bán hàng</p>
                         </div>
+
                         <div class="text-muted">
-                            Tổng số hóa đơn: <strong>${fn:length(listInvoice)}</strong> | Hôm nay: <strong>12</strong>
+                            Tổng số hóa đơn: <strong>${fn:length(listInvoices)}</strong> | Hôm nay: <strong>${countToday}</strong>
                         </div>
                     </div>
 
@@ -425,47 +426,42 @@
                     <!-- ===== FILTER SECTION ===== -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            <div class="row align-items-center">
-                                <!--  
-                                <div class="col-md-3">
-                                    <label class="form-label">Trạng Thái Hóa Đơn:</label>
-                                    <select class="form-select" onchange="filterByStatus(this.value)">
-                                        <option value="">Tất Cả Trạng Thái</option>
-                                        <option value="paid">Đã Thanh Toán (89)</option>
+                            <form id="filterForm" method="get" action="InvoiceManagement">
+                                <input type="hidden" name="action" value="filterAll">
 
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Phương Thức Thanh Toán:</label>
-                                    <select class="form-select" onchange="filterByPaymentMethod(this.value)">
-                                        <option value="">Tất Cả Phương Thức</option>
-                                        <option value="transfer">Chuyển Khoản (28)</option>
-                                    </select>
-                                </div>
-                                -->
-                                <div class="col-md-3">
-                                    <label class="form-label">Khoảng Thời Gian:</label>
-                                    <select class="form-select" name="date" onchange="filterAll()">
-                                        <option value="all" <%= "all".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Tất cả thời gian</option>
-                                        <option value="today" <%= "today".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Hôm nay</option>
-                                        <option value="yesterday" <%= "yesterday".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Hôm qua</option>
-                                        <option value="week" <%= "week".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Tuần này</option>
-                                        <option value="month" <%= "month".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Tháng này</option>
-                                        <option value="quarter" <%= "quarter".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Quý này</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Lọc hóa đơn</label>
-                                    <select class="form-select" name="priceRange" onchange="filterAll()">
-                                        <option value="all" <%= "all".equals(request.getAttribute("selectedPrice"))?"selected":""%>>Tất Cả</option>
-                                        <option value="price1" <%= "price1".equals(request.getAttribute("selectedPrice"))?"selected":""%>>Đơn từ 0 đến 99.000 vnđ</option>
-                                        <option value="price2" <%= "price2".equals(request.getAttribute("selectedPrice"))?"selected":""%>>Đơn từ 100.000 vnđ đến 499.000 vnđ</option>
-                                        <option value="price3" <%= "price3".equals(request.getAttribute("selectedPrice"))?"selected":""%>>Đơn từ 500.000 vnđ</option>
-                                    </select>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Khoảng Thời Gian:</label>
+                                        <select class="form-select" name="date" onchange="filterAll()">
+                                            <option value="all" <%= "all".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Tất cả thời gian</option>
+                                            <option value="today" <%= "today".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Hôm nay</option>
+                                            <option value="yesterday" <%= "yesterday".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Hôm qua</option>
+                                            <option value="week" <%= "week".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Tuần này</option>
+                                            <option value="month" <%= "month".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Tháng này</option>
+                                            <option value="quarter" <%= "quarter".equals(request.getAttribute("selectedRange")) ? "selected" : "" %>>Quý này</option>
+                                        </select>
+                                    </div>
 
-                                </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Lọc hóa đơn</label>
+                                        <select class="form-select" name="priceRange" onchange="filterAll()">
+                                            <option value="all" <%= "all".equals(request.getAttribute("selectedPrice")) ? "selected" : "" %>>Tất Cả</option>
+                                            <option value="price1" <%= "price1".equals(request.getAttribute("selectedPrice")) ? "selected" : "" %>>Đơn từ 0 đến 99.000 vnđ</option>
+                                            <option value="price2" <%= "price2".equals(request.getAttribute("selectedPrice")) ? "selected" : "" %>>Đơn từ 100.000 vnđ đến 499.000 vnđ</option>
+                                            <option value="price3" <%= "price3".equals(request.getAttribute("selectedPrice")) ? "selected" : "" %>>Đơn từ 500.000 vnđ</option>
+                                        </select>
+                                    </div>
 
-                            </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Sắp xếp theo giá</label>
+                                        <select class="form-select" name="sortPrice" onchange="filterAll()">
+                                            <option value="all" <%= "all".equals(request.getAttribute("selectedSort")) ? "selected" : "" %>>Tất cả</option>
+                                            <option value="asc" <%= "asc".equals(request.getAttribute("selectedSort")) ? "selected" : "" %>>Từ thấp đến cao</option>
+                                            <option value="desc" <%= "desc".equals(request.getAttribute("selectedSort")) ? "selected" : "" %>>Từ cao đến thấp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -485,8 +481,8 @@
                                             <th>Khách Hàng</th>
                                             <th>Ngày Tạo</th>
                                             <th>Tổng Tiền</th>
-                                            <th>Trạng Thái</th>
                                             <th>Phương Thức</th>
+                                            <th>Hành động</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -512,10 +508,9 @@
 
                                                 <td>
                                                     <div class="invoice-amount paid">${listI.totalPayment}</div>
-                                                    <div class="text-muted small">${listI.status}</div>
                                                 </td>
-                                                <td><span class="invoice-status paid">${listI.status}</span></td>
                                                 <td><span class="payment-method card">${listI.payment}</span></td>
+                                                <td><button class="btn btn-outline-primary btn-sm" onclick="myApp.printRow(this)"><i class="fas fa-print me-2"></i>In hóa đơn</button></td>
 
                                             </tr>
                                         </c:forEach>
@@ -541,9 +536,16 @@
                                         <ul class="pagination justify-content-center">
                                             <c:forEach begin="1" end="${num}" var="i">
                                                 <li class="page-item ${i == page ? 'active' : ''}">
-                                                    <a class="page-link" href="InvoiceManagement?action=displayAll&page=${i}">${i}</a>
+                                                    <a class="page-link" 
+                                                       href="InvoiceManagement?action=${param.action}&page=${i}
+                                                       <c:if test='${not empty param.date}'>&date=${param.date}</c:if>
+                                                       <c:if test='${not empty param.priceRange}'>&priceRange=${param.priceRange}</c:if>
+                                                       <c:if test='${not empty param.value}'>&value=${param.value}</c:if>">
+                                                        ${i}
+                                                    </a>
                                                 </li>
                                             </c:forEach>
+
                                         </ul>
 
                                     </div>
@@ -559,254 +561,276 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-                                        // ===== INVOICE MANAGEMENT FUNCTIONALITY =====
+                                                    // ===== INVOICE MANAGEMENT FUNCTIONALITY =====
 
-                                        // Search invoices
-                                        function searchInvoices() {
-                                            var search = document.getElementById('invoiceSearch').value.trim();
-                                            if (search !== '') {
-                                                window.location.href = 'InvoiceManagement?action=Search&value=' + encodeURIComponent(search);
-                                            } else {
-                                                alert('Vui lòng nhập từ khóa để tìm kiếm.');
+                                                    // Search invoices
+                                                    function searchInvoices() {
+                                                        var search = document.getElementById('invoiceSearch').value.trim();
 
-                                            }
-                                            // Implementation would filter invoices based on search term
-                                        }
+                                                        window.location.href = 'InvoiceManagement?action=Search&value=' + encodeURIComponent(search);
 
-                                        // Filter functions
-                                        function filterByStatus(status) {
-                                            console.log('Lọc theo trạng thái:', status);
-                                        }
-                                        function filterByPaymentMethod(method) {
-                                            console.log('Lọc theo phương thức:', method);
-                                        }
-                                        function filterAll() {
-                                            const date = document.querySelector('select[name="date"]').value;
-                                            const priceRange = document.querySelector('select[name="priceRange"]').value;
+                                                        // Implementation would filter invoices based on search term
+                                                    }
 
-                                            const url = new URL(window.location.href);
-                                            url.searchParams.set('action', 'filterAll');
+                                                    // Filter functions
+                                                    function filterByStatus(status) {
+                                                        console.log('Lọc theo trạng thái:', status);
+                                                    }
+                                                    function filterByPaymentMethod(method) {
+                                                        console.log('Lọc theo phương thức:', method);
+                                                    }
+                                                    function filterAll() {
+                                                        const date = document.querySelector('select[name="date"]').value;
+                                                        const priceRange = document.querySelector('select[name="priceRange"]').value;
+                                                        const sortPrice = document.querySelector('select[name="sortPrice"]').value;
 
-                                            if (date && date !== "all") {
-                                                url.searchParams.set('date', date);
-                                            } else {
-                                                url.searchParams.delete('date');
-                                            }
+                                                        const url = new URL(window.location.href);
+                                                        url.searchParams.set('action', 'filterAll');
 
-                                            if (priceRange && priceRange !== "all") {
-                                                url.searchParams.set('priceRange', priceRange);
-                                            } else {
-                                                url.searchParams.delete('priceRange');
-                                            }
+                                                        if (date && date !== "all") {
+                                                            url.searchParams.set('date', date);
+                                                        } else {
+                                                            url.searchParams.delete('date');
+                                                        }
 
-                                            window.location.href = url.toString(); // ✅ chuyển trang
-                                        }
+                                                        if (priceRange && priceRange !== "all") {
+                                                            url.searchParams.set('priceRange', priceRange);
+                                                        } else {
+                                                            url.searchParams.delete('priceRange');
+                                                        }
 
-                                        //In dữ liệu
-                                        var myApp = new function () {
-                                            this.printTable = function () {
-                                                var tab = document.getElementById('sampleTable');
-                                                var win = window.open('', '', 'height=700,width=700');
-                                                win.document.write(tab.outerHTML);
-                                                win.document.close();
-                                                win.print();
-                                            };
-                                        };
+                                                        if (sortPrice && sortPrice !== "all") {
+                                                            url.searchParams.set('sortPrice', sortPrice);
+                                                        } else {
+                                                            url.searchParams.delete('sortPrice');
+                                                        }
 
-                                        // Invoice actions
-                                        function printInvoice(invoiceId) {
-                                            console.log('In hóa đơn:', invoiceId);
-                                            window.open(`print-invoice.jsp?id=${invoiceId}`, '_blank');
-                                        }
+                                                        url.searchParams.set('page', '1'); // ✅ reset lại về trang 1 khi lọc
+                                                        window.location.href = url.toString();
+                                                    }
 
-                                        function sendInvoice(invoiceId) {
-                                            console.log('Gửi hóa đơn qua email:', invoiceId);
-                                            if (confirm('Gửi hóa đơn này qua email cho khách hàng?')) {
-                                                alert('Hóa đơn đã được gửi thành công!');
-                                            }
-                                        }
 
-                                        function markAsPaid(invoiceId) {
-                                            if (confirm('Đánh dấu hóa đơn này là đã thanh toán?')) {
-                                                console.log('Đánh dấu đã thanh toán:', invoiceId);
-                                                alert('Hóa đơn đã được cập nhật trạng thái!');
-                                                location.reload();
-                                            }
-                                        }
+                                                    //In dữ liệu
+                                                    var myApp = new function () {
+                                                        this.printTable = function () {
+                                                            var tab = document.getElementById('sampleTable');
+                                                            var win = window.open('', '', 'height=700,width=700');
+                                                            win.document.write(tab.outerHTML);
+                                                            win.document.close();
+                                                            win.print();
+                                                        };
 
-                                        function sendReminder(invoiceId) {
-                                            console.log('Gửi nhắc nhở:', invoiceId);
-                                            if (confirm('Gửi email nhắc nhở thanh toán cho khách hàng?')) {
-                                                alert('Email nhắc nhở đã được gửi!');
-                                            }
-                                        }
+                                                        this.printRow = function (btn) {
+                                                            var row = btn.parentNode.parentNode.cloneNode(true); // clone dòng
+                                                            row.removeChild(row.lastChild); // xoá cột nút In nếu muốn
 
-                                        function sendUrgentReminder(invoiceId) {
-                                            console.log('Gửi nhắc nhở khẩn cấp:', invoiceId);
-                                            if (confirm('Gửi thông báo khẩn cấp về hóa đơn quá hạn?')) {
-                                                alert('Thông báo khẩn cấp đã được gửi!');
-                                            }
-                                        }
+                                                            var table = document.createElement('table');
+                                                            table.border = 1;
+                                                            table.appendChild(row);
 
-                                        function negotiatePayment(invoiceId) {
-                                            console.log('Thương lượng thanh toán:', invoiceId);
-                                            window.location.href = `payment-negotiation.jsp?invoiceId=${invoiceId}`;
-                                        }
+                                                            var win = window.open('', '', 'height=400,width=600');
+                                                            win.document.write('<html><head><title>In 1 dòng</title></head><body>');
+                                                            win.document.write(table.outerHTML);
+                                                            win.document.write('</body></html>');
+                                                            win.document.close();
+                                                            win.print();
+                                                        };
+                                                    };
 
-                                        function finalizeInvoice(invoiceId) {
-                                            if (confirm('Hoàn tất hóa đơn này và gửi cho khách hàng?')) {
-                                                console.log('Hoàn tất hóa đơn:', invoiceId);
-                                                alert('Hóa đơn đã được hoàn tất và gửi!');
-                                                location.reload();
-                                            }
-                                        }
+                                                    // Invoice actions
+                                                    function printInvoice(invoiceId) {
+                                                        console.log('In hóa đơn:', invoiceId);
+                                                        window.open(`print-invoice.jsp?id=${invoiceId}`, '_blank');
+                                                    }
 
-                                        function deleteInvoice(invoiceId) {
-                                            if (confirm('Xóa hóa đơn này? Hành động này không thể hoàn tác.')) {
-                                                console.log('Xóa hóa đơn:', invoiceId);
-                                                alert('Hóa đơn đã được xóa!');
-                                                location.reload();
-                                            }
-                                        }
+                                                    function sendInvoice(invoiceId) {
+                                                        console.log('Gửi hóa đơn qua email:', invoiceId);
+                                                        if (confirm('Gửi hóa đơn này qua email cho khách hàng?')) {
+                                                            alert('Hóa đơn đã được gửi thành công!');
+                                                        }
+                                                    }
 
-                                        function viewCancelReason(invoiceId) {
-                                            console.log('Xem lý do hủy:', invoiceId);
-                                            alert('Lý do hủy: Khách hàng thay đổi ý định, không cần sản phẩm nữa.');
-                                        }
+                                                    function markAsPaid(invoiceId) {
+                                                        if (confirm('Đánh dấu hóa đơn này là đã thanh toán?')) {
+                                                            console.log('Đánh dấu đã thanh toán:', invoiceId);
+                                                            alert('Hóa đơn đã được cập nhật trạng thái!');
+                                                            location.reload();
+                                                        }
+                                                    }
 
-                                        function recreateInvoice(invoiceId) {
-                                            if (confirm('Tạo lại hóa đơn mới dựa trên hóa đơn đã hủy này?')) {
-                                                console.log('Tạo lại hóa đơn:', invoiceId);
-                                                window.location.href = `create-invoice.jsp?baseId=${invoiceId}`;
-                                            }
-                                        }
+                                                    function sendReminder(invoiceId) {
+                                                        console.log('Gửi nhắc nhở:', invoiceId);
+                                                        if (confirm('Gửi email nhắc nhở thanh toán cho khách hàng?')) {
+                                                            alert('Email nhắc nhở đã được gửi!');
+                                                        }
+                                                    }
 
-                                        // Bulk actions
-                                        function selectAllInvoices(checkbox) {
-                                            const invoiceCheckboxes = document.querySelectorAll('.invoice-checkbox');
-                                            invoiceCheckboxes.forEach(cb => cb.checked = checkbox.checked);
-                                            updateBulkActionButtons();
-                                        }
+                                                    function sendUrgentReminder(invoiceId) {
+                                                        console.log('Gửi nhắc nhở khẩn cấp:', invoiceId);
+                                                        if (confirm('Gửi thông báo khẩn cấp về hóa đơn quá hạn?')) {
+                                                            alert('Thông báo khẩn cấp đã được gửi!');
+                                                        }
+                                                    }
 
-                                        function updateBulkActionButtons() {
-                                            const selectedInvoices = document.querySelectorAll('.invoice-checkbox:checked');
-                                            const bulkButtons = ['bulkPaidBtn', 'bulkReminderBtn', 'bulkPrintBtn', 'bulkCancelBtn'];
+                                                    function negotiatePayment(invoiceId) {
+                                                        console.log('Thương lượng thanh toán:', invoiceId);
+                                                        window.location.href = `payment-negotiation.jsp?invoiceId=${invoiceId}`;
+                                                    }
 
-                                            bulkButtons.forEach(btnId => {
-                                                document.getElementById(btnId).disabled = selectedInvoices.length === 0;
-                                            });
-                                        }
+                                                    function finalizeInvoice(invoiceId) {
+                                                        if (confirm('Hoàn tất hóa đơn này và gửi cho khách hàng?')) {
+                                                            console.log('Hoàn tất hóa đơn:', invoiceId);
+                                                            alert('Hóa đơn đã được hoàn tất và gửi!');
+                                                            location.reload();
+                                                        }
+                                                    }
 
-                                        function bulkMarkAsPaid() {
-                                            const selected = document.querySelectorAll('.invoice-checkbox:checked');
-                                            const ids = Array.from(selected).map(cb => cb.value);
-                                            if (confirm(`Đánh dấu ${ids.length} hóa đơn đã chọn là đã thanh toán?`)) {
-                                                console.log('Bulk đánh dấu đã thanh toán:', ids);
-                                                alert('Các hóa đơn đã được cập nhật!');
-                                                location.reload();
-                                            }
-                                        }
+                                                    function deleteInvoice(invoiceId) {
+                                                        if (confirm('Xóa hóa đơn này? Hành động này không thể hoàn tác.')) {
+                                                            console.log('Xóa hóa đơn:', invoiceId);
+                                                            alert('Hóa đơn đã được xóa!');
+                                                            location.reload();
+                                                        }
+                                                    }
 
-                                        function bulkSendReminder() {
-                                            const selected = document.querySelectorAll('.invoice-checkbox:checked');
-                                            const ids = Array.from(selected).map(cb => cb.value);
-                                            if (confirm(`Gửi email nhắc nhở cho ${ids.length} hóa đơn đã chọn?`)) {
-                                                console.log('Bulk gửi nhắc nhở:', ids);
-                                                alert('Email nhắc nhở đã được gửi!');
-                                            }
-                                        }
+                                                    function viewCancelReason(invoiceId) {
+                                                        console.log('Xem lý do hủy:', invoiceId);
+                                                        alert('Lý do hủy: Khách hàng thay đổi ý định, không cần sản phẩm nữa.');
+                                                    }
 
-                                        function bulkPrint() {
-                                            const selected = document.querySelectorAll('.invoice-checkbox:checked');
-                                            const ids = Array.from(selected).map(cb => cb.value);
-                                            console.log('Bulk in hóa đơn:', ids);
-                                            window.open(`bulk-print-invoices.jsp?ids=${ids.join(',')}`, '_blank');
-                                        }
+                                                    function recreateInvoice(invoiceId) {
+                                                        if (confirm('Tạo lại hóa đơn mới dựa trên hóa đơn đã hủy này?')) {
+                                                            console.log('Tạo lại hóa đơn:', invoiceId);
+                                                            window.location.href = `create-invoice.jsp?baseId=${invoiceId}`;
+                                                        }
+                                                    }
 
-                                        function bulkCancel() {
-                                            const selected = document.querySelectorAll('.invoice-checkbox:checked');
-                                            const ids = Array.from(selected).map(cb => cb.value);
-                                            if (confirm(`Hủy ${ids.length} hóa đơn đã chọn? Hành động này không thể hoàn tác.`)) {
-                                                console.log('Bulk hủy hóa đơn:', ids);
-                                                alert('Các hóa đơn đã được hủy!');
-                                                location.reload();
-                                            }
-                                        }
+                                                    // Bulk actions
+                                                    function selectAllInvoices(checkbox) {
+                                                        const invoiceCheckboxes = document.querySelectorAll('.invoice-checkbox');
+                                                        invoiceCheckboxes.forEach(cb => cb.checked = checkbox.checked);
+                                                        updateBulkActionButtons();
+                                                    }
 
-                                        // Export and print functions
-                                        function exportInvoices() {
-                                            console.log('Xuất danh sách hóa đơn...');
-                                            window.location.href = 'export-invoices.jsp?format=excel';
-                                        }
+                                                    function updateBulkActionButtons() {
+                                                        const selectedInvoices = document.querySelectorAll('.invoice-checkbox:checked');
+                                                        const bulkButtons = ['bulkPaidBtn', 'bulkReminderBtn', 'bulkPrintBtn', 'bulkCancelBtn'];
 
-                                        function printInvoices() {
-                                            console.log('In danh sách hóa đơn...');
-                                            window.print();
-                                        }
+                                                        bulkButtons.forEach(btnId => {
+                                                            document.getElementById(btnId).disabled = selectedInvoices.length === 0;
+                                                        });
+                                                    }
 
-                                        // Initialize page
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            // Add event listeners to invoice checkboxes
-                                            document.querySelectorAll('.invoice-checkbox').forEach(checkbox => {
-                                                checkbox.addEventListener('change', updateBulkActionButtons);
-                                            });
+                                                    function bulkMarkAsPaid() {
+                                                        const selected = document.querySelectorAll('.invoice-checkbox:checked');
+                                                        const ids = Array.from(selected).map(cb => cb.value);
+                                                        if (confirm(`Đánh dấu ${ids.length} hóa đơn đã chọn là đã thanh toán?`)) {
+                                                            console.log('Bulk đánh dấu đã thanh toán:', ids);
+                                                            alert('Các hóa đơn đã được cập nhật!');
+                                                            location.reload();
+                                                        }
+                                                    }
 
-                                            // Enable real-time search
-                                            document.getElementById('invoiceSearch').addEventListener('keyup', function (e) {
-                                                if (e.key === 'Enter') {
-                                                    searchInvoices();
-                                                }
-                                            });
+                                                    function bulkSendReminder() {
+                                                        const selected = document.querySelectorAll('.invoice-checkbox:checked');
+                                                        const ids = Array.from(selected).map(cb => cb.value);
+                                                        if (confirm(`Gửi email nhắc nhở cho ${ids.length} hóa đơn đã chọn?`)) {
+                                                            console.log('Bulk gửi nhắc nhở:', ids);
+                                                            alert('Email nhắc nhở đã được gửi!');
+                                                        }
+                                                    }
 
-                                            console.log('Trang quản lý hóa đơn đã được khởi tạo');
-                                        });
+                                                    function bulkPrint() {
+                                                        const selected = document.querySelectorAll('.invoice-checkbox:checked');
+                                                        const ids = Array.from(selected).map(cb => cb.value);
+                                                        console.log('Bulk in hóa đơn:', ids);
+                                                        window.open(`bulk-print-invoices.jsp?ids=${ids.join(',')}`, '_blank');
+                                                    }
 
-                                        // Tự động highlight menu item dựa trên URL hiện tại
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            // Highlight menu item based on URL path
-                                            var path = window.location.pathname.toLowerCase();
-                                            document.querySelectorAll('.sidebar-link').forEach(function (link) {
-                                                link.classList.remove('active');
-                                            });
+                                                    function bulkCancel() {
+                                                        const selected = document.querySelectorAll('.invoice-checkbox:checked');
+                                                        const ids = Array.from(selected).map(cb => cb.value);
+                                                        if (confirm(`Hủy ${ids.length} hóa đơn đã chọn? Hành động này không thể hoàn tác.`)) {
+                                                            console.log('Bulk hủy hóa đơn:', ids);
+                                                            alert('Các hóa đơn đã được hủy!');
+                                                            location.reload();
+                                                        }
+                                                    }
 
-                                            if (path.includes('/category')) {
-                                                var categoryLink = document.getElementById('menu-categoryManagement');
-                                                if (categoryLink)
-                                                    categoryLink.classList.add('active');
-                                            } else if (path.includes('/productmanagement')) {
-                                                var productLink = document.getElementById('menu-productManagement');
-                                                if (productLink)
-                                                    productLink.classList.add('active');
-                                            } else if (path.includes('/storagemanagement')) {
-                                                var storageLink = document.getElementById('menu-storageManagement');
-                                                if (storageLink)
-                                                    storageLink.classList.add('active');
-                                            } else if (path.includes('/ordermanagement')) {
-                                                var orderLink = document.getElementById('menu-orderManagement');
-                                                if (orderLink)
-                                                    orderLink.classList.add('active');
-                                            } else if (path.includes('/invoicemanagement')) {
-                                                var invoiceLink = document.getElementById('menu-invoiceManagement');
-                                                if (invoiceLink)
-                                                    invoiceLink.classList.add('active');
-                                            } else if (path.includes('usermanagement.jsp')) {
-                                                var userLink = document.getElementById('menu-userManagement');
-                                                if (userLink)
-                                                    userLink.classList.add('active');
-                                            } else if (path.includes('feedbackmanagement.jsp')) {
-                                                var feedbackLink = document.getElementById('menu-feedbackManagement');
-                                                if (feedbackLink)
-                                                    feedbackLink.classList.add('active');
-                                            } else if (path.includes('notificationmanagement.jsp')) {
-                                                var notificationLink = document.getElementById('menu-notificationManagement');
-                                                if (notificationLink)
-                                                    notificationLink.classList.add('active');
-                                            } else if (path.includes('/statistics')) {
-                                                var managementLink = document.getElementById('menu-management');
-                                                if (managementLink)
-                                                    managementLink.classList.add('active');
-                                            }
-                                        });
+                                                    // Export and print functions
+                                                    function exportInvoices() {
+                                                        console.log('Xuất danh sách hóa đơn...');
+                                                        window.location.href = 'export-invoices.jsp?format=excel';
+                                                    }
+
+                                                    function printInvoices() {
+                                                        console.log('In danh sách hóa đơn...');
+                                                        window.print();
+                                                    }
+
+                                                    // Initialize page
+                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                        // Add event listeners to invoice checkboxes
+                                                        document.querySelectorAll('.invoice-checkbox').forEach(checkbox => {
+                                                            checkbox.addEventListener('change', updateBulkActionButtons);
+                                                        });
+
+                                                        // Enable real-time search
+                                                        document.getElementById('invoiceSearch').addEventListener('keyup', function (e) {
+                                                            if (e.key === 'Enter') {
+                                                                searchInvoices();
+                                                            }
+                                                        });
+
+                                                        console.log('Trang quản lý hóa đơn đã được khởi tạo');
+                                                    });
+
+                                                    // Tự động highlight menu item dựa trên URL hiện tại
+                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                        // Highlight menu item based on URL path
+                                                        var path = window.location.pathname.toLowerCase();
+                                                        document.querySelectorAll('.sidebar-link').forEach(function (link) {
+                                                            link.classList.remove('active');
+                                                        });
+
+                                                        if (path.includes('/category')) {
+                                                            var categoryLink = document.getElementById('menu-categoryManagement');
+                                                            if (categoryLink)
+                                                                categoryLink.classList.add('active');
+                                                        } else if (path.includes('/productmanagement')) {
+                                                            var productLink = document.getElementById('menu-productManagement');
+                                                            if (productLink)
+                                                                productLink.classList.add('active');
+                                                        } else if (path.includes('/storagemanagement')) {
+                                                            var storageLink = document.getElementById('menu-storageManagement');
+                                                            if (storageLink)
+                                                                storageLink.classList.add('active');
+                                                        } else if (path.includes('/ordermanagement')) {
+                                                            var orderLink = document.getElementById('menu-orderManagement');
+                                                            if (orderLink)
+                                                                orderLink.classList.add('active');
+                                                        } else if (path.includes('/invoicemanagement')) {
+                                                            var invoiceLink = document.getElementById('menu-invoiceManagement');
+                                                            if (invoiceLink)
+                                                                invoiceLink.classList.add('active');
+                                                        } else if (path.includes('usermanagement.jsp')) {
+                                                            var userLink = document.getElementById('menu-userManagement');
+                                                            if (userLink)
+                                                                userLink.classList.add('active');
+                                                        } else if (path.includes('feedbackmanagement.jsp')) {
+                                                            var feedbackLink = document.getElementById('menu-feedbackManagement');
+                                                            if (feedbackLink)
+                                                                feedbackLink.classList.add('active');
+                                                        } else if (path.includes('notificationmanagement.jsp')) {
+                                                            var notificationLink = document.getElementById('menu-notificationManagement');
+                                                            if (notificationLink)
+                                                                notificationLink.classList.add('active');
+                                                        } else if (path.includes('/statistics')) {
+                                                            var managementLink = document.getElementById('menu-management');
+                                                            if (managementLink)
+                                                                managementLink.classList.add('active');
+                                                        }
+                                                    });
 
         </script>
 
