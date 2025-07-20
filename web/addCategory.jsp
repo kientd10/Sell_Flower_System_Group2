@@ -191,9 +191,7 @@
                 </div>
 
                 <c:if test="${not empty error}">
-                    <div class="alert alert-danger" role="alert">
-                        ${error}
-                    </div>
+                    <div class="text-danger small mb-2">${error}</div>
                 </c:if>
 
                 <div class="card">
@@ -204,7 +202,7 @@
                         <form action="category?action=create" method="post">
                             <div class="mb-3">
                                 <label for="categoryName" class="form-label">Tên danh mục</label>
-                                <input type="text" class="form-control" id="categoryName" name="categoryName" required>
+                                <input type="text" class="form-control" id="categoryName" name="categoryName" required maxlength="30">
                             </div>
                             <button type="submit" class="btn btn-primary">Thêm</button>
                             <a href="${pageContext.request.contextPath}/category?action=management" class="btn btn-secondary">Quay lại</a>

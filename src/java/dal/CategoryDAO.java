@@ -30,7 +30,7 @@ public class CategoryDAO {
 
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
-        String sql = "SELECT category_id, category_name FROM categories ORDER BY category_id ASC";
+        String sql = "SELECT category_id, category_name FROM categories WHERE is_active = TRUE ORDER BY category_id ASC";
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 categories.add(new Category(rs.getInt("category_id"), rs.getString("category_name")));
@@ -43,14 +43,17 @@ public class CategoryDAO {
     
         // Create a new category
     public boolean createCategory(Category category) throws Exception {
-    String sql = "INSERT INTO categories (category_name) VALUES (?)";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, category.getCategoryName());
-        return stmt.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw e;
-    }
+        if (isCategoryNameExists(category.getCategoryName(), null)) {
+            throw new Exception("Tên danh mục đã tồn tại!");
+        }
+        String sql = "INSERT INTO categories (category_name) VALUES (?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, category.getCategoryName());
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
     
         // Read category by ID
@@ -72,27 +75,30 @@ public class CategoryDAO {
     
         // Update a category
     public boolean updateCategory(Category category) throws Exception {
-    String sql = "UPDATE categories SET category_name = ? WHERE category_id = ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, category.getCategoryName());
-        stmt.setInt(2, category.getCategoryId());
-        return stmt.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw e;
-    }
+        if (isCategoryNameExists(category.getCategoryName(), category.getCategoryId())) {
+            throw new Exception("Tên danh mục đã tồn tại!");
+        }
+        String sql = "UPDATE categories SET category_name = ? WHERE category_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, category.getCategoryName());
+            stmt.setInt(2, category.getCategoryId());
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
     
-        // Delete a category
+        // Delete a category (soft delete)
     public boolean deleteCategory(int categoryId) throws Exception {
-    if (isCategoryInUse(categoryId)) {
-        throw new Exception("Category is used in bouquet templates!");
-    }
-    String sql = "DELETE FROM categories WHERE category_id = ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, categoryId);
-        return stmt.executeUpdate() > 0;
-    }
+        if (isCategoryInUse(categoryId)) {
+            throw new Exception("Category is used in bouquet templates!");
+        }
+        String sql = "UPDATE categories SET is_active = FALSE WHERE category_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            return stmt.executeUpdate() > 0;
+        }
     }
     
         // Check if category is used in bouquet_templates
@@ -120,7 +126,7 @@ public class CategoryDAO {
     // Search categories by name
     public List<Category> searchCategoriesByName(String searchTerm) {
         List<Category> categories = new ArrayList<>();
-        String sql = "SELECT category_id, category_name FROM categories WHERE category_name LIKE ? ORDER BY category_id ASC";
+        String sql = "SELECT category_id, category_name FROM categories WHERE is_active = TRUE AND category_name LIKE ? ORDER BY category_id ASC";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "%" + searchTerm + "%");
             try (ResultSet rs = stmt.executeQuery()) {
@@ -142,6 +148,7 @@ public class CategoryDAO {
                    COUNT(bt.template_id) as product_count
             FROM categories c
             LEFT JOIN bouquet_templates bt ON c.category_id = bt.category_id
+            WHERE c.is_active = TRUE
             GROUP BY c.category_id, c.category_name
             ORDER BY c.category_id ASC
             """;
@@ -169,6 +176,7 @@ public class CategoryDAO {
                        COUNT(bt.template_id) as product_count
                 FROM categories c
                 INNER JOIN bouquet_templates bt ON c.category_id = bt.category_id
+                WHERE c.is_active = TRUE
                 GROUP BY c.category_id, c.category_name
                 HAVING COUNT(bt.template_id) > 0
                 ORDER BY c.category_id ASC
@@ -179,6 +187,7 @@ public class CategoryDAO {
                        COUNT(bt.template_id) as product_count
                 FROM categories c
                 LEFT JOIN bouquet_templates bt ON c.category_id = bt.category_id
+                WHERE c.is_active = TRUE
                 GROUP BY c.category_id, c.category_name
                 HAVING COUNT(bt.template_id) = 0
                 ORDER BY c.category_id ASC
@@ -220,7 +229,7 @@ public class CategoryDAO {
             sql.append("LEFT JOIN bouquet_templates bt ON c.category_id = bt.category_id ");
         }
         
-        sql.append("WHERE 1=1 ");
+        sql.append("WHERE c.is_active = TRUE ");
         
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             sql.append("AND c.category_name LIKE ? ");
@@ -313,5 +322,63 @@ public class CategoryDAO {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    public boolean isCategoryNameExists(String name, Integer excludeId) throws Exception {
+        String sql = "SELECT COUNT(*) FROM categories WHERE LOWER(category_name) = LOWER(?)";
+        if (excludeId != null) {
+            sql += " AND category_id <> ?";
+        }
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            if (excludeId != null) stmt.setInt(2, excludeId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Restore a soft-deleted category
+    public boolean restoreCategory(int categoryId) throws Exception {
+        String sql = "UPDATE categories SET is_active = TRUE WHERE category_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    // Lấy danh mục đã xóa mềm kèm số sản phẩm
+    public List<Category> getDeletedCategories() {
+        List<Category> categories = new ArrayList<>();
+        String sql = """
+            SELECT c.category_id, c.category_name, COUNT(bt.template_id) as product_count
+            FROM categories c
+            LEFT JOIN bouquet_templates bt ON c.category_id = bt.category_id
+            WHERE c.is_active = FALSE
+            GROUP BY c.category_id, c.category_name
+            ORDER BY c.category_id ASC
+        """;
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Category category = new Category(rs.getInt("category_id"), rs.getString("category_name"));
+                category.setProductCount(rs.getInt("product_count"));
+                categories.add(category);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+
+    // Đếm tổng số danh mục (kể cả đã xóa mềm)
+    public int countAllCategories() {
+        String sql = "SELECT COUNT(*) FROM categories";
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
     }
 }

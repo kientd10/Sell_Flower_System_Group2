@@ -350,7 +350,7 @@
 						<p class="text-muted">Danh sách các danh mục hoa, thêm, sửa, xóa.</p>
 					</div>
 					<div class="text-muted">
-						Tổng số danh mục: <strong>${categories != null ? categories.size() : 0}</strong> | Hoạt động: <strong>${categories != null ? categories.size() : 0}</strong>
+						Tổng số danh mục: <strong>${totalCategories}</strong> | Hoạt động: <strong>${activeWithProduct}</strong>
 					</div>
 				</div>
 
@@ -388,6 +388,8 @@
 								</select>
 							</div>
 						</div>
+						<!-- XÓA ĐOẠN NÀY: -->
+						<!--
 						<div class="col-md-4">
 							<div class="d-flex justify-content-end">
 								<button type="button" class="btn btn-danger btn-sm" onclick="bulkDelete()" id="bulkDeleteBtn" disabled>
@@ -395,6 +397,7 @@
 								</button>
 							</div>
 						</div>
+						-->
 					</div>
 				</div>
 
@@ -408,9 +411,6 @@
 							<table class="table table-hover" id="productsTable">
 								<thead>
 									<tr>
-										<th>
-											<input type="checkbox" class="form-check-input" onchange="selectAllProducts(this)">
-										</th>
 										<th>Mã danh mục</th>
 										<th>Tên danh mục</th>
 										<th>Số sản phẩm</th>
@@ -421,14 +421,29 @@
 								<tbody>
 			            <c:forEach var="category" items="${categories}">
                                         <tr>
-                                            <td><input type="checkbox" class="form-check-input product-checkbox" value="${category.categoryId}"></td>
                                             <td>
                                                 <div>
                                                     <strong>ID: ${category.categoryId}</strong>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div>${category.categoryName}</div>
+                                                <c:choose>
+                                                    <c:when test="${editId != null && category.categoryId == editId}">
+                                                        <form action="category" method="post" class="d-flex align-items-center">
+                                                            <input type="hidden" name="action" value="update" />
+                                                            <input type="hidden" name="categoryId" value="${category.categoryId}" />
+                                                            <input type="text" name="categoryName" class="form-control me-2" value="${category.categoryName}" required style="max-width: 200px;" maxlength="30" />
+                                                            <button type="submit" class="btn btn-sm btn-success me-1">Lưu</button>
+                                                            <a href="category?action=management" class="btn btn-sm btn-secondary">Hủy</a>
+                                                        </form>
+                                                        <c:if test="${not empty error && editId != null && category.categoryId == editId}">
+                                                            <div class="text-danger small mb-2">${error}</div>
+                                                        </c:if>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div>${category.categoryName}</div>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                             <td>
                                                 <div>${category.productCount}</div>
@@ -445,9 +460,16 @@
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="${pageContext.request.contextPath}/category?action=update&id=${category.categoryId}" class="btn btn-sm btn-outline-primary" title="Sửa">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    <c:choose>
+                                                        <c:when test="${editId != null && category.categoryId == editId}">
+                                                            <!-- Đang edit, không hiện nút Sửa -->
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <a href="category?action=management&editId=${category.categoryId}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                     <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory('${category.categoryId}')" title="Xóa">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -482,6 +504,42 @@
 						</nav>
 					</div>
 				</div>
+				<div class="card mt-4">
+    <div class="card-header text-dark" style="background: #bac2d6;">
+        <h5 class="mb-0">Danh mục đã xóa</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Mã danh mục</th>
+                    <th>Tên danh mục</th>
+                    <th>Số sản phẩm</th>
+                    <th>Khôi phục</th>
+                </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="cat" items="${deletedCategories}">
+                <tr>
+                    <td>${cat.categoryId}</td>
+                    <td>${cat.categoryName}</td>
+                    <td>${cat.productCount}</td>
+                    <td>
+                        <form action="category" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="restore" />
+                            <input type="hidden" name="id" value="${cat.categoryId}" />
+                            <button type="submit" class="btn btn-sm btn-success">Khôi phục</button>
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
+            <c:if test="${empty deletedCategories}">
+                <tr><td colspan="4" class="text-center">Không có danh mục đã xóa mềm.</td></tr>
+            </c:if>
+            </tbody>
+        </table>
+    </div>
+</div>
 			</div>
 		</div>
 	</div>
