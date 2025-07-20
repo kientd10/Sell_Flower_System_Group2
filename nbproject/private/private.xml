@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/src/java/dal/DBcontext.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/dal/ProductFeedbackDAO.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/web/editBouquet.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Model/ProductFeedback.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Controller/ProductManagementServlet.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/Controller/FeedbackManagementServlet.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/web/feedbackManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/sell_FLower/Sell_Flower_System_Group2/src/java/dal/DBcontext.java</file>
         </group>
     </open-files>
 </project-private>
