@@ -19,6 +19,7 @@ import java.util.List;
  *
  * @author PC
  */
+
 public class ProductManagementServlet extends HttpServlet {
 
     /**
@@ -59,6 +60,7 @@ public class ProductManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         String mode = request.getParameter("mode");
         BouquetDAO dao = new BouquetDAO();
@@ -66,9 +68,6 @@ public class ProductManagementServlet extends HttpServlet {
             action = "view";
         }
         switch (action) {
-            case "add":
-
-            case "management":
 
             case "edit":
                 int editId = Integer.parseInt(request.getParameter("editId"));
@@ -92,24 +91,56 @@ public class ProductManagementServlet extends HttpServlet {
                 String desc = request.getParameter("description");
                 double price = Double.parseDouble(request.getParameter("basePrice"));
                 int stock = Integer.parseInt(request.getParameter("stock"));
-                request.setAttribute("categoryList", dao.getAllCategory());
-                dao.updateBouquet(id, name, desc, price, name, stock);
+                String imageUrl = request.getParameter("imageUrl"); // ✅ dòng thêm
+
+                dao.updateBouquet(id, name, desc, price, imageUrl, stock); // ✅ dòng sửa
                 response.sendRedirect("productmanagement?action=view");
                 break;
-                
-            case "delete":
 
+            case "delete":
+                int delId = Integer.parseInt(request.getParameter("id"));
+                dao.softDeleteBouquet(delId);
+                response.sendRedirect("productmanagement?action=view");
+                break;
             case "view":
             default:
-                request.setAttribute("editMode", false);
-                List<BouquetTemplate> all = dao.getAllBouquets();
+                int page = 1;
+                int limit = 10;
+                String pageParam = request.getParameter("page");
+                String search = request.getParameter("search");
+                System.out.println("🔍 [Search Keyword] = " + search);
+                if (pageParam != null && !pageParam.isEmpty()) {
+                    page = Integer.parseInt(pageParam);
+                }
+
+                int offset = (page - 1) * limit;
+
+                List<BouquetTemplate> all;
+                int totalItems;
+
+                if (search != null && !search.trim().isEmpty()) {
+                    all = dao.searchBouquetTemplatesWithPaging(search, offset, limit);
+                    totalItems = dao.countSearchResults(search);
+                    System.out.println("✅ Found " + all.size() + " items matching: " + search);
+                    request.setAttribute("search", search);
+                } else {
+                    all = dao.getAllBouquetsPaging(offset, limit);
+                    totalItems = dao.countAllBouquets();
+                    System.out.println("📦 No search keyword provided. Load all items = " + all.size());
+                }
+
                 for (BouquetTemplate b : all) {
                     b.setCategoryName(dao.getCategoryNameById(b.getTemplateId()));
                 }
+
+                int totalPages = (int) Math.ceil((double) totalItems / limit);
+
                 request.setAttribute("bouquetList", all);
                 request.setAttribute("categoryList", dao.getAllCategory());
-                request.getRequestDispatcher("productManagement.jsp")
-                        .forward(request, response);
+                request.setAttribute("currentPage", page);
+                request.setAttribute("totalPages", totalPages);
+                request.setAttribute("editMode", false);
+                request.getRequestDispatcher("productManagement.jsp").forward(request, response);
                 break;
         }
     }
