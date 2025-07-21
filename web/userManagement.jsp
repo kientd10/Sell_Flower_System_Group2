@@ -352,8 +352,12 @@
                         <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
                         <li class="sidebar-header">Hệ Thống</li>
                         <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-                        <li><a href="feedbackManagement.jsp" class="sidebar-link" id="menu-feedbackManagement"><i class="fas fa-comments"></i>Quản Lý Phản Hồi</a></li>
-                        <li><a href="notificationManagement.jsp" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
+                       <li>
+                            <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
+                                <i class="fas fa-comments"></i> Quản Lý Phản Hồi
+                            </a>
+                        </li>     
+                        <li><a href="notificationManagement" class="sidebar-link" id="menu-notificationManagement"><i class="fas fa-bell"></i>Thông Báo<span class="badge bg-danger ms-auto">4</span></a></li>
                         </c:if>
 
                     <!-- Chỉ hiển thị nếu là Shipper -->
