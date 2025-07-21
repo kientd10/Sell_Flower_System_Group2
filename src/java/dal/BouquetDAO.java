@@ -691,5 +691,50 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
         }
         return list;
     }
+    
+  public List<BouquetTemplate> searchBouquetTemplatesWithPaging(String keyword, int offset, int limit) {
+    List<BouquetTemplate> list = new ArrayList<>();
+    String sql = "SELECT * FROM bouquet_templates "
+               + "WHERE is_active = TRUE AND template_name COLLATE utf8mb4_unicode_ci LIKE ? "
+               + "ORDER BY template_id DESC LIMIT ?, ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, "%" + keyword + "%");
+        stmt.setInt(2, offset);
+        stmt.setInt(3, limit);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                BouquetTemplate b = new BouquetTemplate(
+                    rs.getInt("template_id"),
+                    rs.getString("template_name"),
+                    rs.getString("description"),
+                    rs.getDouble("base_price"),
+                    rs.getString("image_url"),
+                    rs.getInt("stock")
+                );
+                list.add(b);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+public int countSearchResults(String keyword) {
+    String sql = "SELECT COUNT(*) FROM bouquet_templates "
+               + "WHERE is_active = TRUE AND template_name COLLATE utf8mb4_unicode_ci LIKE ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, "%" + keyword + "%");
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
+
+
+
+
 
 }

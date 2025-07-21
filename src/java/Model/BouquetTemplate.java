@@ -20,7 +20,7 @@ public class BouquetTemplate {
     private int Stock;
     private String categoryName;
     private List<TemplateIngredient> ingredients;
-
+    private int categoryId;
     public BouquetTemplate() {
     }
 
@@ -109,4 +109,13 @@ public double getAvgRating() {
 public void setAvgRating(double avgRating) {
     this.avgRating = avgRating;
 }
+
+public int getCategoryId() {
+    return categoryId;
+}
+
+public void setCategoryId(int categoryId) {
+    this.categoryId = categoryId;
+}
+
 }
