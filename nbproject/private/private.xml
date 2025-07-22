@@ -3,8 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/New_folder/Sell_Flower_System_Group2/src/java/Controller/ProductManagementServlet.java</file>
-            <file>file:/D:/New_folder/Sell_Flower_System_Group2/web/productManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/dal/ProductFeedbackDAO.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/dal/DBcontext.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/categoryManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/orderManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/userManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/feedbackManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/management.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/Controller/EditProfileServlet.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/invoiceManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/notificationManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/src/java/Controller/FeedbackManagementServlet.java</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/productManagement.jsp</file>
+            <file>file:/C:/Users/Admin/OneDrive/Desktop/Sell_Flower_System_Group2/web/storageManagement.jsp</file>
         </group>
     </open-files>
 </project-private>
