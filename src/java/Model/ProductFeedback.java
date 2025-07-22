@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -19,6 +20,14 @@ public class ProductFeedback {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String customerName;
+    private String productName;
+  
+public String getProductName() {
+    return productName;
+}
+public void setProductName(String productName) {
+    this.productName = productName;
+}
     public int getFeedbackId() {
         return feedbackId;
     }
