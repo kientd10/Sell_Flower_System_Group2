@@ -104,6 +104,7 @@ public class CartServlet extends HttpServlet {
                 }
             }
             session.setAttribute("cartMerged", true);
+            session.removeAttribute("cart"); // Xóa cart session sau khi merge để tránh cộng dồn nhiều lần
         }
 
         session.setAttribute("cart", cartList);

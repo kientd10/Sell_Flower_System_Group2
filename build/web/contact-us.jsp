@@ -34,17 +34,16 @@
                         <div class="col-sm-6">
                             <div class="contactinfo">
                                 <ul class="nav nav-pills">
-                                    <li><a href=""><i class="fa fa-phone"></i> 0327160365</a></li>
-                                    <li><a href=""><i class="fa fa-envelope"></i> ducvmhe186253@fpt.edu.vn</a></li>
+                                    <li><a href="#"><i class="fa fa-phone"></i> 0123456789</a></li>
+                                    <li><a href="#"><i class="fa fa-envelope"></i> Group2@fpt.edu.vn</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="social-icons pull-right">
                                 <ul class="nav navbar-nav">
-                                    <li><a href="https://www.facebook.com/vu.minh.uc.927607/"><i class="fa fa-facebook"></i></a></li>
-                                    <li><a href=""><i class="fa fa-twitter"></i></a></li>
-                        
+                                    <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2"><i class="fa fa-brands fa-github"></i></a></li>
+                                    <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>                                   
                                 </ul>
                             </div>
                         </div>
@@ -52,45 +51,13 @@
                 </div>
             </div><!--/header_top-->
 
+
             <div class="header-middle"><!--header-middle-->
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="logo pull-left">
-                                <a href="index.jsp"><img src="images/home/logo.png" alt="" /></a>
-                            </div>
-                            <div class="btn-group pull-right">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        VNĐ
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="">VietNam</a></li>
-                                        
-                                    </ul>
-                                </div>
-
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                        VND
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="">VND</a></li>
-                                      
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="shop-menu pull-right">
-                                <ul class="nav navbar-nav">
-                   
-                                    <li><a href="checkout.jsp"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-                                    <li><a href="cart.jsp"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-                                    <li><a href="login.jsp"><i class="fa fa-lock"></i> Login</a></li>
-                                </ul>
+                                <a href="${pageContext.request.contextPath}/home?pageNum=1" ><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
                             </div>
                         </div>
                     </div>
@@ -111,21 +78,14 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                    <li><a href="index.jsp">Home</a></li>
-          
-           
-                                    <li><a href="contact-us.jsp" class="active">Contact</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1" class="active">Trang chủ</a></li>                            
+                                    <li><a href="contact-us.jsp">Liên hệ</a></li>
                                 </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="search_box pull-right">
-                                <input type="text" placeholder="Search"/>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div><!--/header-bottom-->
+            </div><!--/header-bottom-->        
         </header><!--/header-->
 
         <div id="contact-page" class="container">
@@ -149,29 +109,12 @@
                         <div class="contact-info">
                             <h2 class="title text-center">Contact Info</h2>
                             <address>
-                                <p>E-Flower Shop Inc.</p>
+                                <p>Flower Shop Inc.</p>
                                 
-                                <p>HoLa Việt Nam</p>
-                                <p>Mobile: 0327160365</p>
+                                <p>Khu CNC Hòa lạc - Thạch Hòa - Thạch Thất - Việt Nam</p>
+                                <p>Số điện thoại: 0327160365</p>
                                 <p>Email: ducvmhe186253@fpt.edu.vn</p>
                             </address>
-                            <div class="social-networks">
-                                <h2 class="title text-center">Social Networking</h2>
-                                <ul>
-                                    <li>
-                                        <a href="#"><i class="fa fa-facebook"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="fa fa-twitter"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="fa fa-google-plus"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="fa fa-youtube"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>    			
                 </div>  
@@ -179,148 +122,40 @@
         </div><!--/#contact-page-->
 
         <footer id="footer"><!--Footer-->
-            <div class="footer-top">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <div class="companyinfo">
-                                <h2><span>e</span>-Flower Shop</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,sed do eiusmod tempor</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-7">
-                            <div class="col-sm-3">
-                                <div class="video-gallery text-center">
-                                    <a href="#">
-                                        <div class="iframe-img">
-                                            <img src="images/home/iframe1.png" alt="" />
-                                        </div>
-                                        <div class="overlay-icon">
-                                            <i class="fa fa-play-circle-o"></i>
-                                        </div>
-                                    </a>
-                                    <p>Circle of Hands</p>
-                                    <h2>24 DEC 2014</h2>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-3">
-                                <div class="video-gallery text-center">
-                                    <a href="#">
-                                        <div class="iframe-img">
-                                            <img src="images/home/iframe2.png" alt="" />
-                                        </div>
-                                        <div class="overlay-icon">
-                                            <i class="fa fa-play-circle-o"></i>
-                                        </div>
-                                    </a>
-                                    <p>Circle of Hands</p>
-                                    <h2>24 DEC 2014</h2>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-3">
-                                <div class="video-gallery text-center">
-                                    <a href="#">
-                                        <div class="iframe-img">
-                                            <img src="images/home/iframe3.png" alt="" />
-                                        </div>
-                                        <div class="overlay-icon">
-                                            <i class="fa fa-play-circle-o"></i>
-                                        </div>
-                                    </a>
-                                    <p>Circle of Hands</p>
-                                    <h2>24 DEC 2014</h2>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-3">
-                                <div class="video-gallery text-center">
-                                    <a href="#">
-                                        <div class="iframe-img">
-                                            <img src="images/home/iframe4.png" alt="" />
-                                        </div>
-                                        <div class="overlay-icon">
-                                            <i class="fa fa-play-circle-o"></i>
-                                        </div>
-                                    </a>
-                                    <p>Circle of Hands</p>
-                                    <h2>24 DEC 2014</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="address">
-                                <img src="images/home/map.png" alt="" />
-                                <p>505 S Atlantic Ave Virginia Beach, VA(Virginia)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="footer-widget">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="single-widget">
-                                <h2>Service</h2>
+                                <h2>Dịch vụ</h2>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="">Online Help</a></li>
-                                    <li><a href="">Contact Us</a></li>
-                                    <li><a href="">Order Status</a></li>
-                                    <li><a href="">Change Location</a></li>
-                                    <li><a href="">FAQ’s</a></li>
+                                    <li><a href="orders">Xem đơn mua</a></li>
+                                    <li><a href="profile">Thay đổi hồ sơ</a></li>
+                                    <li><a href="#">Giỏ hoa theo yêu cầu</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/home?pageNum=1">Tiếp tục mua sắm</a></li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                             <div class="single-widget">
-                                <h2>Quock Shop</h2>
+                                <h2>Liên hệ </h2>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="">T-Shirt</a></li>
-                                    <li><a href="">Mens</a></li>
-                                    <li><a href="">Womens</a></li>
-                                    <li><a href="">Gift Cards</a></li>
-                                    <li><a href="">Shoes</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="single-widget">
-                                <h2>Policies</h2>
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="">Terms of Use</a></li>
-                                    <li><a href="">Privecy Policy</a></li>
-                                    <li><a href="">Refund Policy</a></li>
-                                    <li><a href="">Billing System</a></li>
-                                    <li><a href="">Ticket System</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="single-widget">
-                                <h2>About Flower Shop</h2>
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="">Company Information</a></li>
-                                    <li><a href="">Careers</a></li>
-                                    <li><a href="">Store Location</a></li>
-                                    <li><a href="">Affillate Program</a></li>
-                                    <li><a href="">Copyright</a></li>
+                                    <li><a href="https://www.facebook.com/tran.uc.kien.588942">Facebook</a></li>
+                                    <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2">Github</a></li>
+                                    <li><a href="https://accounts.google.com/v3/signin/identifier?ifkv=AdBytiMmsOAuql232UmLNKelOUNWSkE5R7zTjDiG1c2Eh9s_g4WpAUxqvRqKj9gMYsdypUFg84Mr&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S1730468177%3A1750350775108616">kientdhe186194@fpt.edu.vn</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-3 col-sm-offset-1">
                             <div class="single-widget">
-                                <h2>About Flower Shop</h2>
+                                <h2>Về chúng tôi</h2>
                                 <form action="#" class="searchform">
-                                    <input type="text" placeholder="Your email address" />
+                                    <input type="text" placeholder="Nhập email" />
                                     <button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
-                                    <p>Get the most recent updates from <br />our site and be updated your self...</p>
+                                    <p>Đăng kí để nhận được các thông báo <br />Ưu đãi và sản phẩm mới nhất...</p>
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -328,12 +163,11 @@
             <div class="footer-bottom">
                 <div class="container">
                     <div class="row">
-                        <p class="pull-left">Copyright © 2013 E-Flower Shop Inc. All rights reserved.</p>
-                        <p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+                        <p class="pull-left">Copyright © 2025  Flower Shop. All rights reserved</p>
+                        <p class="pull-right">Designed by <span style="color: #080101;"  ><a target="_blank" href="https://github.com/kientd10/Sell_Flower_System_Group2">Group 2</a></span></p>
                     </div>
                 </div>
             </div>
-
         </footer><!--/Footer-->
 
 

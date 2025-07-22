@@ -417,19 +417,12 @@
 			<div class="top-navbar">
 				<div class="d-flex justify-content-between align-items-center">
 					<div class="d-flex align-items-center gap-3">
-						<h5 class="mb-0">Notification Center</h5>
-						<span class="badge bg-danger">4 Unread</span>
+						<h5 class="mb-0">Thông báo</h5>
 					</div>
 					
 					<div class="d-flex align-items-center gap-3">
-						<button class="btn btn-outline-secondary" onclick="markAllAsRead()">
-							<i class="fas fa-check-double me-2"></i>Mark All Read
-						</button>
-						<button class="btn btn-outline-secondary" onclick="clearAllNotifications()">
-							<i class="fas fa-trash me-2"></i>Clear All
-						</button>
 						<button class="btn btn-primary" onclick="configureNotifications()">
-							<i class="fas fa-cog me-2"></i>Settings
+							<i class="fas fa-cog me-2"></i>Cài đặt
 						</button>
 					</div>
 				</div>
@@ -440,11 +433,11 @@
 				<!-- Page Header -->
 				<div class="d-flex justify-content-between align-items-center mb-4">
 					<div>
-						<h2 class="page-title">Notifications & Alerts</h2>
-						<p class="text-muted">Stay updated with important system alerts and business notifications</p>
+						<h2 class="page-title">Thông báo & Yêu cầu</h2>
+						<p class="text-muted">Trang quản lí thông báo, có thể theo dõi và phản hồi các thông báo, yêu cầu</p>
 					</div>
 					<div class="text-muted">
-						Last updated: <strong><%= new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()) %></strong>
+						Cập nhật gần đây: <strong><%= new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()) %></strong>
 					</div>
 				</div>
 
@@ -453,26 +446,26 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="stat-item">
-								<div class="stat-number text-danger">4</div>
-								<div class="text-muted">Unread</div>
+								<div class="stat-number text-danger">10</div>
+								<div class="text-muted">Chưa đọc</div>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="stat-item">
-								<div class="stat-number text-warning">2</div>
-								<div class="text-muted">Critical</div>
+								<div class="stat-number text-warning">10</div>
+								<div class="text-muted">Hôm nay</div>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="stat-item">
-								<div class="stat-number text-info">15</div>
-								<div class="text-muted">Today</div>
+								<div class="stat-number text-info">10</div>
+								<div class="text-muted">Tuần này</div>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="stat-item">
-								<div class="stat-number text-success">89</div>
-								<div class="text-muted">This Week</div>
+								<div class="stat-number text-success">10</div>
+								<div class="text-muted">Tháng này</div>
 							</div>
 						</div>
 					</div>
@@ -482,18 +475,18 @@
 				<div class="notification-filter">
 					<div class="row align-items-center">
 						<div class="col-md-3">
-							<label class="form-label">Filter by Status:</label>
+							<label class="form-label">Trạng thái:</label>
 							<select class="form-select" onchange="filterByStatus(this.value)">
-								<option value="">All Notifications</option>
+								<option value="">Tất cả</option>
 								<option value="unread">Unread (4)</option>
 								<option value="read">Read (85)</option>
 								<option value="archived">Archived (156)</option>
 							</select>
 						</div>
 						<div class="col-md-3">
-							<label class="form-label">Filter by Category:</label>
+							<label class="form-label">Ngày gửi:</label>
 							<select class="form-select" onchange="filterByCategory(this.value)">
-								<option value="">All Categories</option>
+								<option value="">Tất cả</option>
 								<option value="inventory">Inventory (12)</option>
 								<option value="orders">Orders (8)</option>
 								<option value="customers">Customers (5)</option>
@@ -501,27 +494,8 @@
 								<option value="security">Security (1)</option>
 							</select>
 						</div>
-						<div class="col-md-3">
-							<label class="form-label">Filter by Priority:</label>
-							<select class="form-select" onchange="filterByPriority(this.value)">
-								<option value="">All Priorities</option>
-								<option value="high">High Priority (2)</option>
-								<option value="medium">Medium Priority (6)</option>
-								<option value="low">Low Priority (21)</option>
-							</select>
-						</div>
-						<div class="col-md-3">
-							<label class="form-label">Time Period:</label>
-							<select class="form-select" onchange="filterByTime(this.value)">
-								<option value="">All Time</option>
-								<option value="today">Today</option>
-								<option value="yesterday">Yesterday</option>
-								<option value="week">This Week</option>
-								<option value="month">This Month</option>
-							</select>
-						</div>
 					</div>
-				</div>
+				</div>                               
 
 				<!-- ===== NOTIFICATIONS LIST ===== -->
 				<div class="flower-request-list">
@@ -537,4 +511,19 @@
             <a href="viewRequestDetail?requestId=${req.requestId}" class="btn btn-detail">Xem chi tiết</a>
         </div>
     </c:forEach>
+                                    		<nav aria-label="Category pagination" class="mt-3">
+							<ul class="pagination">
+								<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+									<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${currentPage - 1}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}"><i class="fas fa-chevron-left"></i></a>
+								</li>
+								<c:forEach begin="1" end="${totalPages}" var="i">
+									<li class="page-item ${currentPage == i ? 'active' : ''}">
+										<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${i}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}">${i}</a>
+									</li>
+								</c:forEach>
+								<li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+									<a class="page-link" href="${pageContext.request.contextPath}/category?action=management&pageNum=${currentPage + 1}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}"><i class="fas fa-chevron-right"></i></a>
+								</li>
+							</ul>
+						</nav>
 </div>
