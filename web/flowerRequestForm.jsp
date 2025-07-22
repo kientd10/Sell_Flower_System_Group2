@@ -262,14 +262,17 @@
             <label for="description">Mô tả yêu cầu <span style="color:red">*</span></label>
             <textarea id="description" name="description" rows="3" placeholder="Ví dụ: Hoa cắm dạng tròn, phối màu pastel..." required></textarea>
 
-            <label for="price">Mức giá mong muốn (VNĐ)</label>
-            <input type="number" id="price" name="price" min="100000" step="10000" placeholder="Ví dụ: 300000">
+            <label for="suggestedPrice">Mức giá mong muốn (VNĐ)</label>
+            <input type="number" id="suggestedPrice" name="suggestedPrice" min="100000" step="10000" placeholder="Ví dụ: 300000" required>
 
             <label for="color">Màu sắc chủ đạo</label>
             <input type="text" id="color" name="color" placeholder="Ví dụ: Hồng, trắng, vàng...">
 
             <label for="event">Dịp tặng</label>
             <input type="text" id="event" name="event" placeholder="Ví dụ: Sinh nhật, 8/3, 20/10...">
+
+            <label for="quantity">Số lượng bó hoa</label>
+            <input type="number" id="quantity" name="quantity" min="1" step="1" placeholder="Ví dụ: 1" required>
 
             <label for="note">Ghi chú thêm</label>
             <textarea id="note" name="note" rows="2" placeholder="Yêu cầu đặc biệt, lời chúc... (nếu có)"></textarea>

@@ -102,6 +102,33 @@ public class OrderServlet extends HttpServlet {
             List<Order> completedOrders = new ArrayList<>();
             List<Order> cancelledOrders = new ArrayList<>();
 
+            // Bổ sung: Xử lý đơn hoa theo yêu cầu (requestId != null)
+            dal.FlowerRequestDAO flowerRequestDAO = null;
+            try { flowerRequestDAO = new dal.FlowerRequestDAO(); } catch (Exception ignore) {}
+            for (Order order : allOrders) {
+                Integer reqId = order.getRequestId();
+                if (reqId != null && flowerRequestDAO != null) {
+                    try {
+                        Model.FlowerRequest fr = flowerRequestDAO.getRequestById(reqId);
+                        if (fr != null) {
+                            Model.OrderItem customItem = new Model.OrderItem();
+                            customItem.setProductName("Hoa yêu cầu");
+                            int qty = (fr.getQuantity() > 0) ? fr.getQuantity() : 1;
+                            double price = (fr.getSuggestedPrice() != null && fr.getSuggestedPrice().doubleValue() > 0) ? fr.getSuggestedPrice().doubleValue() : 1;
+                            customItem.setQuantity(qty);
+                            customItem.setUnitPrice(price);
+                            // Ưu tiên sampleImageUrl nếu có, không thì lấy imageUrl
+                            String img = (fr.getSampleImageUrl() != null && !fr.getSampleImageUrl().isEmpty()) ? fr.getSampleImageUrl() : fr.getImageUrl();
+                            customItem.setImageUrl(img != null ? img : "");
+                            customItem.setTemplateId(-1); // Để link không bị lỗi
+                            List<Model.OrderItem> customList = new ArrayList<>();
+                            customList.add(customItem);
+                            order.setItems(customList);
+                        }
+                    } catch (Exception ignore) { /* log nếu cần */ }
+                }
+            }
+
             for (Order order : allOrders) {
                 switch (order.getStatus()) {
                     case "Chờ xác nhận" -> pendingOrders.add(order);

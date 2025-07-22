@@ -213,6 +213,9 @@
                         <div class="detail-row"><span class="detail-label">Màu sắc mong muốn:</span> ${flowerRequest.colorPreference}</div>
                         <div class="detail-row"><span class="detail-label">Dịp:</span> ${flowerRequest.eventType}</div>
                         <div class="detail-row"><span class="detail-label">Ghi chú:</span> ${flowerRequest.note}</div>
+                        <div class="detail-row"><span class="detail-label">Số lượng:</span> ${flowerRequest.quantity}</div>
+                        <div class="detail-row"><span class="detail-label">Giá mong muốn:</span> <fmt:formatNumber value="${flowerRequest.suggestedPrice}" type="currency" currencySymbol="₫"/>
+                        </div>
                         <div class="detail-row"><span class="detail-label">Trạng thái:</span> <span class="status ${flowerRequest.status}">${flowerRequest.status}</span></div>
                         <form action="send-reply" method="post" enctype="multipart/form-data" class="mt-4">
                             <input type="hidden" name="requestId" value="${flowerRequest.requestId}" />

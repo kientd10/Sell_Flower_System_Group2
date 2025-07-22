@@ -31,15 +31,15 @@ public class ConfirmOrderServlet extends HttpServlet {
                 response.sendRedirect("viewShopReply.jsp?error=Yêu cầu không hợp lệ!");
                 return;
             }
-            // Tạo order mới
-            OrderDAO orderDao = new OrderDAO();
-            int orderId = orderDao.createOrderForCustomRequest(user.getUserId(), fr.getSuggestedPrice(), requestId);
-            // Cập nhật trạng thái flower_request
-            frDao.updateStatus(requestId, "accepted");
-            // Tạo notification cho shop/manager
-            NotificationDAO ndao = new NotificationDAO();
-            ndao.createForManager("Khách hàng đã xác nhận đặt hoa theo yêu cầu!", requestId);
-            response.sendRedirect("orderDetail.jsp?orderId=" + orderId + "&msg=Đặt hàng thành công!");
+            // Lưu requestId vào session để nhận diện đơn hoa theo yêu cầu
+            request.getSession().setAttribute("customFlowerRequestId", requestId);
+            request.getSession().setAttribute("customFlowerQuantity", fr.getQuantity());
+            request.getSession().setAttribute("customFlowerPrice", fr.getSuggestedPrice());
+            // Xóa giỏ hàng khỏi session để tránh hiển thị sản phẩm thường ở checkout
+            request.getSession().removeAttribute("cart");
+            request.getSession().removeAttribute("selectedCartIds");
+            // Chuyển sang trang checkout
+            response.sendRedirect("checkout.jsp");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("viewShopReply.jsp?error=Đặt hàng thất bại!");

@@ -40,38 +40,35 @@ public class ReorderServlet extends HttpServlet {
         try {
             int orderId = Integer.parseInt(orderIdStr);
             OrderDAO orderDAO = new OrderDAO();
-            BouquetDAO bouquetDAO = new BouquetDAO();
-            
             // Lấy thông tin đơn hàng
-            List<Order> userOrders = orderDAO.getOrdersByUserId(userId);
-            Order targetOrder = null;
-            
-            for (Order order : userOrders) {
-                if (order.getOrderId() == orderId) {
-                    targetOrder = order;
-                    break;
-                }
-            }
-            
+            Order targetOrder = orderDAO.getOrderById(orderId);
             if (targetOrder == null) {
                 response.sendRedirect("orders");
                 return;
             }
-            
-            // Lấy chi tiết sản phẩm trong đơn hàng
+            // Nếu là đơn hoa yêu cầu
+            if (targetOrder.getRequestId() != null) {
+                dal.FlowerRequestDAO frDao = new dal.FlowerRequestDAO();
+                Model.FlowerRequest fr = frDao.getRequestById(targetOrder.getRequestId());
+                if (fr != null) {
+                    session.setAttribute("customFlowerRequestId", fr.getRequestId());
+                    session.setAttribute("customFlowerQuantity", fr.getQuantity());
+                    session.setAttribute("customFlowerPrice", fr.getSuggestedPrice());
+                    session.removeAttribute("cart");
+                    session.removeAttribute("selectedCartIds");
+                    response.sendRedirect("checkout.jsp");
+                    return;
+                }
+            }
+            // Đơn thường: giữ logic cũ
+            BouquetDAO bouquetDAO = new BouquetDAO();
             List<OrderItem> orderItems = orderDAO.getItemsByOrderId(orderId, null);
-            
-            // Thêm các sản phẩm vào giỏ hàng database
             for (OrderItem item : orderItems) {
-                // Lấy thông tin BouquetTemplate
                 BouquetTemplate template = bouquetDAO.getBouquetByID(item.getTemplateId());
                 if (template != null) {
-                    // Thêm vào giỏ hàng - method addToCart đã tự động xử lý trùng lặp
                     bouquetDAO.addToCart(userId, item.getTemplateId(), item.getQuantity());
                 }
             }
-            
-            // Redirect đến giỏ hàng
             response.sendRedirect("cart");
             
         } catch (Exception e) {

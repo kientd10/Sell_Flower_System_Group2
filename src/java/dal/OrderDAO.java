@@ -97,7 +97,7 @@ public class OrderDAO {
     }
 
     // Sửa hàm insertOrder để tự động assign staff và shipper theo area
-    public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmount, String deliveryAddress, String deliveryPhone, String deliveryName) {
+    public int insertOrder(int userId, List<ShoppingCart> cartItems, double totalAmount, String deliveryAddress, String deliveryPhone, String deliveryName, Integer requestId) {
         int orderId = -1;
         Connection conn = null;
         try {
@@ -120,7 +120,7 @@ public class OrderDAO {
 
             // 1. Thêm vào bảng orders
             String orderCode = "ORD" + System.currentTimeMillis();
-            String insertOrderSQL = "INSERT INTO orders (order_code, customer_id, total_amount, status_id, delivery_address, delivery_phone, delivery_name, staff_id, shipper_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertOrderSQL = "INSERT INTO orders (order_code, customer_id, total_amount, status_id, delivery_address, delivery_phone, delivery_name, staff_id, shipper_id, request_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement ps = conn.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, orderCode);
                 ps.setInt(2, userId);
@@ -139,6 +139,11 @@ public class OrderDAO {
                 } else {
                     ps.setNull(9, java.sql.Types.INTEGER);
                 }
+                if (requestId != null) {
+                    ps.setInt(10, requestId);
+                } else {
+                    ps.setNull(10, java.sql.Types.INTEGER);
+                }
                 ps.executeUpdate();
 
                 ResultSet rs = ps.getGeneratedKeys();
@@ -148,17 +153,19 @@ public class OrderDAO {
             }
 
             // 2. Thêm vào order_details
-            String insertDetailSQL = "INSERT INTO order_details (order_id, template_id, quantity, unit_price, subtotal) VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(insertDetailSQL)) {
-                for (ShoppingCart item : cartItems) {
-                    ps.setInt(1, orderId);
-                    ps.setInt(2, item.getTemplateId());
-                    ps.setInt(3, item.getQuantity());
-                    ps.setDouble(4, item.getPrice());
-                    ps.setDouble(5, item.getQuantity() * item.getPrice());
-                    ps.addBatch();
+            if (cartItems != null && !cartItems.isEmpty()) {
+                String insertDetailSQL = "INSERT INTO order_details (order_id, template_id, quantity, unit_price, subtotal) VALUES (?, ?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(insertDetailSQL)) {
+                    for (ShoppingCart item : cartItems) {
+                        ps.setInt(1, orderId);
+                        ps.setInt(2, item.getTemplateId());
+                        ps.setInt(3, item.getQuantity());
+                        ps.setDouble(4, item.getPrice());
+                        ps.setDouble(5, item.getQuantity() * item.getPrice());
+                        ps.addBatch();
+                    }
+                    ps.executeBatch();
                 }
-                ps.executeBatch();
             }
 
             conn.commit();
@@ -189,7 +196,7 @@ public class OrderDAO {
 
         String sql = """
             SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_phone, o.delivery_name,
-            os.status_name,o.created_At
+            os.status_name,o.created_At, o.request_id
             FROM orders o
             JOIN order_status os ON o.status_id = os.status_id
             WHERE o.customer_id = ?
@@ -216,6 +223,7 @@ public class OrderDAO {
                 order.setDeliveryName(rs.getString("delivery_name"));
                 order.setStatus(rs.getString("status_name"));
                 order.setCreatedAt(rs.getString("created_at"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
 
                 // Load danh sách sản phẩm trong đơn hàng
                 order.setItems(getItemsByOrderId(order.getOrderId(), conn));
@@ -243,7 +251,7 @@ public class OrderDAO {
 
         String sql = """
             SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_phone, o.delivery_name,
-            os.status_name, o.created_At, u.full_name as customer_name
+            os.status_name, o.created_At, u.full_name as customer_name, o.request_id
             FROM orders o
             JOIN order_status os ON o.status_id = os.status_id
             JOIN users u ON o.customer_id = u.user_id
@@ -270,6 +278,7 @@ public class OrderDAO {
                 order.setStatus(rs.getString("status_name"));
                 order.setCreatedAt(rs.getString("created_at"));
                 order.setCustomerName(rs.getString("customer_name"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
 
                 // Load danh sách sản phẩm trong đơn hàng
                 order.setItems(getItemsByOrderId(order.getOrderId(), conn));
@@ -290,7 +299,7 @@ public class OrderDAO {
         String sql = """
             SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_phone, o.delivery_name,
             os.status_name, o.created_At, u.full_name as customer_name,
-            s.full_name as staff_name, sh.full_name as shipper_name
+            s.full_name as staff_name, sh.full_name as shipper_name, o.request_id
             FROM orders o
             JOIN order_status os ON o.status_id = os.status_id
             JOIN users u ON o.customer_id = u.user_id
@@ -322,6 +331,7 @@ public class OrderDAO {
                 order.setCustomerName(rs.getString("customer_name"));
                 order.setStaffName(rs.getString("staff_name"));
                 order.setShipperName(rs.getString("shipper_name"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
                 // Load danh sách sản phẩm trong đơn hàng nếu cần
                 order.setItems(getItemsByOrderId(order.getOrderId(), conn));
                 orders.add(order);
@@ -472,15 +482,15 @@ public class OrderDAO {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_name, o.delivery_phone, os.status_name, o.created_At, u.full_name as customer_name, u.phone, u.email, ");
-        sql.append("s.full_name as staff_name, sh.full_name as shipper_name ");
+        sql.append("s.full_name as staff_name, sh.full_name as shipper_name, o.request_id ");
         sql.append("FROM orders o ");
         sql.append("JOIN order_status os ON o.status_id = os.status_id ");
         sql.append("JOIN users u ON o.customer_id = u.user_id ");
         sql.append("LEFT JOIN users s ON o.staff_id = s.user_id ");
         sql.append("LEFT JOIN users sh ON o.shipper_id = sh.user_id ");
-        sql.append("JOIN order_details od ON o.order_id = od.order_id ");
-        sql.append("JOIN bouquet_templates bt ON od.template_id = bt.template_id ");
-        sql.append("JOIN categories c ON bt.category_id = c.category_id ");
+        sql.append("LEFT JOIN order_details od ON o.order_id = od.order_id ");
+        sql.append("LEFT JOIN bouquet_templates bt ON od.template_id = bt.template_id ");
+        sql.append("LEFT JOIN categories c ON bt.category_id = c.category_id ");
         sql.append("WHERE 1=1 ");
         if (roleId == 2) {
             sql.append("AND os.status_name = 'Đang chuẩn bị' ");
@@ -565,6 +575,7 @@ public class OrderDAO {
                 order.setEmail(rs.getString("email"));
                 order.setStaffName(rs.getString("staff_name"));
                 order.setShipperName(rs.getString("shipper_name"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
                 order.setItems(getItemsByOrderId(order.getOrderId(), conn));
                 orders.add(order);
             }
@@ -751,6 +762,7 @@ public class OrderDAO {
                 order.setEmail(rs.getString("email"));
                 order.setStaffName(rs.getString("staff_name"));
                 order.setShipperName(rs.getString("shipper_name"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
                 order.setItems(getItemsByOrderId(order.getOrderId(), conn));
                 orders.add(order);
             }
@@ -790,6 +802,7 @@ public class OrderDAO {
                 order.setEmail(rs.getString("email"));
                 order.setStaffName(rs.getString("staff_name"));
                 order.setShipperName(rs.getString("shipper_name"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
                 order.setItems(getItemsByOrderId(order.getOrderId(), conn));
                 orders.add(order);
             }
@@ -804,7 +817,7 @@ public class OrderDAO {
         String sql = """
             SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_phone, o.delivery_name,
             os.status_name, o.created_At, u.full_name as customer_name,
-            s.full_name as staff_name, sh.full_name as shipper_name
+            s.full_name as staff_name, sh.full_name as shipper_name, o.request_id
             FROM orders o
             JOIN order_status os ON o.status_id = os.status_id
             JOIN users u ON o.customer_id = u.user_id
@@ -831,6 +844,7 @@ public class OrderDAO {
                 order.setCustomerName(rs.getString("customer_name"));
                 order.setStaffName(rs.getString("staff_name"));
                 order.setShipperName(rs.getString("shipper_name"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
                 order.setItems(getItemsByOrderId(order.getOrderId(), conn));
                 orders.add(order);
             }
@@ -851,5 +865,39 @@ public class OrderDAO {
         if (rs.next()) orderId = rs.getInt(1);
         rs.close(); ps.close();
         return orderId;
+    }
+
+    // Lấy đơn hàng theo orderId
+    public Order getOrderById(int orderId) throws Exception {
+        String sql = "SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_phone, o.delivery_name, os.status_name, o.created_At, o.request_id FROM orders o JOIN order_status os ON o.status_id = os.status_id WHERE o.order_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBcontext.getJDBCConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setOrderCode(rs.getString("order_code"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setDeliveryAddress(rs.getString("delivery_address"));
+                order.setDeliveryPhone(rs.getString("delivery_phone"));
+                order.setDeliveryName(rs.getString("delivery_name"));
+                order.setStatus(rs.getString("status_name"));
+                order.setCreatedAt(rs.getString("created_at"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
+                // Lấy danh sách sản phẩm trong đơn hàng
+                order.setItems(getItemsByOrderId(order.getOrderId(), conn));
+                return order;
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+        return null;
     }
 }

@@ -67,6 +67,15 @@ public class NotificationDAO {
         ps.close();
     }
 
+    // Xóa tất cả notification liên quan đến 1 requestId
+    public void deleteByRequestId(int requestId) throws Exception {
+        String sql = "DELETE FROM notifications WHERE related_request_id=?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, requestId);
+        ps.executeUpdate();
+        ps.close();
+    }
+
     // Helper: mapping ResultSet -> Notification
     private Notification mapResultSet(ResultSet rs) throws Exception {
         Notification n = new Notification();

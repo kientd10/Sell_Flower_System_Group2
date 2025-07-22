@@ -125,6 +125,35 @@ public class PlaceOder extends HttpServlet {
         session.setAttribute("deliveryTime", deliveryTime);
         session.setAttribute("fullname", receiverName);
 
+        // Kiểm tra đơn hoa theo yêu cầu
+        Integer customFlowerRequestId = (Integer) session.getAttribute("customFlowerRequestId");
+        Integer customFlowerQuantity = (Integer) session.getAttribute("customFlowerQuantity");
+        java.math.BigDecimal customFlowerPrice = (java.math.BigDecimal) session.getAttribute("customFlowerPrice");
+        if (customFlowerRequestId != null && customFlowerQuantity != null && customFlowerPrice != null) {
+            // Tạo đơn hàng hoa theo yêu cầu
+            List<ShoppingCart> customList = new ArrayList<>();
+            Model.BouquetTemplate customBouquet = new Model.BouquetTemplate();
+            customBouquet.setTemplateId(-1); // hoặc 0
+            customBouquet.setTemplateName("Hoa yêu cầu");
+            customBouquet.setBasePrice(customFlowerPrice.doubleValue());
+            ShoppingCart customItem = new ShoppingCart();
+            customItem.setBouquetTemplate(customBouquet);
+            customItem.setQuantity(customFlowerQuantity);
+            customList.add(customItem);
+            double total = customFlowerPrice.doubleValue() * customFlowerQuantity;
+            String amount = String.format("%.2f", total);
+            session.setAttribute("amount", amount);
+            OrderDAO dao = new OrderDAO();
+            int orderId = dao.insertOrder(userId, null, total, fullDeliveryAddress, receiverPhone, receiverName, customFlowerRequestId);
+            // Xóa biến custom khỏi session
+            session.removeAttribute("customFlowerRequestId");
+            session.removeAttribute("customFlowerQuantity");
+            session.removeAttribute("customFlowerPrice");
+            session.setAttribute("orderId", orderId);
+            response.sendRedirect("createpaymentservlet");
+            return;
+        }
+
         // Lấy giỏ hàng từ session
         List<String> selectedCartIds = (List<String>) session.getAttribute("selectedCartIds");
         List<ShoppingCart> fullCart = (List<ShoppingCart>) session.getAttribute("cart");
@@ -162,7 +191,7 @@ public class PlaceOder extends HttpServlet {
 
         // ✅ Lưu đơn hàng
         OrderDAO dao = new OrderDAO();
-        int orderId = dao.insertOrder(userId, selectedItems, total, fullDeliveryAddress, receiverPhone, receiverName);
+        int orderId = dao.insertOrder(userId, selectedItems, total, fullDeliveryAddress, receiverPhone, receiverName, null);
         System.out.println("===> Đã tạo đơn hàng với ID: " + orderId);
 
         // ✅ Xóa giỏ hàng khỏi session sau khi lưu đơn

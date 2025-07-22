@@ -13,7 +13,7 @@ public class FlowerRequestDAO {
 
     // Thêm yêu cầu mới
     public void insertRequest(FlowerRequest req) throws Exception {
-        String sql = "INSERT INTO flower_requests (customer_id, image_url, description, color_preference, event_type, note, status, created_at) VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())";
+        String sql = "INSERT INTO flower_requests (customer_id, image_url, description, color_preference, event_type, note, quantity, suggested_price, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())";
         PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setInt(1, req.getCustomerId());
         ps.setString(2, req.getImageUrl());
@@ -21,6 +21,8 @@ public class FlowerRequestDAO {
         ps.setString(4, req.getColorPreference());
         ps.setString(5, req.getEventType());
         ps.setString(6, req.getNote());
+        ps.setInt(7, req.getQuantity());
+        ps.setBigDecimal(8, req.getSuggestedPrice());
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         if (rs.next()) req.setRequestId(rs.getInt(1));
@@ -98,13 +100,39 @@ public class FlowerRequestDAO {
         return list;
     }
 
-    // Xóa yêu cầu (khi khách hủy)
-    public void deleteRequest(int requestId) throws Exception {
-        String sql = "DELETE FROM flower_requests WHERE request_id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, requestId);
-        ps.executeUpdate();
-        ps.close();
+    // Xóa yêu cầu (chỉ khi chưa có đơn hàng liên kết), đồng thời xóa notification liên quan
+    public boolean deleteRequestAndNotificationsIfNoOrder(int requestId) throws Exception {
+        Connection conn = null;
+        PreparedStatement psCheck = null, psDeleteNotif = null, psDeleteReq = null;
+        ResultSet rs = null;
+        try {
+            conn = DBcontext.getJDBCConnection();
+            // Kiểm tra có đơn hàng nào liên kết không
+            String sqlCheck = "SELECT COUNT(*) FROM orders WHERE request_id=?";
+            psCheck = conn.prepareStatement(sqlCheck);
+            psCheck.setInt(1, requestId);
+            rs = psCheck.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                return false; // Đã có đơn hàng, không xóa
+            }
+            // Xóa notifications liên kết
+            String sqlDeleteNotif = "DELETE FROM notifications WHERE related_request_id=?";
+            psDeleteNotif = conn.prepareStatement(sqlDeleteNotif);
+            psDeleteNotif.setInt(1, requestId);
+            psDeleteNotif.executeUpdate();
+            // Xóa yêu cầu hoa
+            String sqlDeleteReq = "DELETE FROM flower_requests WHERE request_id=?";
+            psDeleteReq = conn.prepareStatement(sqlDeleteReq);
+            psDeleteReq.setInt(1, requestId);
+            psDeleteReq.executeUpdate();
+            return true;
+        } finally {
+            if (rs != null) rs.close();
+            if (psCheck != null) psCheck.close();
+            if (psDeleteNotif != null) psDeleteNotif.close();
+            if (psDeleteReq != null) psDeleteReq.close();
+            if (conn != null) conn.close();
+        }
     }
 
     // Cập nhật trạng thái yêu cầu
@@ -133,6 +161,8 @@ public class FlowerRequestDAO {
         fr.setCreatedAt(rs.getTimestamp("created_at"));
         fr.setUpdatedAt(rs.getTimestamp("updated_at"));
         try { fr.setCustomerName(rs.getString("customerName")); } catch (Exception ignore) {}
+        try { fr.setQuantity(rs.getInt("quantity")); } catch (Exception ignore) {}
+        try { fr.setSuggestedPrice(rs.getBigDecimal("suggested_price")); } catch (Exception ignore) {}
         return fr;
     }
 } 

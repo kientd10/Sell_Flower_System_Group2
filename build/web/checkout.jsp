@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 
     <head>
@@ -144,41 +145,70 @@
                                     <input type="datetime-local" class="form-control" id="deliveryTime" name="deliveryTime" required>
                                 </div>
                                 <!-- Hiển thị giỏ hàng -->
-                                <c:if test="${not empty sessionScope.cart}">
-                                    <h4>Chi tiết đơn hàng</h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Tên sản phẩm</th>
-                                                    <th>Giá</th>
-                                                    <th>Số lượng</th>
-                                                    <th>Thành tiền</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:set var="total" value="0" />
-                                                <c:forEach var="line" items="${sessionScope.cart}">
-                                                    <c:set var="itemTotal" value="${line.bouquetTemplate.basePrice * line.quantity}" />
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.cart}">
+                                        <h4>Chi tiết đơn hàng</h4>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
                                                     <tr>
-                                                        <td>${line.bouquetTemplate.templateName}</td>
-                                                        <td>${line.bouquetTemplate.basePrice} VNĐ</td>
-                                                        <td>${line.quantity}</td>
-                                                        <td>${itemTotal} VNĐ</td>
+                                                        <th>Tên sản phẩm</th>
+                                                        <th>Giá</th>
+                                                        <th>Số lượng</th>
+                                                        <th>Thành tiền</th>
                                                     </tr>
-                                                    <c:set var="total" value="${total + itemTotal}" />
-                                                </c:forEach>
-                                                <tr>
-                                                    <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
-                                                    <td><strong>${total} VNĐ</strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </c:if>
-                                <c:if test="${empty sessionScope.cart}">
-                                    <p>Không có sản phẩm nào trong giỏ hàng.</p>
-                                </c:if>
+                                                </thead>
+                                                <tbody>
+                                                    <c:set var="total" value="0" />
+                                                    <c:forEach var="line" items="${sessionScope.cart}">
+                                                        <c:set var="itemTotal" value="${line.bouquetTemplate.basePrice * line.quantity}" />
+                                                        <tr>
+                                                            <td>${line.bouquetTemplate.templateName}</td>
+                                                            <td>${line.bouquetTemplate.basePrice} VNĐ</td>
+                                                            <td>${line.quantity}</td>
+                                                            <td>${itemTotal} VNĐ</td>
+                                                        </tr>
+                                                        <c:set var="total" value="${total + itemTotal}" />
+                                                    </c:forEach>
+                                                    <tr>
+                                                        <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
+                                                        <td><strong>${total} VNĐ</strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${not empty sessionScope.customFlowerRequestId}">
+                                        <h4>Chi tiết đơn hàng</h4>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tên sản phẩm</th>
+                                                        <th>Giá</th>
+                                                        <th>Số lượng</th>
+                                                        <th>Thành tiền</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Hoa yêu cầu</td>
+                                                        <td><fmt:formatNumber value="${sessionScope.customFlowerPrice}" type="currency" currencySymbol="₫"/></td>
+                                                        <td>${sessionScope.customFlowerQuantity}</td>
+                                                        <td><fmt:formatNumber value="${sessionScope.customFlowerPrice * sessionScope.customFlowerQuantity}" type="currency" currencySymbol="₫"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
+                                                        <td><strong><fmt:formatNumber value="${sessionScope.customFlowerPrice * sessionScope.customFlowerQuantity}" type="currency" currencySymbol="₫"/></strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p>Không có sản phẩm nào trong giỏ hàng.</p>
+                                    </c:otherwise>
+                                </c:choose>
                                 <button type="submit" class="btn btn-success btn-block">Xác nhận đặt hàng</button>
                             </form>
                         </div>
