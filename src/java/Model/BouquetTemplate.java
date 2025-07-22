@@ -21,6 +21,8 @@ public class BouquetTemplate {
     private String categoryName;
     private List<TemplateIngredient> ingredients;
     private int categoryId;
+    private int createdBy;
+
     public BouquetTemplate() {
     }
 
@@ -40,7 +42,7 @@ public class BouquetTemplate {
         this.basePrice = basePrice;
         this.imageUrl = imageUrl;
     }
-    
+
     public int getStock() {
         return Stock;
     }
@@ -96,26 +98,38 @@ public class BouquetTemplate {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
     public List<TemplateIngredient> getIngredients() {
         return ingredients;
     }
+
     public void setIngredients(List<TemplateIngredient> ingredients) {
         this.ingredients = ingredients;
     }
     private double avgRating;
-public double getAvgRating() {
-    return avgRating;
-}
-public void setAvgRating(double avgRating) {
-    this.avgRating = avgRating;
-}
 
-public int getCategoryId() {
-    return categoryId;
-}
+    public double getAvgRating() {
+        return avgRating;
+    }
 
-public void setCategoryId(int categoryId) {
-    this.categoryId = categoryId;
-}
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
+    }
 
 }
