@@ -70,9 +70,32 @@
                                 <ul class="nav navbar-nav">
                                     <c:if test="${sessionScope.user != null}">
                                         <li><a href="profile"><i class="fa fa-user"></i> Hồ sơ</a></li>
-                                        <li><a href="orders"><i class="fa fa-truck"></i> Đơn mua</a></li>
-                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
-                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
+                                        <li class="notification-bell" style="position:relative;">
+                                            <a href="javascript:void(0);" id="notifBell" onclick="toggleNotifDropdown()">
+                                                <i class="fa fa-bell"></i> Thông báo
+                                                <span class="notification-badge"></span>
+                                            </a>
+                                            <ul id="notifDropdown" class="notif-dropdown-menu">
+                                                <c:choose>
+                                                    <c:when test="${not empty shopReplies}">
+                                                        <c:forEach var="reply" items="${shopReplies}">
+                                                            <li>
+                                                                <a href="viewShopReply?requestId=${reply.requestId}">
+                                                                    <img src="${pageContext.request.contextPath}/${reply.sampleImageUrl}" class="notif-img-mini" alt="Shop gửi" />
+                                                                    <span class="notif-dot"></span>
+                                                                    <c:out value="${fn:substring(reply.shopReply, 0, 40)}" />...
+                                                                </a>
+                                                            </li>
+                                                        </c:forEach>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <li class="notif-empty">Không có thông báo mới</li>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </ul>
+                                        </li>
+                                        <li><a href="orders"><i class="fa fa-truck"></i> Đơn hàng</a></li>
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
                                         </c:if> 
                                         <c:if test="${sessionScope.user == null}">
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
@@ -104,160 +127,302 @@
                                 </ul>
                             </div>
                         </div>
+
+                        <div class="col-sm-3">
+                            <div class="search_box pull-right">
+                                <form action="SearchServlet" method="GET">
+                                    <input type="text" name="searchQuery" placeholder="Tìm kiếm mẫu hoa..." required/>
+                                    <button type="submit">
+                                        <i class="fa fa-search" style="border: none; height: 29px; line-height: 29px;"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div><!--/header-bottom-->        
-        </header><!--/header-->        
+        </header><!--/header-->      
         
-        <style>
-            .table-fixed {
-                table-layout: fixed;
-                width: 100%;
+        <!-- GIỮ style cho header/footer, xóa style cũ cart -->
+    <style>
+        /* GIỮ style cho header/footer, xóa style cũ cart */
+        /* --- CART SECTION NEW STYLE --- */
+        #cart_items {
+            margin-top: 40px;
+        }
+        .cart-section-container {
+            max-width: 950px;
+            margin: 48px auto 60px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 32px rgba(206,66,108,0.10);
+            padding: 48px 36px 40px 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cart-section-container h2 {
+            color: #ce4242;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .cart-table {
+            width: 100%;
+            min-width: 800px;
+            margin: 0 auto 24px auto;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        .cart-table th {
+            background: #ce4242;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 8px;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.08rem;
+        }
+        .cart-table td {
+            background: #fff;
+            border: none;
+            box-shadow: 0 2px 12px rgba(206,66,108,0.07);
+            border-radius: 8px;
+            padding: 14px 8px;
+            vertical-align: middle;
+        }
+        .cart-table tr {
+            background: transparent;
+        }
+        .cart_product img {
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(206,66,108,0.10);
+            max-width: 130px;
+            max-height: 130px;
+            min-width: 90px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        .cart_product h4 {
+            color: #ce4242;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .cart_product p {
+            color: #888;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+        .cart_quantity button {
+            background: #fff;
+            color: #ce4242;
+            border: 1.5px solid #ce4242;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: background 0.2s, color 0.2s;
+        }
+        .cart_quantity button:hover {
+            background: #ce4242;
+            color: #fff;
+        }
+        .cart_quantity input[type="number"] {
+            border: 1.5px solid #ce4242;
+            border-radius: 6px;
+            width: 48px;
+            text-align: center;
+            margin: 0 4px;
+        }
+        .cart_quantity input[type="number"]:focus {
+            outline: 1.5px solid #ce4242;
+        }
+        .btn-success, .btn-default {
+            background: #ce4242 !important;
+            border: none;
+            color: #fff !important;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 8px 24px;
+            transition: background 0.2s;
+        }
+        .btn-success:hover, .btn-default:hover {
+            background: #a81e4a !important;
+            color: #fff !important;
+        }
+        .alert-danger {
+            background: #ffe3ef;
+            color: #ce4242;
+            border: 1px solid #ce4242;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+        .cart-actions {
+            text-align: right;
+            margin-top: 18px;
+        }
+        /* Responsive tweaks */
+        @media (max-width: 1100px) {
+            .cart-section-container {
+                max-width: 99vw;
+                padding: 18px 2vw 18px 2vw;
             }
-            .table-fixed th.image,
-            .table-fixed td.cart_product {
+            .cart-table {
+                min-width: 600px;
+            }
+        }
+        @media (max-width: 900px) {
+            .cart-section-container {
+                padding: 8px 1vw;
+            }
+            .cart-table {
+                min-width: 400px;
+            }
+        }
+        @media (max-width: 600px) {
+            .cart-section-container {
+                box-shadow: none;
                 padding: 0;
-                width: 150px;
-                overflow: hidden;
             }
-            .image-wrapper {
-                width: 150px;
-                height: 150px;
-                overflow: hidden;
-                position: relative;
-            }
-            .image-wrapper img {
+            .cart-table {
+                min-width: unset;
                 width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
             }
-        </style>
+            .cart-table th, .cart-table td {
+                font-size: 0.85rem;
+            }
+        }
+        .cart-table th, .cart-table td {
+            padding: 16px 14px;
+            text-align: center;
+        }
+        .cart-table th {
+            min-width: 80px;
+        }
+        .cart-table th:first-child,
+        .cart-table td.cart_product {
+            min-width: 130px;
+            width: 130px;
+        }
+        .cart_product img {
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(206,66,108,0.10);
+            max-width: 130px;
+            max-height: 130px;
+            min-width: 90px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        .cart-table td.cart_product {
+            min-width: 90px;
+        }
+        .cart-table td:nth-child(2) {
+            min-width: 160px;
+            text-align: left;
+        }
+        .cart-table td:nth-child(3),
+        .cart-table td:nth-child(5) {
+            min-width: 100px;
+        }
+        .cart-table td:nth-child(4) {
+            min-width: 120px;
+        }
+        .cart-table td:nth-child(6),
+        .cart-table td:nth-child(7) {
+            min-width: 60px;
+        }
+        .cart-table td {
+            white-space: nowrap;
+        }
+        @media (max-width: 900px) {
+            .cart-table th, .cart-table td {
+                padding: 10px 4px;
+            }
+        }
+        @media (max-width: 600px) {
+            .cart-table th, .cart-table td {
+                padding: 6px 2px;
+            }
+        }
+    </style>
         
         <section id="cart_items">
-            <div class="container" style="margin-bottom: 40px;" >
-                <div class="text-center" style="margin-bottom: 40px;">
+            <div class="cart-section-container">
+                <div class="text-center" style="margin-bottom: 32px;">
                     <h2><i class="fa fa-shopping-bag"></i> Giỏ hàng </h2>
                     <p class="text-muted">Theo dõi và quản lý giỏ hàng của bạn</p>
                 </div>
-                <h2>Giỏ hàng</h2>
                 <c:if test="${cart.isEmpty()}">
                     <div class="alert alert-danger">Chưa chọn sản phẩm nào vào giỏ hàng </div>
                 </c:if>
                 <c:if test="${!cart.isEmpty()}">
                     <form action="cart" method="post">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-fixed">
+                            <table class="cart-table">
                                 <thead>
                                     <tr class="cart_menu">
-                                        <th class="image" style="width: 200px;">Tên Sản Phẩm</th>
-                                        <th class="description">Mô tả</th>
-                                        <th class="price">Giá</th>
-                                        <th class="quantity">Số lượng</th>
-                                        <th class="total">Tổng tiền</th>
-                                        <th class="pay">Đặt Hàng</th>
-                                        <th class="delete"></th>  
+                                        <th>Ảnh</th>
+                                        <th>Tên Sản Phẩm</th>
+                                        <th>Giá</th>
+                                        <th>Số lượng</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Chọn</th>
+                                        <th>Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${cart}" var="line">
                                         <tr>
                                             <td class="cart_product">
-                                                <img
-                                                    class="image-wrapper"
-                                                    src="${pageContext.request.contextPath}/images/cart/${line.bouquetTemplate.imageUrl}"
-                                                    alt="${line.bouquetTemplate.templateName}" />
+                                                <img src="${pageContext.request.contextPath}/images/cart/${line.bouquetTemplate.imageUrl}" alt="${line.bouquetTemplate.templateName}" />
                                             </td>
                                             <td>
                                                 <h4>${line.bouquetTemplate.templateName}</h4>
                                                 <p>Web ID: ${line.bouquetTemplate.templateId}</p>
-                                                <p>
-                                                    Quantity: 
-                                                    <input type="number" id="stk_${line.bouquetTemplate.templateId}" 
-                                                           value="${line.bouquetTemplate.stock}" 
-                                                           min="0" readonly style="border: none; background: transparent; width: 50px;">
-                                                </p>
-                                                <div id="notice_${line.bouquetTemplate.templateId}" style="margin-top: 5px;"></div>
+                                                <input type="number" id="stk_${line.bouquetTemplate.templateId}" value="${line.bouquetTemplate.stock}" min="0" readonly style="display:none;">
+                                                <div id="notice_${line.bouquetTemplate.templateId}" style="margin-top: 5px; color: #ce426c; font-size: 0.95rem;"></div>
                                             </td>
                                             <td>
                                                 ${line.bouquetTemplate.basePrice} VNĐ
                                             </td>
                                             <td class="cart_quantity">
-                                                <button type="button"
-                                                        onclick="decreaseQty('${line.bouquetTemplate.templateId}')"
-                                                        class="btn btn-xs btn-default">
-                                                    -
-                                                </button>
-                                                <input type="number"
-                                                       id="qty_${line.bouquetTemplate.templateId}"
-                                                       name="quantity[]"
-                                                       value="${line.quantity}"
-                                                       min="1"
-                                                       data-base-price="${line.bouquetTemplate.basePrice}"
-                                                       readonly
-                                                       style="width:60px; text-align:center;"/>
-
-                                                <!-- Nút tăng -->
-                                                <button
-                                                    type="button"
-                                                    id="btnPlus_${line.bouquetTemplate.templateId}"
-                                                    onclick="increaseQty('${line.bouquetTemplate.templateId}')"
-
-                                                    class="btn btn-xs btn-default">
-                                                    +
-                                                </button>
-
-
-                                                <!-- Hidden input để gửi templateId lên server -->
-                                                <input type="hidden"
-                                                       name="templateId[]"
-                                                       value="${line.bouquetTemplate.templateId}"/>
+                                                <button type="button" onclick="decreaseQty('${line.bouquetTemplate.templateId}')" id="btnMinus_${line.bouquetTemplate.templateId}" class="btn btn-xs btn-default">-</button>
+                                                <input type="number" id="qty_${line.bouquetTemplate.templateId}" name="quantity[]" value="${line.quantity}" min="1" data-base-price="${line.bouquetTemplate.basePrice}" readonly />
+                                                <button type="button" id="btnPlus_${line.bouquetTemplate.templateId}" onclick="increaseQty('${line.bouquetTemplate.templateId}')" class="btn btn-xs btn-default">+</button>
+                                                <input type="hidden" name="templateId[]" value="${line.bouquetTemplate.templateId}"/>
                                             </td>
                                             <td>
-                                                <span id="lineTotal_${line.bouquetTemplate.templateId}">
-                                                    ${line.bouquetTemplate.basePrice * line.quantity}
-                                                </span> VNĐ
+                                                <span id="lineTotal_${line.bouquetTemplate.templateId}">${line.bouquetTemplate.basePrice * line.quantity}</span> VNĐ
                                             </td>
-                                            <td >
+                                            <td>
                                                 <input type="hidden" name="cartId[]" value="${line.cartId}" />
-                                                <input
-                                                    type="checkbox"
-                                                    name="isChecked[]"
-                                                    value="${line.cartId}"
-                                                    <c:if test="${fn:contains(selectedCartIds, line.cartId.toString())}">
-                                                        checked
-                                                    </c:if>
-                                                    />
+                                                <input type="checkbox" name="isChecked[]" value="${line.cartId}" <c:if test="${fn:contains(selectedCartIds, line.cartId.toString())}">checked</c:if> />
                                             </td>
                                             <td>
-                                                <a href="remove?templateId=${line.bouquetTemplate.templateId}">
-                                                    <i class="fa fa-times"></i>
-                                                </a>
+                                                <a href="remove?templateId=${line.bouquetTemplate.templateId}"><i class="fa fa-times"></i></a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="text-right" style="margin-top:20px;">
+                        <div class="cart-actions">
                             <c:if test="${not empty sessionScope.error}">
                                 <div class="alert alert-danger">${sessionScope.error}</div>
                             </c:if>
-                        </div>
-                        <c:if test="${!sessionScope.isEmpty}">
-                            <c:if test="${sessionScope.user == null}">
-                                <div class="text-right" style="margin-top:20px;">
+                            <c:if test="${!sessionScope.isEmpty}">
+                                <c:if test="${sessionScope.user == null}">
                                     <a href="login.jsp" class="btn btn-success">Thanh Toán</a>
-                                </div>
-                            </c:if>
-                            <c:if test="${sessionScope.user != null}">
-                                <div class="text-right" style="margin-top:20px;">
+                                </c:if>
+                                <c:if test="${sessionScope.user != null}">
                                     <button type="submit" class="btn btn-success">Thanh Toán</button>
-                                </div>
-
+                                </c:if>
                             </c:if>
-                        </c:if>
- 
+                        </div>
                     </form>
                 </c:if>
             </div>
@@ -427,6 +592,84 @@
             });
         });
     </script>
+            <style>
+    .notif-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 38px;
+        right: 0;
+        min-width: 240px;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(44,62,80,0.13);
+        z-index: 9999;
+        padding: 6px 0;
+        list-style: none;
+        max-height: 260px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #ce426c #f3f3f3;
+    }
+    .notif-dropdown-menu::-webkit-scrollbar {
+        width: 8px;
+        background: #f3f3f3;
+        border-radius: 8px;
+    }
+    .notif-dropdown-menu::-webkit-scrollbar-thumb {
+        background: #ce426c;
+        border-radius: 8px;
+    }
+    .notif-dropdown-menu li { display: block; }
+    /* ĐÃ XÓA: .notif-dropdown-menu li:nth-child(n+6) { display: none; } */
+    .notification-bell.open .notif-dropdown-menu {
+        display: block;
+    }
+    .notif-dropdown-menu li a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px 8px 12px;
+        color: #333;
+        font-size: 1rem;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background 0.15s;
+    }
+    .notif-dropdown-menu li a:hover {
+        background: #f8f9fa;
+    }
+    .notif-img-mini {
+        width: 32px; height: 32px; object-fit: cover; border-radius: 6px; box-shadow: 0 1px 4px rgba(206,66,108,0.08);
+        flex-shrink: 0;
+    }
+    .notif-dot {
+        width: 7px;
+        height: 7px;
+        background: #ce426c;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 4px;
+    }
+    .notif-empty {
+        text-align: center;
+        color: #888;
+        padding: 12px 0;
+        font-size: 1rem;
+    }
+</style>
+<script>
+function toggleNotifDropdown() {
+    var bell = document.querySelector('.notification-bell');
+    bell.classList.toggle('open');
+}
+document.addEventListener('click', function(event) {
+    var bell = document.querySelector('.notification-bell');
+    if (!bell.contains(event.target)) {
+        bell.classList.remove('open');
+    }
+});
+</script>
 </body>
 </html>
 

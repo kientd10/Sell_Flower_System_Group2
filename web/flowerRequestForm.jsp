@@ -233,16 +233,6 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="search_box pull-right">
-                        <form action="SearchServlet" method="GET">
-                            <input type="text" name="searchQuery" placeholder="Tìm kiếm mẫu hoa..." required/>
-                            <button type="submit">
-                                <i class="fa fa-search" style="border: none; height: 29px; line-height: 29px;"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
     </div><!--/header-bottom-->        

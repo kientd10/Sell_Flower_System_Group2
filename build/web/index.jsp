@@ -95,7 +95,7 @@
                                                 </c:choose>
                                             </ul>
                                         </li>
-                                        <li><a href="orders"><i class="fa fa-truck"></i> Đơn hàng</a></li>
+                                        <li><a href="orders"><i class="fa fa-truck"></i> Đơn mua</a></li>
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
                                         </c:if> 
                                         <c:if test="${sessionScope.user == null}">
@@ -406,7 +406,7 @@
                                 <ul class="nav nav-pills nav-stacked">
                                     <li><a href="orders">Xem đơn mua</a></li>
                                     <li><a href="profile">Thay đổi hồ sơ</a></li>
-                                    <li><a href="#">Giỏ hoa theo yêu cầu</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/flowerRequestForm.jsp">Giỏ hoa theo yêu cầu</a></li>
                                     <li><a href="${pageContext.request.contextPath}/home?pageNum=1">Tiếp tục mua sắm</a></li>
                                 </ul>
                             </div>
@@ -486,6 +486,8 @@
                 }
             </style>
         </c:if>
+            
+            
         <style>
     .notif-dropdown-menu {
         display: none;
