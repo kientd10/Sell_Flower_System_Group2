@@ -393,14 +393,18 @@
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center gap-3">
                                     <form method="get" action="productmanagement">
-                                        <label>Lọc theo loại:</label>
-                                        <select name="categoryId" onchange="this.form.submit()">
-                                            <option value="">All Categories</option>
-                                            <c:forEach var="c" items="${categoryList}">
-                                                <option value="${c.categoryId}" ${c.categoryId == categoryId ? 'selected' : ''}>${c.categoryName}</option>
+                                        <input type="hidden" name="action" value="view" />
+                                        <label for="filterCategory">Lọc theo danh mục:</label>
+                                        <select name="filterCategory" onchange="this.form.submit()">
+                                            <option value="">Tất cả</option>
+                                            <c:forEach var="cat" items="${categoryList}">
+                                                <option value="${cat.categoryId}" ${cat.categoryId == selectedFilterCategory ? 'selected' : ''}>
+                                                    ${cat.categoryName}
+                                                </option>
                                             </c:forEach>
                                         </select>
                                     </form>
+
 
 
 
@@ -493,8 +497,16 @@
                                                             </form>
                                                             <a href="javascript:void(0)" 
                                                                class="btn btn-sm btn-outline-primary"
-                                                               onclick="openEditModal(${line.templateId}, '${fn:escapeXml(line.templateName)}', '${line.basePrice}', '${fn:escapeXml(line.description)}', '${line.imageUrl}', ${line.categoryId})">
-                                                                <i class="fas fa-edit"></i>
+                                                               onclick="openEditModal(${line.templateId},
+                                                                               '${fn:escapeXml(line.templateName)}',
+                                                                               '${line.basePrice}',
+                                                                               '${fn:escapeXml(line.description)}',
+                                                                               '${line.imageUrl}',
+                                                               ${line.categoryId},
+                                                               ${line.stock}
+                                                                       )"
+
+                                                               <i class="fas fa-edit"></i>
                                                             </a>
 
                                                         </td>
@@ -605,6 +617,11 @@
                                                     <label>URL Hình ảnh</label>
                                                     <input type="text" class="form-control" name="imageUrl" id="modal-imageUrl">
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <label>Số lượng tồn kho</label>
+                                                    <input type="number" class="form-control" name="stock" id="modal-stock" min="0" value="0" />
+                                                </div>
+
                                                 <div class="col-12">
                                                     <label>Mô tả</label>
                                                     <textarea class="form-control" name="description" id="modal-description" rows="3"></textarea>
@@ -711,14 +728,14 @@
                                                                            modal.show();
                                                                        }
 
-                                                                       function openEditModal(id, name, price, desc, imageUrl, categoryId) {
-                                                                           document.getElementById("productModalLabel").innerText = "Chỉnh sửa sản phẩm";
+                                                                       function openEditModal(id, name, price, desc, imageUrl, categoryId, stock) {
                                                                            document.getElementById("modal-templateId").value = id;
                                                                            document.getElementById("modal-templateName").value = name;
                                                                            document.getElementById("modal-basePrice").value = price;
                                                                            document.getElementById("modal-description").value = desc;
                                                                            document.getElementById("modal-imageUrl").value = imageUrl;
                                                                            document.getElementById("modal-categoryId").value = categoryId;
+                                                                           document.getElementById("modal-stock").value = stock;
 
                                                                            let modal = new bootstrap.Modal(document.getElementById('productModal'));
                                                                            modal.show();

@@ -13,13 +13,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.text.Normalizer;
 import java.util.List;
 
 /**
  *
  * @author PC
  */
-
 public class ProductManagementServlet extends HttpServlet {
 
     /**
@@ -108,7 +108,23 @@ public class ProductManagementServlet extends HttpServlet {
                 int limit = 10;
                 String pageParam = request.getParameter("page");
                 String search = request.getParameter("search");
-                System.out.println("🔍 [Search Keyword] = " + search);
+
+                if (search != null) {
+                    String before = search;
+                    search = Normalizer.normalize(search, Normalizer.Form.NFC); // ✅ chuẩn hóa Unicode tổ hợp
+                    System.out.println("🔍 Raw input: " + before);
+                    System.out.println("🔍 Normalized: " + search);
+                }
+
+                String categoryParam = request.getParameter("filterCategory");
+                int filterCategoryId = -1;
+                if (categoryParam != null && !categoryParam.isEmpty()) {
+                    try {
+                        filterCategoryId = Integer.parseInt(categoryParam);
+                    } catch (NumberFormatException e) {
+                        filterCategoryId = -1;
+                    }
+                }
                 if (pageParam != null && !pageParam.isEmpty()) {
                     page = Integer.parseInt(pageParam);
                 }
@@ -118,18 +134,25 @@ public class ProductManagementServlet extends HttpServlet {
                 List<BouquetTemplate> all;
                 int totalItems;
 
-                if (search != null && !search.trim().isEmpty()) {
+                if (filterCategoryId != -1) {
+                    System.out.println("📦 Filter by category ID: " + filterCategoryId);
+                    all = dao.getBouquetsByCategoryIdPaging(filterCategoryId, offset, limit);
+                    totalItems = dao.countBouquetsByCategory(filterCategoryId);
+                    request.setAttribute("selectedFilterCategory", filterCategoryId);
+                } else if (search != null && !search.trim().isEmpty()) {
+                    System.out.println("🔎 Searching with keyword: " + search);
                     all = dao.searchBouquetTemplatesWithPaging(search, offset, limit);
                     totalItems = dao.countSearchResults(search);
-                    System.out.println("✅ Found " + all.size() + " items matching: " + search);
+                    System.out.println("📊 Found " + totalItems + " results for search = " + search);
                     request.setAttribute("search", search);
                 } else {
+                    System.out.println("📋 Viewing all bouquets");
                     all = dao.getAllBouquetsPaging(offset, limit);
                     totalItems = dao.countAllBouquets();
-                    System.out.println("📦 No search keyword provided. Load all items = " + all.size());
                 }
 
                 for (BouquetTemplate b : all) {
+                    System.out.println("🟢 Loaded: " + b.getTemplateId() + " - " + b.getTemplateName());
                     b.setCategoryName(dao.getCategoryNameById(b.getTemplateId()));
                 }
 
@@ -140,6 +163,7 @@ public class ProductManagementServlet extends HttpServlet {
                 request.setAttribute("currentPage", page);
                 request.setAttribute("totalPages", totalPages);
                 request.setAttribute("editMode", false);
+                request.setAttribute("selectedFilterCategory", filterCategoryId);
                 request.getRequestDispatcher("productManagement.jsp").forward(request, response);
                 break;
         }
@@ -156,6 +180,48 @@ public class ProductManagementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+
+        BouquetDAO dao = new BouquetDAO();
+
+        switch (action) {
+            case "save": {
+                String idParam = request.getParameter("templateId");
+                String name = request.getParameter("templateName");
+                String desc = request.getParameter("description");
+                String imageUrl = request.getParameter("imageUrl");
+                double price = Double.parseDouble(request.getParameter("basePrice"));
+                int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+                int createdBy = ((Model.User) request.getSession().getAttribute("user")).getUserId();
+
+                // Nếu có cột stock trong form (tuỳ bạn thêm field đó):
+                String stockParam = request.getParameter("stock");
+                int stock = (stockParam != null && !stockParam.isEmpty()) ? Integer.parseInt(stockParam) : 0;
+
+                if (idParam == null || idParam.trim().isEmpty()) {
+                    // ===== Thêm sản phẩm mới =====
+                    BouquetTemplate newTemplate = new BouquetTemplate();
+                    newTemplate.setTemplateName(name);
+                    newTemplate.setDescription(desc);
+                    newTemplate.setImageUrl(imageUrl);
+                    newTemplate.setBasePrice(price);
+                    newTemplate.setCategoryId(categoryId);
+                    newTemplate.setCreatedBy(createdBy);
+                    newTemplate.setStock(stock);
+                    dao.addBouquet(newTemplate);
+                } else {
+                    // ===== Cập nhật sản phẩm =====
+                    int id = Integer.parseInt(idParam);
+                    dao.updateBouquetFull(id, name, desc, price, imageUrl, stock, categoryId);
+                }
+                response.sendRedirect("productmanagement?action=view");
+                break;
+            }
+
+            default:
+                response.sendRedirect("productmanagement?action=view");
+        }
     }
 
     /**
