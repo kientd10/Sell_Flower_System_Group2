@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
@@ -14,17 +15,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name="FeedbackManagementServlet", urlPatterns={"/feedbacks"})
-public class FeedbackManagementServlet extends HttpServlet {
+@WebServlet(name="FeedbackDetailServlet", urlPatterns={"/feedback-details"})
+public class FeedbackDetailServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -41,10 +38,10 @@ public class FeedbackManagementServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FeedbackManagementServlet</title>");  
+            out.println("<title>Servlet FeedbackDetailServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FeedbackManagementServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet FeedbackDetailServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,54 +55,39 @@ public class FeedbackManagementServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-
- 
+@Override
 protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-    ProductFeedbackDAO dao = new ProductFeedbackDAO();
-    try {
-        String ratingParam = request.getParameter("rating");
-        String timeParam = request.getParameter("time");
-        System.out.println("Rating param: " + ratingParam);
-System.out.println("Time param: " + timeParam);
 
-        List<ProductFeedback> feedbacks = dao.getAllFeedbacksWithCustomerName();
+    String idParam = request.getParameter("id");
 
-        // Lọc theo đánh giá
-        if (ratingParam != null && !ratingParam.isEmpty()) {
-            int rating = Integer.parseInt(ratingParam);
-            feedbacks.removeIf(f -> f.getRating() != rating);
-        }
-
-        // Lọc theo thời gian
-        if (timeParam != null && !timeParam.isEmpty()) {
-            java.time.LocalDateTime now = java.time.LocalDateTime.now();
-            java.time.LocalDateTime fromTime = switch (timeParam) {
-                case "today" -> now.toLocalDate().atStartOfDay();
-                case "yesterday" -> now.minusDays(1).toLocalDate().atStartOfDay();
-                case "week" -> now.with(java.time.DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
-                case "month" -> now.withDayOfMonth(1).toLocalDate().atStartOfDay();
-                case "quarter" -> now.withMonth(((now.getMonthValue() - 1) / 3) * 3 + 1).withDayOfMonth(1).toLocalDate().atStartOfDay();
-                default -> null;
-            };
-
-            if (fromTime != null) {
-                feedbacks.removeIf(f -> f.getCreatedAt().toLocalDateTime().isBefore(fromTime));
-            }
-        }
-
-        // Debug
-        System.out.println("Tổng feedbacks sau lọc = " + feedbacks.size());
-
-        request.setAttribute("feedbacks", feedbacks);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        request.setAttribute("error", "Không thể tải danh sách phản hồi.");
+    if (idParam == null) {
+        response.sendRedirect("feedbacks");
+        return;
     }
 
-    request.getRequestDispatcher("/feedbackManagement.jsp").forward(request, response);
+    try {
+        int id = Integer.parseInt(idParam);
+
+        ProductFeedbackDAO dao = new ProductFeedbackDAO();
+        ProductFeedback f = dao.getFeedbackWithProductNameById(id);
+
+        if (f == null) {
+            request.setAttribute("error", "Không tìm thấy phản hồi nào!");
+        } else {
+            request.setAttribute("feedback", f);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace(); // ✅ Log ra console
+        request.setAttribute("error", "Lỗi xử lý phản hồi: " + e.getMessage());
+    }
+
+    // ✅ Forward phải nằm ngoài try/catch
+    request.getRequestDispatcher("feedback-details.jsp").forward(request, response);
 }
+
+
 
     /** 
      * Handles the HTTP <code>POST</code> method.

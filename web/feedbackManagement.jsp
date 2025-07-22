@@ -451,106 +451,40 @@
                     </div>
 
                     <!-- ===== FEEDBACK STATISTICS ===== -->
-                    <div class="feedback-summary">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="summary-item">
-                                    <div class="summary-number text-primary">42</div>
-                                    <div class="text-muted">Mới</div>
-                                    <div class="text-primary small">+8 hôm nay</div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="summary-item">
-                                    <div class="summary-number text-info">89</div>
-                                    <div class="text-muted">Đã Đọc</div>
-                                    <div class="text-info small">+12 hôm nay</div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="summary-item">
-                                    <div class="summary-number text-success">156</div>
-                                    <div class="text-muted">Đã Phản Hồi</div>
-                                    <div class="text-success small">+15 hôm nay</div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="summary-item">
-                                    <div class="summary-number text-secondary">98</div>
-                                    <div class="text-muted">Đã Giải Quyết</div>
-                                    <div class="text-secondary small">+6 hôm nay</div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="summary-item">
-                                    <div class="summary-number text-warning">23</div>
-                                    <div class="text-muted">Đang Xử Lý</div>
-                                    <div class="text-warning small">+3 hôm nay</div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="summary-item">
-                                    <div class="summary-number text-warning">4.2</div>
-                                    <div class="text-muted">Đánh Giá TB</div>
-                                    <div class="rating-stars small">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  
 
                     <!-- ===== FILTER SECTION ===== -->
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-md-3">
-                                    <label class="form-label">Trạng Thái:</label>
-                                    <select class="form-select" onchange="filterByStatus(this.value)">
-                                        <option value="">Tất Cả Trạng Thái</option>
-                                        <option value="new">Mới (42)</option>
-                                        <option value="read">Đã Đọc (89)</option>
-                                        <option value="replied">Đã Phản Hồi (156)</option>
-                                        <option value="resolved">Đã Giải Quyết (98)</option>
-                                        <option value="pending">Đang Xử Lý (23)</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Loại Phản Hồi:</label>
-                                    <select class="form-select" onchange="filterByType(this.value)">
-                                        <option value="">Tất Cả Loại</option>
-                                        <option value="complaint">Khiếu Nại (45)</option>
-                                        <option value="suggestion">Góp Ý (78)</option>
-                                        <option value="compliment">Khen Ngợi (89)</option>
-                                        <option value="question">Câu Hỏi (56)</option>
-                                        <option value="bug-report">Báo Lỗi (12)</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Đánh Giá:</label>
-                                    <select class="form-select" onchange="filterByRating(this.value)">
-                                        <option value="">Tất Cả Đánh Giá</option>
-                                        <option value="5">5 Sao (89)</option>
-                                        <option value="4">4 Sao (67)</option>
-                                        <option value="3">3 Sao (45)</option>
-                                        <option value="2">2 Sao (28)</option>
-                                        <option value="1">1 Sao (19)</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Thời Gian:</label>
-                                    <select class="form-select" onchange="filterByTime(this.value)">
-                                        <option value="">Tất Cả Thời Gian</option>
-                                        <option value="today">Hôm Nay</option>
-                                        <option value="yesterday">Hôm Qua</option>
-                                        <option value="week">Tuần Này</option>
-                                        <option value="month">Tháng Này</option>
-                                        <option value="quarter">Quý Này</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                 <form method="get" action="feedbacks" id="filterForm">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <label class="form-label">Đánh Giá:</label>
+                         <label>Đánh Giá:</label>
+      <select name="rating" class="form-select" onchange="document.getElementById('filterForm').submit()">
+        <option value="">Tất Cả Đánh Giá</option>
+        <option value="5" ${param.rating == '5' ? 'selected' : ''}>5 Sao</option>
+        <option value="4" ${param.rating == '4' ? 'selected' : ''}>4 Sao</option>
+        <option value="3" ${param.rating == '3' ? 'selected' : ''}>3 Sao</option>
+        <option value="2" ${param.rating == '2' ? 'selected' : ''}>2 Sao</option>
+        <option value="1" ${param.rating == '1' ? 'selected' : ''}>1 Sao</option>
+      </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Thời Gian:</label>
+                    <select class="form-select" name="time" onchange="document.getElementById('filterForm').submit()">
+                        <option value="">Tất Cả Thời Gian</option>
+                        <option value="today" ${param.time == 'today' ? 'selected' : ''}>Hôm Nay</option>
+                        <option value="yesterday" ${param.time == 'yesterday' ? 'selected' : ''}>Hôm Qua</option>
+                        <option value="week" ${param.time == 'week' ? 'selected' : ''}>Tuần Này</option>
+                        <option value="month" ${param.time == 'month' ? 'selected' : ''}>Tháng Này</option>
+                        <option value="quarter" ${param.time == 'quarter' ? 'selected' : ''}>Quý Này</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
                     <!-- ===== FEEDBACK TABLE ===== -->
                     <div class="card">
@@ -633,9 +567,9 @@
                 <td>
     <div class="feedback-actions d-flex gap-1">
         <!-- Nút Xem Chi Tiết -->
-        <button class="btn btn-sm btn-outline-primary" onclick="viewFeedback(${f.feedbackId})" title="Xem Chi Tiết">
-            <i class="fas fa-eye"></i>
-        </button>
+        <a href="feedback-details?id=${f.feedbackId}" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
+    <i class="fas fa-eye"></i>
+</a>
 
         <!-- Nút Phản hồi bình luận -->
         <button class="btn btn-sm btn-outline-success" onclick="replyFeedback(${f.feedbackId})" title="Phản Hồi Bình Luận">
@@ -704,15 +638,20 @@
                                         }
 
                                         // Feedback actions
-                                        function viewFeedback(feedbackId) {
-                                            console.log('Xem chi tiết phản hồi:', feedbackId);
-                                            window.location.href = `feedback-details.jsp?id=${feedbackId}`;
-                                        }
+                                       <!-- Xem chi tiết -->
+        <button class="btn btn-sm btn-outline-primary" onclick="viewFeedback(${f.feedbackId})" title="Xem Chi Tiết">
+            <i class="fas fa-eye"></i>
+        </button>
 
-                                        function replyFeedback(feedbackId) {
-                                            console.log('Phản hồi:', feedbackId);
-                                            window.location.href = `reply-feedback.jsp?id=${feedbackId}`;
-                                        }
+        <!-- Phản hồi bình luận -->
+        <a href="feedbacks?action=reply&id=${f.feedbackId}" class="btn btn-sm btn-outline-success" title="Phản hồi bình luận">
+            <i class="fas fa-reply"></i>
+        </a>
+
+        <!-- Xóa bình luận -->
+        <a href="feedbacks?action=delete&id=${f.feedbackId}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc muốn xóa phản hồi này?')" title="Xóa bình luận">
+            <i class="fas fa-trash"></i>
+        </a>
 
                                         function markAsRead(feedbackId) {
                                             if (confirm('Đánh dấu phản hồi này là đã đọc?')) {
@@ -898,6 +837,19 @@
                                                 }
                                             }
                                         });
+                                       
+                                     
+    function applyFilters() {
+        const rating = document.getElementById("ratingFilter").value;
+        const time = document.getElementById("timeFilter").value;
+        let url = "feedbacks?";
+
+        if (rating) url += "rating=" + rating + "&";
+        if (time) url += "time=" + time;
+
+        window.location.href = url;
+    }
+</script>
         </script>
     </body>
 </html>

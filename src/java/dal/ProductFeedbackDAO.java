@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -118,5 +119,36 @@ public class ProductFeedbackDAO {
         }
         return list;
     }
+  public ProductFeedback getFeedbackWithProductNameById(int id) throws SQLException {
+    String sql = "SELECT f.*, " +
+                 "       bt.name AS productName, " +
+                 "       u.full_name AS customerName " +
+                 "FROM product_feedback f " +
+                 "LEFT JOIN bouquet_templates bt ON f.product_id = bt.template_id " +
+                 "LEFT JOIN users u ON f.customer_id = u.user_id " +
+                 "WHERE f.feedback_id = ?";
+
+    try (Connection conn = DBcontext.getJDBCConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                ProductFeedback f = new ProductFeedback();
+                f.setFeedbackId(rs.getInt("feedback_id"));
+                f.setProductId(rs.getInt("product_id"));
+                f.setCustomerId(rs.getInt("customer_id"));
+                f.setRating(rs.getInt("rating"));
+                f.setComment(rs.getString("comment"));
+                f.setCreatedAt(rs.getTimestamp("created_at"));
+                f.setUpdatedAt(rs.getTimestamp("updated_at"));
+                f.setProductName(rs.getString("productName"));       // ✅ từ bouquet_templates
+                f.setCustomerName(rs.getString("customerName"));     // ✅ từ users
+                return f;
+            }
+        }
+    }
+    return null;
+}
 }
     
