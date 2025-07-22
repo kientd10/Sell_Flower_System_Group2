@@ -27,6 +27,12 @@ public class FlowerRequestServlet extends HttpServlet {
             String color = request.getParameter("color");
             String event = request.getParameter("event");
             String note = request.getParameter("note");
+            String quantityStr = request.getParameter("quantity");
+            String priceStr = request.getParameter("suggestedPrice");
+            int quantity = 1;
+            java.math.BigDecimal suggestedPrice = null;
+            try { quantity = Integer.parseInt(quantityStr); } catch (Exception ignore) {}
+            try { suggestedPrice = new java.math.BigDecimal(priceStr); } catch (Exception ignore) {}
             // Kiểm tra file ảnh hợp lệ
             if (filePart == null || filePart.getSize() == 0 || !filePart.getContentType().startsWith("image/")) {
                 request.setAttribute("error", "Vui lòng chọn file ảnh hợp lệ!");
@@ -45,6 +51,8 @@ public class FlowerRequestServlet extends HttpServlet {
             fr.setColorPreference(color);
             fr.setEventType(event);
             fr.setNote(note);
+            fr.setQuantity(quantity);
+            fr.setSuggestedPrice(suggestedPrice);
             FlowerRequestDAO dao = new FlowerRequestDAO();
             dao.insertRequest(fr);
             NotificationDAO ndao = new NotificationDAO();

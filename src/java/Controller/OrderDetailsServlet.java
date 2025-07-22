@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import Model.Order;
 import Model.OrderItem;
+import java.util.ArrayList;
 
 /**
  *
@@ -73,12 +74,35 @@ public class OrderDetailsServlet extends HttpServlet {
             }
             
             System.out.println("OrderDetailsServlet - Found target order: " + targetOrder.getOrderCode());
-            
-            // Lấy chi tiết sản phẩm trong đơn hàng
-            List<OrderItem> orderItems = orderDAO.getItemsByOrderId(orderId, null);
-            System.out.println("OrderDetailsServlet - Found " + orderItems.size() + " items for order");
-            targetOrder.setItems(orderItems);
-            
+
+            // Bổ sung: Xử lý đơn hoa theo yêu cầu (requestId != null)
+            Integer reqId = targetOrder.getRequestId();
+            if (reqId != null) {
+                try {
+                    dal.FlowerRequestDAO flowerRequestDAO = new dal.FlowerRequestDAO();
+                    Model.FlowerRequest fr = flowerRequestDAO.getRequestById(reqId);
+                    if (fr != null) {
+                        Model.OrderItem customItem = new Model.OrderItem();
+                        customItem.setProductName("Hoa yêu cầu");
+                        int qty = (fr.getQuantity() > 0) ? fr.getQuantity() : 1;
+                        double price = (fr.getSuggestedPrice() != null && fr.getSuggestedPrice().doubleValue() > 0) ? fr.getSuggestedPrice().doubleValue() : 1;
+                        customItem.setQuantity(qty);
+                        customItem.setUnitPrice(price);
+                        String img = (fr.getSampleImageUrl() != null && !fr.getSampleImageUrl().isEmpty()) ? fr.getSampleImageUrl() : fr.getImageUrl();
+                        customItem.setImageUrl(img != null ? img : "");
+                        customItem.setTemplateId(-1);
+                        List<Model.OrderItem> customList = new ArrayList<>();
+                        customList.add(customItem);
+                        targetOrder.setItems(customList);
+                    }
+                } catch (Exception ignore) { /* log nếu cần */ }
+            } else {
+                // Lấy chi tiết sản phẩm trong đơn hàng thường
+                List<OrderItem> orderItems = orderDAO.getItemsByOrderId(orderId, null);
+                System.out.println("OrderDetailsServlet - Found " + orderItems.size() + " items for order");
+                targetOrder.setItems(orderItems);
+            }
+
             request.setAttribute("order", targetOrder);
             System.out.println("OrderDetailsServlet - Forwarding to orderDetails.jsp");
             request.getRequestDispatcher("orderDetails.jsp").forward(request, response);

@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="Model.FlowerRequest" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     FlowerRequest fr = (FlowerRequest) request.getAttribute("flowerRequest");
 %>
@@ -194,18 +195,23 @@
             <div class="shop-reply-content">
                 <div class="shop-reply-title">Phản hồi từ shop về yêu cầu hoa mẫu</div>
                 <div class="shop-reply-text">
-                    <b>Phản hồi chi tiết:</b> ${flowerRequest.shopReply}
+                    <b>Phản hồi chi tiết:</b> ${flowerRequest.shopReply}<br/>
+                    <b>Số lượng:</b> ${flowerRequest.quantity}<br/>
+                    <b>Giá mong muốn:</b> <fmt:formatNumber value="${flowerRequest.suggestedPrice}" type="currency" currencySymbol="₫"/>
                 </div>
                 <div class="shop-reply-actions">
-                    <form action="AcceptShopReplyServlet" method="post" style="display:inline;">
+                    <form action="confirm-order" method="post" style="display:inline;">
                         <input type="hidden" name="requestId" value="${flowerRequest.requestId}" />
                         <button type="submit" class="btn-accept"><i class="fa fa-check"></i> Xác nhận mua</button>
                     </form>
-                    <form action="RejectShopReplyServlet" method="post" style="display:inline;">
+                    <form action="cancel-request" method="post" style="display:inline;">
                         <input type="hidden" name="requestId" value="${flowerRequest.requestId}" />
                         <button type="submit" class="btn-cancel"><i class="fa fa-times"></i> Hủy yêu cầu</button>
                     </form>
                 </div>
+                <c:if test="${not empty errorMsg}">
+                    <div style="color: red; font-weight: bold; margin-top: 18px; text-align: right; padding-right: 10px;">${errorMsg}</div>
+                </c:if>
             </div>
         </c:otherwise>
     </c:choose>

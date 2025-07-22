@@ -16,6 +16,7 @@ public class FlowerRequest {
     private Timestamp updatedAt;
     private java.math.BigDecimal suggestedPrice;
     private String customerName;
+    private int quantity;
 
     // Getters and setters
     public int getRequestId() { return requestId; }
@@ -46,4 +47,6 @@ public class FlowerRequest {
     public void setSuggestedPrice(java.math.BigDecimal suggestedPrice) { this.suggestedPrice = suggestedPrice; }
     public String getCustomerName() { return customerName; }
     public void setCustomerName(String customerName) { this.customerName = customerName; }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 } 

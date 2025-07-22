@@ -66,12 +66,39 @@ public class OrderManagementServlet extends HttpServlet {
         // Lấy danh sách đơn hàng theo role và filter
         List<Order> orders = new ArrayList<>();
         try {
+            dal.FlowerRequestDAO flowerRequestDAO = new dal.FlowerRequestDAO();
             if (roleId == 2) { // Staff
                 orders = orderDAO.getOrdersByStatus("Đang chuẩn bị");
             } else if (roleId == 4) { // Shipper
                 orders = orderDAO.getOrdersByStatus("Chờ giao hàng");
             } else {
                 orders = orderDAO.getOrdersForManagement(roleId, status, category, priceRange, province, search, dateFilter, sortPrice, page, pageSize);
+            }
+            // Gán thông tin hoa theo yêu cầu nếu có requestId
+            for (Model.Order order : orders) {
+                try {
+                    java.lang.reflect.Method getRequestId = order.getClass().getMethod("getRequestId");
+                    Object reqIdObj = getRequestId.invoke(order);
+                    Integer reqId = (reqIdObj instanceof Integer) ? (Integer) reqIdObj : null;
+                    if (reqId != null) {
+                        Model.FlowerRequest fr = flowerRequestDAO.getRequestById(reqId);
+                        if (fr != null) {
+                            Model.OrderItem customItem = new Model.OrderItem();
+                            customItem.setProductName("Hoa yêu cầu");
+                            Integer qtyObj = fr.getQuantity();
+                            int qty = (qtyObj != null && qtyObj > 0) ? qtyObj : 1;
+                            java.math.BigDecimal priceObj = fr.getSuggestedPrice();
+                            double price = (priceObj != null && priceObj.doubleValue() > 0) ? priceObj.doubleValue() : 1;
+                            customItem.setQuantity(qty);
+                            customItem.setUnitPrice(price);
+                            customItem.setImageUrl(fr.getImageUrl());
+                            customItem.setTemplateId(-1);
+                            List<Model.OrderItem> customList = new ArrayList<>();
+                            customList.add(customItem);
+                            order.setItems(customList);
+                        }
+                    }
+                } catch (Exception ignore) {}
             }
         } catch (Exception e) {
             e.printStackTrace();

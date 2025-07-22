@@ -31,6 +31,8 @@ public class Order {
     private String email;
     private String staffName;
     private String shipperName;
+    private Integer requestId;
+    private Model.FlowerRequest customRequest;
 
     public Order() {
         this.items = new ArrayList<>();
@@ -153,4 +155,9 @@ public void setCreatedAt(String createdAt) {
     public void setShipperName(String shipperName) {
         this.shipperName = shipperName;
     }
+
+    public Integer getRequestId() { return requestId; }
+    public void setRequestId(Integer requestId) { this.requestId = requestId; }
+    public Model.FlowerRequest getCustomRequest() { return customRequest; }
+    public void setCustomRequest(Model.FlowerRequest customRequest) { this.customRequest = customRequest; }
 }
