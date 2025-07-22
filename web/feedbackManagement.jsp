@@ -429,14 +429,9 @@
                         </div>
 
                         <div class="d-flex align-items-center gap-3">
-                            <button class="btn btn-success" onclick="exportFeedback()">
-                                <i class="fas fa-file-export me-2"></i>Xuất Excel
-                            </button>
+
                             <button class="btn btn-outline-secondary" onclick="refreshFeedback()">
                                 <i class="fas fa-sync-alt me-2"></i>Làm Mới
-                            </button>
-                            <button class="btn btn-primary" onclick="generateFeedbackReport()">
-                                <i class="fas fa-chart-bar me-2"></i>Báo Cáo
                             </button>
                         </div>
                     </div>
@@ -584,7 +579,7 @@
                                             <th>Trạng Thái</th>
                                             <th>Ngày Tạo</th>
                                             <th>Ưu Tiên</th>
-                                            <th>Thao Tác</th>
+                                
                                         </tr>
                                     </thead>
                                     <!-- =====phan duc lam===== -->
@@ -602,8 +597,7 @@
                                                     <div>
                                                         <strong>${f.customerName}</strong>
                                                         <!-- Nếu có thêm email và phone từ bảng user thì bạn có thể truyền và hiện ở đây -->
-                                                        <div class="text-muted small">${f.email}</div>
-                                                        <div class="text-muted small">${f.phone}</div>
+                                                        
                                                     </div>
                                                 </td>
                                                 <td>
@@ -635,18 +629,25 @@
                                                         <div class="text-muted small"><fmt:formatDate value="${f.createdAt}" pattern="HH:mm"/></div>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <span class="priority-indicator medium"></span>
-                                                    <span class="text-warning small">Trung Bình</span>
-                                                </td>
-                                                <td>
-                                                    <div class="feedback-actions">
-                                                        <button class="btn btn-sm btn-outline-primary" onclick="viewFeedback(${f.feedbackId})" title="Xem Chi Tiết">
-                                                            <i class="fas fa-eye"></i>
-                                                        </button>
-                                                        <!-- Các nút khác bạn muốn thêm -->
-                                                    </div>
-                                                </td>
+                    
+                <td>
+    <div class="feedback-actions d-flex gap-1">
+        <!-- Nút Xem Chi Tiết -->
+        <button class="btn btn-sm btn-outline-primary" onclick="viewFeedback(${f.feedbackId})" title="Xem Chi Tiết">
+            <i class="fas fa-eye"></i>
+        </button>
+
+        <!-- Nút Phản hồi bình luận -->
+        <button class="btn btn-sm btn-outline-success" onclick="replyFeedback(${f.feedbackId})" title="Phản Hồi Bình Luận">
+            <i class="fas fa-reply"></i>
+        </button>
+
+        <!-- Nút Xóa bình luận -->
+        <button class="btn btn-sm btn-outline-danger" onclick="deleteFeedback(${f.feedbackId})" title="Xóa Bình Luận">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -655,28 +656,6 @@
                                 </table>
                             </div>
 
-                            <!-- ===== BULK ACTIONS ===== -->
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div>
-                                    <button class="btn btn-outline-success btn-sm" onclick="bulkMarkAsRead()" disabled id="bulkReadBtn">
-                                        <i class="fas fa-check me-2"></i>Đánh Dấu Đã Đọc
-                                    </button>
-                                    <button class="btn btn-outline-primary btn-sm" onclick="bulkReply()" disabled id="bulkReplyBtn">
-                                        <i class="fas fa-reply me-2"></i>Phản Hồi Hàng Loạt
-                                    </button>
-                                    <button class="btn btn-outline-info btn-sm" onclick="bulkExport()" disabled id="bulkExportBtn">
-                                        <i class="fas fa-file-export me-2"></i>Xuất Đã Chọn
-                                    </button>
-                                    <button class="btn btn-outline-danger btn-sm" onclick="bulkDelete()" disabled id="bulkDeleteBtn">
-                                        <i class="fas fa-trash me-2"></i>Xóa Phản Hồi
-                                    </button>
-                                </div>
-                                <div class="text-muted">
-                                    Hiển thị 1 đến 5 trong tổng số 248 phản hồi
-                                </div>
-                            </div>
-
-                            <!-- ===== PAGINATION ===== -->
                             <nav aria-label="Feedback pagination" class="mt-3">
                                 <ul class="pagination">
                                     <li class="page-item disabled">
