@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>User Management | Flower Shop</title>
+        <title>Quản Lý Nhân Sự | Flower Shop</title>
         <!-- External CSS -->
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -351,7 +351,11 @@
                         <li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                         <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
                         <li class="sidebar-header">Hệ Thống</li>
+
+                        <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
+
                         <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Nhân Sự</a></li>
+
                         <li>
                             <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
                                 <i class="fas fa-comments"></i> Quản Lý Phản Hồi
@@ -393,7 +397,10 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
                             <h2 class="page-title">Quản Lý Nhân Sự</h2>
+
+
                             <p class="text-muted">Quản lý nhân viên và shipper trong hệ thống</p>
+
                         </div>
                         <div class="text-muted">
                             Ngày cập nhật: <%= new java.text.SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new java.util.Date()) %>
@@ -593,12 +600,16 @@
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form action="UserManagementServlet" method="post">
+                            <form action="UserManagementServlet" method="post" >
                                 <input type="hidden" name="action" value="add">
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
+
+                                            <label class="form-label">Tên</label>
+
                                             <label class="form-label">Tên tài khoản</label>
+
                                             <input type="text" name="username" class="form-control" maxlength="50" required autocomplete="off">
                                         </div>
                                         <div class="col-md-6 mb-3">
@@ -625,6 +636,10 @@
                                             <label class="form-label">Vai trò</label>
                                             <select name="roleId" class="form-select" required>
                                                 <option value="2">Staff</option>
+
+                                                <option value="3">Manager</option>
+
+
 
                                                 <option value="4">Shipper</option>
                                             </select>
@@ -656,7 +671,11 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editUserModalLabel">
+
+                                    <i class="fas fa-user-edit me-2"></i>Cập nhật thông tin
+
                                     <i class="fas fa-user-edit me-2"></i>Sửa Thông Tin
+
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
@@ -677,8 +696,11 @@
                                     <div class="row">
 
 
+
+
                                     </div>
                                     <div class="row">
+
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Số điện thoại</label>
                                             <input type="text" name="phone" class="form-control" value="<%= userToEdit != null ? userToEdit.getPhone() : "" %>" pattern="0[0-9]{9,10}" title="Số điện thoại phải bắt đầu bằng 0 và có 10-11 số">
@@ -751,8 +773,12 @@
                 }
                 function filterByRole() {
                     const role = document.getElementById("roleFilter").value;
+
+                    window.location.href = 'UserManagementServlet?action=search&roleFilter=' + role;
+
                     const pageSize = "${param.pageSize != null ? param.pageSize : 10}";
                     window.location.href = "UserManagementServlet?action=search&roleFilter=" + role + "&page=1&pageSize=" + pageSize;
+
                 }
 
 

@@ -534,7 +534,11 @@
                                                         <td><span class="badge bg-info">${line.categoryName}</span></td>
                                                         <td>
                                                             
+
+                                                            <div class="text-muted small"><strong>${line.basePrice}</strong></div>
+
                                                             <div class="text-muted small"><strong>${line.basePrice} VNĐ</strong></div>
+
                                                         </td>
                                                         <td>
                                                             <strong>${line.stock}</strong>

@@ -334,6 +334,22 @@ public class UserDAO {
         return users;
     }
 
+
+public List<User> searchUsers(String searchTerm, int page, int pageSize) throws SQLException {
+    List<User> users = new ArrayList<>();
+    String sql = "SELECT * FROM users WHERE (username LIKE ? OR email LIKE ? OR full_name LIKE ?) AND role_id IN (2, 3, 4) ORDER BY user_id LIMIT ? OFFSET ?";
+    try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String searchPattern = "%" + (searchTerm != null ? searchTerm : "") + "%";
+        stmt.setString(1, searchPattern);
+        stmt.setString(2, searchPattern);
+        stmt.setString(3, searchPattern);
+        stmt.setInt(4, pageSize);
+        stmt.setInt(5, (page - 1) * pageSize);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            User u = new User();
+            u.setUserId(rs.getInt("user_id"));
+
     public List<User> searchUsers(String searchTerm, int page, int pageSize) throws SQLException {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE (username LIKE ? OR email LIKE ? OR full_name LIKE ?) AND role_id IN (2, 3, 4) ORDER BY user_id LIMIT ? OFFSET ?";
@@ -348,6 +364,7 @@ public class UserDAO {
             while (rs.next()) {
                 User u = new User();
                 u.setUserId(rs.getInt("user_id"));
+
                 u.setUsername(rs.getString("username"));
                 u.setEmail(rs.getString("email"));
                 u.setPassword(rs.getString("password"));
@@ -359,13 +376,64 @@ public class UserDAO {
                 u.setCreatedAt(rs.getTimestamp("created_at"));
                 u.setUpdatedAt(rs.getTimestamp("updated_at"));
                 u.setArea(rs.getString("area"));
-                users.add(u);
-            }
+            users.add(u);
         }
-        return users;
     }
+    return users;
+}
+public List<User> searchUsers(String searchTerm, Integer roleFilter, int page, int pageSize) throws SQLException {
+    List<User> users = new ArrayList<>();
+    String sql = "SELECT * FROM users WHERE (username LIKE ? OR email LIKE ? OR full_name LIKE ?) AND role_id IN (2,3,4) ";
+    if (roleFilter != null) {
+        sql += " AND role_id = ?";
+    }
+    sql += " ORDER BY user_id LIMIT ? OFFSET ?";
+
+    try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String searchPattern = "%" + (searchTerm != null ? searchTerm : "") + "%";
+        stmt.setString(1, searchPattern);
+        stmt.setString(2, searchPattern);
+        stmt.setString(3, searchPattern);
+        int index = 4;
+        if (roleFilter != null) {
+            stmt.setInt(index++, roleFilter);
+        }
+        stmt.setInt(index++, pageSize);
+        stmt.setInt(index, (page - 1) * pageSize);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            User u = new User();
+            u.setUserId(rs.getInt("user_id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setPassword(rs.getString("password"));
+                u.setFullName(rs.getString("full_name"));
+                u.setPhone(rs.getString("phone"));
+                u.setAddress(rs.getString("address"));
+                u.setRoleId(rs.getInt("role_id"));
+                u.setIsActive(rs.getBoolean("is_active"));
+                u.setCreatedAt(rs.getTimestamp("created_at"));
+                u.setUpdatedAt(rs.getTimestamp("updated_at"));
+                u.setArea(rs.getString("area"));
+            users.add(u);
+        }
+    }
+    return users;
+}
+
 
     public int getTotalUsers(String searchTerm) throws SQLException {
+
+    String sql = "SELECT COUNT(*) FROM users WHERE (username LIKE ? OR email LIKE ? OR full_name LIKE ?) AND role_id IN (2, 3, 4)";
+    try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String searchPattern = "%" + (searchTerm != null ? searchTerm : "") + "%";
+        stmt.setString(1, searchPattern);
+        stmt.setString(2, searchPattern);
+        stmt.setString(3, searchPattern);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+
         String sql = "SELECT COUNT(*) FROM users WHERE (username LIKE ? OR email LIKE ? OR full_name LIKE ?) AND role_id IN (2, 3, 4)";
         try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             String searchPattern = "%" + (searchTerm != null ? searchTerm : "") + "%";
@@ -376,9 +444,34 @@ public class UserDAO {
             if (rs.next()) {
                 return rs.getInt(1);
             }
+
         }
         return 0;
     }
+    return 0;
+}
+    public int getTotalUsers(String searchTerm, Integer roleFilter) throws SQLException {
+    String sql = "SELECT COUNT(*) FROM users WHERE (username LIKE ? OR email LIKE ? OR full_name LIKE ?) AND role_id IN (2,3,4)";
+    if (roleFilter != null) {
+        sql += " AND role_id = ?";
+    }
+
+    try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String searchPattern = "%" + (searchTerm != null ? searchTerm : "") + "%";
+        stmt.setString(1, searchPattern);
+        stmt.setString(2, searchPattern);
+        stmt.setString(3, searchPattern);
+        if (roleFilter != null) {
+            stmt.setInt(4, roleFilter);
+        }
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    }
+    return 0;
+}
+
 
     // Vô hiệu hóa người dùng (thay vì xóa)
     public boolean deactivateUser(int userId) throws SQLException {
