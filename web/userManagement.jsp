@@ -392,8 +392,13 @@
                     <!-- Page Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
+<<<<<<< Updated upstream
                             <h2 class="page-title">User Management</h2>
                             <p class="text-muted">Quản lý thông tin người dùng hệ thống</p>
+=======
+                            <h2 class="page-title">Quản Lý Nhân Sự</h2>
+                            <p class="text-muted">Quản lý Staff và Shipper trong hệ thống</p>
+>>>>>>> Stashed changes
                         </div>
                         <div class="text-muted">
                             Ngày cập nhật: <%= new java.text.SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new java.util.Date()) %>
