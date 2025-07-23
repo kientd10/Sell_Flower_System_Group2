@@ -38,7 +38,9 @@ public class UserManagementServlet extends HttpServlet {
 
         int page = pageParam != null ? Integer.parseInt(pageParam) : 1;
         int pageSize = pageSizeParam != null ? Integer.parseInt(pageSizeParam) : 10;
-
+        String roleFilterParam = request.getParameter("roleFilter");
+        Integer roleFilter = (roleFilterParam != null && !roleFilterParam.isEmpty())
+                ? Integer.parseInt(roleFilterParam) : null;
         try {
             if ("edit".equals(action)) {
                 String idParam = request.getParameter("id");
@@ -64,8 +66,9 @@ public class UserManagementServlet extends HttpServlet {
                 }
             }
 
-            List<User> users = u.searchUsers(searchTerm, page, pageSize);
-            int totalUsers = u.getTotalUsers(searchTerm);
+            List<User> users = u.searchUsers(searchTerm, roleFilter, page, pageSize);
+            int totalUsers = u.getTotalUsers(searchTerm, roleFilter);
+
             int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
 
             request.setAttribute("users", users);
@@ -73,7 +76,7 @@ public class UserManagementServlet extends HttpServlet {
             request.setAttribute("pageSize", pageSize);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("searchTerm", searchTerm);
-
+            request.setAttribute("roleFilter", roleFilter);
             request.getRequestDispatcher("userManagement.jsp").forward(request, response);
 
         } catch (SQLException ex) {
@@ -114,6 +117,7 @@ public class UserManagementServlet extends HttpServlet {
         String roleIdParam = request.getParameter("roleId");
         String isActiveParam = request.getParameter("isActive");
 
+        // === VALIDATION CHUNG ===
         if (username == null || username.trim().isEmpty() || username.length() > 50) {
             response.sendRedirect("UserManagementServlet?action=search&error=invalidUsername");
             return;
@@ -122,20 +126,8 @@ public class UserManagementServlet extends HttpServlet {
             response.sendRedirect("UserManagementServlet?action=search&error=invalidEmail");
             return;
         }
-        if (password == null || password.trim().isEmpty() || password.length() < 6 || password.length() > 255) {
-            response.sendRedirect("UserManagementServlet?action=search&error=invalidPassword");
-            return;
-        }
-        if (fullName == null || fullName.trim().isEmpty() || fullName.length() > 100) {
-            response.sendRedirect("UserManagementServlet?action=search&error=invalidFullName");
-            return;
-        }
         if (phone != null && !phone.trim().isEmpty() && !isValidPhone(phone)) {
             response.sendRedirect("UserManagementServlet?action=search&error=invalidPhone");
-            return;
-        }
-        if (roleIdParam == null || !roleIdParam.matches("2|1|4")) {
-            response.sendRedirect("UserManagementServlet?action=search&error=invalidRole");
             return;
         }
         if (isActiveParam == null) {
@@ -143,17 +135,24 @@ public class UserManagementServlet extends HttpServlet {
             return;
         }
 
-        user.setUsername(username.trim());
-        user.setEmail(email.trim());
-        user.setPassword(password.trim());
-        user.setFullName(fullName.trim());
-        user.setPhone(phone != null ? phone.trim() : null);
-        user.setAddress(address != null ? address.trim() : null);
-        user.setRoleId(Integer.parseInt(roleIdParam));
-        user.setIsActive(Boolean.parseBoolean(isActiveParam));
-
         try {
             if ("add".equals(action)) {
+                // Validate password
+                if (password == null || password.trim().isEmpty() || password.length() < 6 || password.length() > 255) {
+                    response.sendRedirect("UserManagementServlet?action=search&error=invalidPassword");
+                    return;
+                }
+                // Validate role
+                if (roleIdParam == null || !roleIdParam.matches("2|1|4")) {
+                    response.sendRedirect("UserManagementServlet?action=search&error=invalidRole");
+                    return;
+                }
+                // Validate fullName
+                if (fullName == null || fullName.trim().isEmpty() || fullName.length() > 100) {
+                    response.sendRedirect("UserManagementServlet?action=search&error=invalidFullName");
+                    return;
+                }
+
                 if (u.emailExists(email)) {
                     response.sendRedirect("UserManagementServlet?action=search&error=emailExists");
                     return;
@@ -162,9 +161,42 @@ public class UserManagementServlet extends HttpServlet {
                     response.sendRedirect("UserManagementServlet?action=search&error=usernameExists");
                     return;
                 }
+
+                user.setUsername(username.trim());
+                user.setEmail(email.trim());
+                user.setPassword(password.trim());
+                user.setFullName(fullName.trim());
+                user.setPhone(phone != null ? phone.trim() : null);
+                user.setAddress(address != null ? address.trim() : null);
+                user.setRoleId(Integer.parseInt(roleIdParam));
+                user.setIsActive(Boolean.parseBoolean(isActiveParam));
+
                 u.addUser(user);
                 response.sendRedirect("UserManagementServlet?action=search&success=add");
+
             } else if ("update".equals(action)) {
+                // Lấy dữ liệu cũ
+                User oldUser = u.getInfoUserByID(user.getUserId());
+                if (oldUser == null) {
+                    response.sendRedirect("UserManagementServlet?action=search&error=invalidId");
+                    return;
+                }
+
+                user.setUsername(username.trim());
+                user.setEmail(email.trim());
+                user.setPassword(oldUser.getPassword());
+                user.setRoleId(oldUser.getRoleId());
+                user.setPhone(phone != null ? phone.trim() : null);
+                user.setAddress(address != null ? address.trim() : null);
+                user.setIsActive(Boolean.parseBoolean(isActiveParam));
+
+                // Giữ lại tên cũ nếu người dùng không nhập gì
+                if (fullName != null && !fullName.trim().isEmpty()) {
+                    user.setFullName(fullName.trim());
+                } else {
+                    user.setFullName(oldUser.getFullName());
+                }
+
                 u.updateUser(user);
                 response.sendRedirect("UserManagementServlet?action=search&success=update");
             }

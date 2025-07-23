@@ -478,7 +478,7 @@
                                                         </td>
                                                         <td><span class="badge bg-info">${line.categoryName}</span></td>
                                                         <td>
-                                                            <strong>$150.00</strong>
+                                                            
                                                             <input type="number" name="basePrice" class="form-control" min="0" step="0.01"
                                                                    value="${line.basePrice}" />
 
@@ -533,8 +533,8 @@
                                                         </td>
                                                         <td><span class="badge bg-info">${line.categoryName}</span></td>
                                                         <td>
-                                                            <strong>$150.00</strong>
-                                                            <div class="text-muted small">Cost: ${line.basePrice}</div>
+                                                            
+                                                            <div class="text-muted small"><strong>${line.basePrice} VNĐ</strong></div>
                                                         </td>
                                                         <td>
                                                             <strong>${line.stock}</strong>
