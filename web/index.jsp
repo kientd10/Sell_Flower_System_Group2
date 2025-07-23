@@ -186,7 +186,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <p style="text-align: center; font-weight: bold; color: red;">Không có sản phẩm nổi bật nào.</p>
+                                <p style="text-align: center; font-weight: bold; color: black;">...</p>
                             </c:otherwise>
                         </c:choose>
 
