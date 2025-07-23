@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>User Management | Flower Shop</title>
+        <title>Quản Lý Nhân Sự | Flower Shop</title>
         <!-- External CSS -->
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -336,7 +336,7 @@
                     <li class="sidebar-header">Menu Chính</li>
                     <!-- Chỉ hiển thị nếu là Staff -->
                     <c:if test="${sessionScope.user.roleId == 2}">
-                       <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
+                        <li><a href="productmanagement?action=view" class="sidebar-link" id="menu-productManagement"><i class="fas fa-list"></i>Quản Lí Sản Phẩm</a></li>
                         <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
                         <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
                         <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
@@ -352,7 +352,7 @@
                         <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
                         <li class="sidebar-header">Hệ Thống</li>
                         <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-                       <li>
+                        <li>
                             <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
                                 <i class="fas fa-comments"></i> Quản Lý Phản Hồi
                             </a>
@@ -392,12 +392,21 @@
                     <!-- Page Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
-                            <h2 class="page-title">User Management</h2>
-                            <p class="text-muted">Quản lý thông tin người dùng hệ thống</p>
+                            <h2 class="page-title">Quản Lý Nhân Sự</h2>
                         </div>
                         <div class="text-muted">
                             Ngày cập nhật: <%= new java.text.SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new java.util.Date()) %>
                         </div>
+                    </div>
+                    <!-- Dropdown lọc theo role dạng 'Lọc theo danh mục: Tất cả ▼' -->
+                    <div class="mb-3 d-flex align-items-center" style="gap: 10px;">
+                        <label for="roleFilter" class="form-label mb-0"><strong>Lọc theo vai trò:</strong></label>
+                        <select id="roleFilter" class="form-select" style="width: 200px;" onchange="filterByRole()">
+                            <option value="">Tất cả</option>
+                            <option value="2" ${param.roleFilter == '2' ? 'selected' : ''}>Staff</option>
+                            <option value="3" ${param.roleFilter == '3' ? 'selected' : ''}>Manager</option>
+                            <option value="4" ${param.roleFilter == '4' ? 'selected' : ''}>Shipper</option>
+                        </select>
                     </div>
 
                     <!-- Alert Messages -->
@@ -518,14 +527,12 @@
                                                 <td>${u.phone}</td>
                                                 <td>
                                                     <span class="role-badge
-                                                          ${u.roleId == 1 ? 'role-customer' : 
-                                                            u.roleId == 2 ? 'role-staff' : 
+                                                          ${u.roleId == 2 ? 'role-staff' : 
                                                             u.roleId == 3 ? 'role-manager' : 
-                                                            'role-shipper'}">
-                                                              ${u.roleId == 1 ? 'Customer' : 
-                                                                u.roleId == 2 ? 'Staff' : 
+                                                            u.roleId == 4 ? 'role-shipper' : ''}">
+                                                              ${u.roleId == 2 ? 'Staff' : 
                                                                 u.roleId == 3 ? 'Manager' : 
-                                                                'Shipper'}
+                                                                u.roleId == 4 ? 'Shipper' : ''}
                                                           </span>
                                                     </td>
                                                     <td>
@@ -580,49 +587,49 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addUserModalLabel">
-                                    <i class="fas fa-user-plus me-2"></i>Add New User
+                                    <i class="fas fa-user-plus me-2"></i>Thêm tài khoản
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form action="UserManagementServlet" method="post">
+                            <form action="UserManagementServlet" method="post" >
                                 <input type="hidden" name="action" value="add">
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Username</label>
-                                            <input type="text" name="username" class="form-control" maxlength="50" required>
+                                            <label class="form-label">Tên</label>
+                                            <input type="text" name="username" class="form-control" maxlength="50" required autocomplete="off">
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Email</label>
-                                            <input type="email" name="email" class="form-control" maxlength="100" required>
+                                            <input type="email" name="email" class="form-control" maxlength="100" required >
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Password</label>
-                                            <input type="password" name="password" class="form-control" minlength="6" maxlength="255" required>
+                                            <label class="form-label">Mật khẩu</label>
+                                            <input type="password" name="password" class="form-control" minlength="6" maxlength="255" required autocomplete="new-password">
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Full Name</label>
+                                            <label class="form-label">Họ và tên</label>
                                             <input type="text" name="fullName" class="form-control" maxlength="100" required>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Phone</label>
+                                            <label class="form-label">Số điện thoại</label>
                                             <input type="text" name="phone" class="form-control" pattern="0[0-9]{9,10}" title="Số điện thoại phải bắt đầu bằng 0 và có 10-11 số">
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Role</label>
                                             <select name="roleId" class="form-select" required>
                                                 <option value="2">Staff</option>
-                                                <option value="1">Customer</option>
+                                                <option value="3">Manager</option>
                                                 <option value="4">Shipper</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Address</label>
+                                        <label class="form-label">Địa chỉ</label>
                                         <input type="text" name="address" class="form-control">
                                     </div>
                                     <div class="form-check">
@@ -633,8 +640,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Add User</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                                    <button type="submit" class="btn btn-primary">Thêm</button>
                                 </div>
                             </form>
                         </div>
@@ -647,7 +654,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editUserModalLabel">
-                                    <i class="fas fa-user-edit me-2"></i>Edit User
+                                    <i class="fas fa-user-edit me-2"></i>Cập nhật thông tin
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
@@ -657,7 +664,7 @@
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Username</label>
+                                            <label class="form-label">Tên</label>
                                             <input type="text" name="username" class="form-control" value="<%= userToEdit != null ? userToEdit.getUsername() : "" %>" maxlength="50" required>
                                         </div>
                                         <div class="col-md-6 mb-3">
@@ -667,30 +674,13 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Password</label>
-                                            <input type="password" name="password" class="form-control" value="<%= userToEdit != null ? userToEdit.getPassword() : "" %>" minlength="6" maxlength="255" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Full Name</label>
-                                            <input type="text" name="fullName" class="form-control" value="<%= userToEdit != null ? userToEdit.getFullName() : "" %>" maxlength="100" required>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Phone</label>
+                                            <label class="form-label">Số điện thoại</label>
                                             <input type="text" name="phone" class="form-control" value="<%= userToEdit != null ? userToEdit.getPhone() : "" %>" pattern="0[0-9]{9,10}" title="Số điện thoại phải bắt đầu bằng 0 và có 10-11 số">
                                         </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Role</label>
-                                            <select name="roleId" class="form-select" required>
-                                                <option value="2" <%= userToEdit != null && userToEdit.getRoleId() == 2 ? "selected" : "" %>>Staff</option>
-                                                <option value="1" <%= userToEdit != null && userToEdit.getRoleId() == 1 ? "selected" : "" %>>Customer</option>
-                                                <option value="4" <%= userToEdit != null && userToEdit.getRoleId() == 4 ? "selected" : "" %>>Shipper</option>
-                                            </select>
-                                        </div>
+
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Address</label>
+                                        <label class="form-label">Địa chỉ</label>
                                         <input type="text" name="address" class="form-control" value="<%= userToEdit != null ? userToEdit.getAddress() : "" %>">
                                     </div>
                                     <div class="form-check">
@@ -701,8 +691,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Update User</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                                    <button type="submit" class="btn btn-primary">Cập nhật</button>
                                 </div>
                             </form>
                         </div>
@@ -752,6 +742,10 @@
                 // Export users
                 function exportUsers() {
                     window.location.href = 'export-users.jsp?format=excel';
+                }
+                function filterByRole() {
+                    const role = document.getElementById("roleFilter").value;
+                    window.location.href = 'UserManagementServlet?action=search&roleFilter=' + role;
                 }
 
 
