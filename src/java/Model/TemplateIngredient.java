@@ -12,9 +12,19 @@ public class TemplateIngredient {
     private int ingredientId;
     private int templateId;
     private int typeId;
+    private int colorId;
     private int requiredQuantity;
     private String Name;
 
+    public int getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(int colorId) {
+        this.colorId = colorId;
+    }
+    
+    
     // Getters và Setters
     public int getIngredientId() {
         return ingredientId;

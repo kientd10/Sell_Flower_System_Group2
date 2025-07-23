@@ -22,10 +22,20 @@ public class BouquetTemplate {
     private List<TemplateIngredient> ingredients;
     private int categoryId;
     private int createdBy;
+    private int ingredientID;
 
     public BouquetTemplate() {
     }
 
+    public BouquetTemplate(int templateId, String templateName, String description, double basePrice, String imageUrl, int Stock,int ingredientID) {
+        this.templateId = templateId;
+        this.templateName = templateName;
+        this.description = description;
+        this.basePrice = basePrice;
+        this.imageUrl = imageUrl;
+        this.Stock = Stock;
+        this.ingredientID=ingredientID;
+    }
     public BouquetTemplate(int templateId, String templateName, String description, double basePrice, String imageUrl, int Stock) {
         this.templateId = templateId;
         this.templateName = templateName;
@@ -43,6 +53,15 @@ public class BouquetTemplate {
         this.imageUrl = imageUrl;
     }
 
+    public int getIngredientID() {
+        return ingredientID;
+    }
+
+    public void setIngredientID(int ingredientID) {
+        this.ingredientID = ingredientID;
+    }
+
+    
     public int getStock() {
         return Stock;
     }

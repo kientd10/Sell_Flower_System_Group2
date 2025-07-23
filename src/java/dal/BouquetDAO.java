@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import Model.BouquetTemplate;
 import Model.Category;
+import Model.FlowerColor;
 import Model.RawFlower;
 import Model.ShoppingCart;
 import java.sql.SQLException;
@@ -31,83 +32,46 @@ public class BouquetDAO {
         }
     }
 
- public List<BouquetTemplate> getBouquetsByCategoryId(int categoryId) {
-    List<BouquetTemplate> bouquets = new ArrayList<>();
-    String sql = "SELECT t.template_id, t.template_name, t.description, t.base_price, t.image_url, " +
-                 "       (SELECT AVG(CAST(f.rating AS FLOAT)) FROM product_feedback f WHERE f.product_id = t.template_id) AS avg_rating " +
-                 "FROM bouquet_templates t " +
-                 "WHERE t.category_id = ? AND t.is_active = TRUE";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, categoryId);
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                BouquetTemplate b = new BouquetTemplate(
-                        rs.getInt("template_id"),
-                        rs.getString("template_name"),
-                        rs.getString("description"),
-                        rs.getDouble("base_price"),
-                        rs.getString("image_url")
-                );
-                // Thêm dòng này để set sao trung bình
-                
-                b.setAvgRating(rs.getDouble("avg_rating"));
-                bouquets.add(b);
-            }
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return bouquets;
-}
+    public List<BouquetTemplate> getBouquetsByCategoryId(int categoryId) {
+        List<BouquetTemplate> bouquets = new ArrayList<>();
+        String sql = "SELECT t.template_id, t.template_name, t.description, t.base_price, t.image_url, "
+                + "       (SELECT AVG(CAST(f.rating AS FLOAT)) FROM product_feedback f WHERE f.product_id = t.template_id) AS avg_rating "
+                + "FROM bouquet_templates t "
+                + "WHERE t.category_id = ? AND t.is_active = TRUE";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    BouquetTemplate b = new BouquetTemplate(
+                            rs.getInt("template_id"),
+                            rs.getString("template_name"),
+                            rs.getString("description"),
+                            rs.getDouble("base_price"),
+                            rs.getString("image_url")
+                    );
+                    // Thêm dòng này để set sao trung bình
 
-public List<BouquetTemplate> getAllBouquets() {
+                    b.setAvgRating(rs.getDouble("avg_rating"));
+                    bouquets.add(b);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bouquets;
+    }
+
+    public List<BouquetTemplate> getAllBouquets() {
         System.out.println("DEBUG: === Called getAllBouquets ===");
 
-    List<BouquetTemplate> bouquets = new ArrayList<>();
-    String sql = "SELECT t.template_id, t.template_name, t.description, t.base_price, t.image_url, t.stock, "
-               + "       (SELECT AVG(CAST(f.rating AS FLOAT)) "
-               + "        FROM product_feedback f "
-               + "        WHERE f.product_id = t.template_id) AS avg_rating "
-               + "FROM bouquet_templates t "
-               + "WHERE t.is_active = TRUE";
-    try (PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-            BouquetTemplate b = new BouquetTemplate(
-                rs.getInt("template_id"),
-                rs.getString("template_name"),
-                rs.getString("description"),
-                rs.getDouble("base_price"),
-                rs.getString("image_url"),
-                rs.getInt("stock")
-            );
-double avgRating = rs.getDouble("avg_rating");
-if (rs.wasNull()) {
-    avgRating = 0.0;
-}
-b.setAvgRating(avgRating);
-
-// Debug
-System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating = " + avgRating);            bouquets.add(b);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return bouquets;
-}
-
-  public List<BouquetTemplate> getBouquetsByCategoryIdPaging(int categoryId, int offset, int limit) {
-    List<BouquetTemplate> list = new ArrayList<>();
-    String sql = "SELECT template_id, template_name, description, base_price, image_url, stock "
-               + "FROM bouquet_templates "
-               + "WHERE category_id = ? AND is_active = TRUE "
-               + "ORDER BY template_id "
-               + "LIMIT ?, ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, categoryId);
-        stmt.setInt(2, offset);
-        stmt.setInt(3, limit);
-        try (ResultSet rs = stmt.executeQuery()) {
+        List<BouquetTemplate> bouquets = new ArrayList<>();
+        String sql = "SELECT t.template_id, t.template_name, t.description, t.base_price, t.image_url, t.stock, "
+                + "       (SELECT AVG(CAST(f.rating AS FLOAT)) "
+                + "        FROM product_feedback f "
+                + "        WHERE f.product_id = t.template_id) AS avg_rating "
+                + "FROM bouquet_templates t "
+                + "WHERE t.is_active = TRUE";
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 BouquetTemplate b = new BouquetTemplate(
                         rs.getInt("template_id"),
@@ -115,55 +79,112 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
                         rs.getString("description"),
                         rs.getDouble("base_price"),
                         rs.getString("image_url"),
-                        rs.getInt("stock") // ✅ Lấy giá trị stock đúng từ DB
-                );
-                list.add(b);
-            }
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return list;
-}
-
-    public List<BouquetTemplate> getAllBouquetsPaging(int offset, int limit) {
-    List<BouquetTemplate> bouquets = new ArrayList<>();
-    String sql = "SELECT t.template_id, t.template_name, t.description, t.base_price, t.image_url, t.stock, "
-               + "       (SELECT AVG(CAST(f.rating AS FLOAT)) "
-               + "        FROM product_feedback f "
-               + "        WHERE f.product_id = t.template_id) AS avg_rating "
-               + "FROM bouquet_templates t "
-               + "WHERE t.is_active = TRUE "
-               + "ORDER BY t.template_id "
-               + "LIMIT ?, ?"; // ✅ MySQL dùng LIMIT offset, limit
-
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, offset);
-        stmt.setInt(2, limit);
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                BouquetTemplate b = new BouquetTemplate(
-                    rs.getInt("template_id"),
-                    rs.getString("template_name"),
-                    rs.getString("description"),
-                    rs.getDouble("base_price"),
-                    rs.getString("image_url"),
-                    rs.getInt("stock")
+                        rs.getInt("stock")
                 );
                 double avgRating = rs.getDouble("avg_rating");
                 if (rs.wasNull()) {
                     avgRating = 0.0;
                 }
                 b.setAvgRating(avgRating);
+
+// Debug
+                System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating = " + avgRating);
                 bouquets.add(b);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return bouquets;
     }
 
-    return bouquets;
-}
+    public List<FlowerColor> listColor() {
+        List<FlowerColor> list = new ArrayList<>();
+        String sql = "SELECT `flower_colors`.`color_id`,\n"
+                + "    `flower_colors`.`color_name`\n"
+                + "    \n"
+                + "FROM `flower_shop_db`.`flower_colors`;";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                FlowerColor fl = new FlowerColor();
+                fl.setColorId(rs.getInt("color_id"));
+                fl.setColorName(rs.getString("color_name"));
+                list.add(fl);
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+
+    public List<BouquetTemplate> getBouquetsByCategoryIdPaging(int categoryId, int offset, int limit) {
+        List<BouquetTemplate> list = new ArrayList<>();
+        String sql = "SELECT template_id, template_name, description, base_price, image_url, stock "
+                + "FROM bouquet_templates "
+                + "WHERE category_id = ? AND is_active = TRUE "
+                + "ORDER BY template_id "
+                + "LIMIT ?, ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            stmt.setInt(2, offset);
+            stmt.setInt(3, limit);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    BouquetTemplate b = new BouquetTemplate(
+                            rs.getInt("template_id"),
+                            rs.getString("template_name"),
+                            rs.getString("description"),
+                            rs.getDouble("base_price"),
+                            rs.getString("image_url"),
+                            rs.getInt("stock") // ✅ Lấy giá trị stock đúng từ DB
+                    );
+                    list.add(b);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<BouquetTemplate> getAllBouquetsPaging(int offset, int limit) {
+        List<BouquetTemplate> bouquets = new ArrayList<>();
+        String sql = "SELECT t.template_id, t.template_name, t.description, t.base_price, t.image_url, t.stock, "
+                + "       (SELECT AVG(CAST(f.rating AS FLOAT)) "
+                + "        FROM product_feedback f "
+                + "        WHERE f.product_id = t.template_id) AS avg_rating "
+                + "FROM bouquet_templates t "
+                + "WHERE t.is_active = TRUE "
+                + "ORDER BY t.template_id "
+                + "LIMIT ?, ?"; // ✅ MySQL dùng LIMIT offset, limit
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, offset);
+            stmt.setInt(2, limit);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    BouquetTemplate b = new BouquetTemplate(
+                            rs.getInt("template_id"),
+                            rs.getString("template_name"),
+                            rs.getString("description"),
+                            rs.getDouble("base_price"),
+                            rs.getString("image_url"),
+                            rs.getInt("stock")
+                    );
+                    double avgRating = rs.getDouble("avg_rating");
+                    if (rs.wasNull()) {
+                        avgRating = 0.0;
+                    }
+                    b.setAvgRating(avgRating);
+                    bouquets.add(b);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return bouquets;
+    }
 
     public int countAllBouquets() {
         String sql = "SELECT COUNT(*) FROM bouquet_templates WHERE is_active = TRUE";
@@ -226,6 +247,7 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
         }
         return cartItems;
     }
+
     public String getCategoryNameById(int templateId) {
         String p = new String();
         String sql
@@ -247,7 +269,6 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
         return p;
     }
 
-
     public List<Category> getAllCategory() {
         List<Category> C = new ArrayList<>();
         String sql
@@ -267,6 +288,7 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
         }
         return C;
     }
+
     public ShoppingCart getItems(int userId, int templateId) {
         ShoppingCart Item = new ShoppingCart();
         String sql
@@ -381,7 +403,7 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
 
     public List<BouquetTemplate> getTopSellingBouquets(int limit) {
         List<BouquetTemplate> bouquets = new ArrayList<>();
-        
+
         // Thử lấy sản phẩm bán chạy từ order_details trước
         String sql = "SELECT bt.template_id, bt.template_name, bt.description, bt.base_price, bt.image_url "
                 + "FROM order_details od "
@@ -390,7 +412,7 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
                 + "GROUP BY bt.template_id, bt.template_name, bt.description, bt.base_price, bt.image_url "
                 + "ORDER BY SUM(od.quantity) DESC "
                 + "LIMIT ?";
-        
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, limit);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -407,7 +429,7 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
         } catch (Exception e) {
             System.out.println("Error getting top selling bouquets: " + e.getMessage());
         }
-        
+
         // Nếu không có sản phẩm bán chạy, lấy sản phẩm mới nhất làm fallback
         if (bouquets.isEmpty()) {
             String fallbackSql = "SELECT template_id, template_name, description, base_price, image_url "
@@ -415,7 +437,7 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
                     + "WHERE is_active = TRUE "
                     + "ORDER BY template_id DESC "
                     + "LIMIT ?";
-            
+
             try (PreparedStatement stmt = conn.prepareStatement(fallbackSql)) {
                 stmt.setInt(1, limit);
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -433,7 +455,7 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
                 System.out.println("Error getting fallback bouquets: " + e.getMessage());
             }
         }
-        
+
         return bouquets;
     }
 
@@ -628,25 +650,25 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
         return recommendations;
     }
 
-   public void addBouquet(BouquetTemplate b) {
-    String sql = "INSERT INTO bouquet_templates "
-               + "(template_name, description, base_price, image_url, stock, is_active, category_id, created_by) "
-               + "VALUES (?, ?, ?, ?, ?, TRUE, ?, ?)";
+    public void addBouquet(BouquetTemplate b) {
+        String sql = "INSERT INTO bouquet_templates "
+                + "(template_name, description, base_price, image_url, stock, is_active, category_id, created_by) "
+                + "VALUES (?, ?, ?, ?, ?, TRUE, ?, ?)";
 
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, b.getTemplateName());
-        ps.setString(2, b.getDescription());
-        ps.setDouble(3, b.getBasePrice());
-        ps.setString(4, b.getImageUrl());
-        ps.setInt(5, b.getStock());
-        ps.setInt(6, b.getCategoryId());
-        ps.setInt(7, b.getCreatedBy()); // ✅ Gán đúng người tạo
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, b.getTemplateName());
+            ps.setString(2, b.getDescription());
+            ps.setDouble(3, b.getBasePrice());
+            ps.setString(4, b.getImageUrl());
+            ps.setInt(5, b.getStock());
+            ps.setInt(6, b.getCategoryId());
+            ps.setInt(7, b.getCreatedBy()); // ✅ Gán đúng người tạo
 
-        ps.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
 
     public void updateBouquet(int template_id, String template_name, String description, double baseprice, String imageUrl, int stock) {
         String sql = "UPDATE bouquet_templates SET template_name = ?, description = ?, base_price = ?, image_url = ? , stock = ? "
@@ -698,50 +720,52 @@ System.out.println("DEBUG: Template ID = " + b.getTemplateId() + ", Avg Rating =
         }
         return list;
     }
-    
-  public List<BouquetTemplate> searchBouquetTemplatesWithPaging(String keyword, int offset, int limit) {
-    List<BouquetTemplate> list = new ArrayList<>();
-    String sql = "SELECT * FROM bouquet_templates "
-               + "WHERE is_active = TRUE AND template_name COLLATE utf8mb4_unicode_ci LIKE ? "
-               + "ORDER BY template_id DESC LIMIT ?, ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, "%" + keyword + "%");
-        stmt.setInt(2, offset);
-        stmt.setInt(3, limit);
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                BouquetTemplate b = new BouquetTemplate(
-                    rs.getInt("template_id"),
-                    rs.getString("template_name"),
-                    rs.getString("description"),
-                    rs.getDouble("base_price"),
-                    rs.getString("image_url"),
-                    rs.getInt("stock")
-                );
-                list.add(b);
+
+    public List<BouquetTemplate> searchBouquetTemplatesWithPaging(String keyword, int offset, int limit) {
+        List<BouquetTemplate> list = new ArrayList<>();
+        String sql = "SELECT * FROM bouquet_templates "
+                + "WHERE is_active = TRUE AND template_name COLLATE utf8mb4_unicode_ci LIKE ? "
+                + "ORDER BY template_id DESC LIMIT ?, ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + keyword + "%");
+            stmt.setInt(2, offset);
+            stmt.setInt(3, limit);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    BouquetTemplate b = new BouquetTemplate(
+                            rs.getInt("template_id"),
+                            rs.getString("template_name"),
+                            rs.getString("description"),
+                            rs.getDouble("base_price"),
+                            rs.getString("image_url"),
+                            rs.getInt("stock")
+                    );
+                    list.add(b);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
-public int countSearchResults(String keyword) {
-    String sql = "SELECT COUNT(*) FROM bouquet_templates "
-               + "WHERE is_active = TRUE AND template_name COLLATE utf8mb4_unicode_ci LIKE ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, "%" + keyword + "%");
-        try (ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
+
+    public int countSearchResults(String keyword) {
+        String sql = "SELECT COUNT(*) FROM bouquet_templates "
+                + "WHERE is_active = TRUE AND template_name COLLATE utf8mb4_unicode_ci LIKE ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + keyword + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return 0;
     }
-    return 0;
-}
 
-
-public void updateBouquetFull(int template_id, String name, String desc, double basePrice, String imageUrl, int stock, int categoryId) {
+    public void updateBouquetFull(int template_id, String name, String desc, double basePrice, String imageUrl, int stock, int categoryId) {
         String sql = "UPDATE bouquet_templates SET template_name = ?, description = ?, base_price = ?, image_url = ?, stock = ?, category_id = ? "
                 + "WHERE template_id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -757,6 +781,5 @@ public void updateBouquetFull(int template_id, String name, String desc, double 
             e.printStackTrace();
         }
     }
-
 
 }

@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< Updated upstream
             <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/feedback-details.jsp</file>
             <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/feedback_form.jsp</file>
             <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/login.jsp</file>
@@ -11,6 +12,15 @@
             <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/index.jsp</file>
             <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/viewShopReply.jsp</file>
             <file>file:/C:/Users/ADMIN/Desktop/Sell_Flower_System_Group2/web/product-details.jsp</file>
+=======
+            <file>file:/C:/Users/ADMIN/Sell_Flower_System_Group2/web/storageManagement.jsp</file>
+            <file>file:/C:/Users/ADMIN/Sell_Flower_System_Group2/src/java/Controller/StorageManagement.java</file>
+            <file>file:/C:/Users/ADMIN/Sell_Flower_System_Group2/src/java/dal/BouquetDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Sell_Flower_System_Group2/src/java/dal/DBcontext.java</file>
+            <file>file:/C:/Users/ADMIN/Sell_Flower_System_Group2/src/java/Controller/ProductManagementServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Sell_Flower_System_Group2/src/java/Model/RawFlower.java</file>
+            <file>file:/C:/Users/ADMIN/Sell_Flower_System_Group2/src/java/dal/StorageDAO.java</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>

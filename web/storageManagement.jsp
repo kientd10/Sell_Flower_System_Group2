@@ -20,12 +20,12 @@
         <style>
             /* ===== SHARED STYLES ===== */
             :root {
-		--primary-red: #c44d58;
-		--primary-red-dark: #a03d4a;
-		--secondary-gray: #6c757d;
-		--dark-gray: #343a40;
-		--light-gray: #f8f9fa;
-		--sidebar-width: 280px;
+                --primary-red: #c44d58;
+                --primary-red-dark: #a03d4a;
+                --secondary-gray: #6c757d;
+                --dark-gray: #343a40;
+                --light-gray: #f8f9fa;
+                --sidebar-width: 280px;
             }
             body {
                 font-family: 'Inter', sans-serif;
@@ -379,17 +379,17 @@
                             <button class="btn btn-outline-secondary" onclick="searchInventory()"><i class="fas fa-search"></i></button>
                         </div>
 
-<!--                        <div class="d-flex align-items-center gap-3">
-                            <a href="stock-adjustment.jsp" class="btn btn-primary">
-                                <i class="fas fa-edit me-2"></i>Stock Adjustment
-                            </a>
-                            <a href="purchase-order.jsp" class="btn btn-success">
-                                <i class="fas fa-shopping-cart me-2"></i>Purchase Order
-                            </a>
-                            <button class="btn btn-outline-secondary" onclick="generateInventoryReport()">
-                                <i class="fas fa-file-export me-2"></i>Export Report
-                            </button>
-                        </div>-->
+                        <!--                        <div class="d-flex align-items-center gap-3">
+                                                    <a href="stock-adjustment.jsp" class="btn btn-primary">
+                                                        <i class="fas fa-edit me-2"></i>Stock Adjustment
+                                                    </a>
+                                                    <a href="purchase-order.jsp" class="btn btn-success">
+                                                        <i class="fas fa-shopping-cart me-2"></i>Purchase Order
+                                                    </a>
+                                                    <button class="btn btn-outline-secondary" onclick="generateInventoryReport()">
+                                                        <i class="fas fa-file-export me-2"></i>Export Report
+                                                    </button>
+                                                </div>-->
                     </div>
                 </div>
 
@@ -398,12 +398,15 @@
                     <!-- Page Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
-                            <h2 class="page-title">Inventory Control</h2>
-                            <p class="text-muted">Monitor stock levels, manage reorders, and track inventory movements</p>
+                            <h2 class="page-title">Quản lí kho</h2>
+                            <!--                            <p class="text-muted">Monitor stock levels, manage reorders, and track inventory movements</p>-->
+                            <div class="page-title">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                        <i class="fas fa-plus me-2"></i>Thêm sản phẩm
+                                    </button>
+                           </div>
                         </div>
-                        <div class="text-muted">
-                            Total Items: <strong>248</strong> | Value: <strong>$45,230</strong>
-                        </div>
+
                     </div>
 
                     <!-- ===== INVENTORY OVERVIEW STATISTICS ===== -->
@@ -444,18 +447,12 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Inventory Product</h5>
-                            <div class="d-flex align-items-center gap-3">
-                                <a href="storagemanagement?action=add" class="btn btn-success">
-                                    <i class="fas fa-shopping-cart me-2"></i>Build New Product
-                                </a>
-                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th><input type="checkbox" class="form-check-input" onchange="selectAllItems(this)"></th>
                                             <th>Product</th>
                                             <th>Quantity</th>
                                             <th>Status</th>
@@ -466,168 +463,85 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:choose>
-                                            <c:when test="${action == 'view' && editMode}">
-                                                <c:forEach items="${bouquetList}" var="line1">
-                                                    <tr class="table-danger">
-                                                        <td><input type="checkbox" class="form-check-input item-checkbox" value="1"></td>
-                                                        <td>
-                                                            <div>
-                                                                <div class="text-muted">${line1.templateName}</div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="text-center">
-                                                                <strong class="text-danger">${line1.stock}</strong>
-                                                                <div class="text-muted small">units</div>
-                                                                <div class="stock-progress mt-1">
-                                                                    <div class="progress-bar critical" style="width: 0%"></div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
 
-                                                        </td>
-                                                        <td>
-                                                            <c:forEach items="${line1.ingredients}" var="ing">
-                                                                <strong class="text-muted small">${ing.name} : ${ing.requiredQuantity}</strong>
-                                                            </c:forEach>
-                                                        </td>
-                                                        <td>
-                                                            <strong class="text-muted">${line1.basePrice}</strong>
-                                                        </td>
-                                                        <td>
-                                                            <strong class="text-muted">${line1.categoryName}</strong>
-                                                        </td>
-                                                        <td>
-                                                            <div class="btn-group" role="group">
+                                        <c:forEach items="${bouquetList}" var="line1">
+                                            <tr >
+                                                <td>
+                                                    <div>
+                                                        <div class="text-muted">${line1.templateName}</div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-center">
+                                                        <strong class="text-danger">${line1.stock}</strong>
+                                                        <div class="text-muted small">units</div>
+                                                        <div class="stock-progress mt-1">
+                                                            <div class="progress-bar critical" style="width: 0%"></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    <c:forEach items="${line1.ingredients}" var="ing">
+                                                        <strong class="text-muted small">${ing.name} : ${ing.requiredQuantity}</strong>
+                                                    </c:forEach>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-muted">${line1.basePrice}</strong>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-muted">${line1.categoryName}</strong>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
                                                                 <a href="productmanagement?action=edit&mode=edit&editId=${line.templateId}" class="btn btn-sm btn-outline-primary" title="Edit">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </a>
-                                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(1)" title="Delete">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            <form action="storagemanagement?action=addProduct" method="get">
-                                                <tr class="table-success">
-                                                    <td></td>
-                                                    <td>
-                                                        <input type="text" name="newTemplateName" class="form-control" placeholder="Tên mẫu" />
-                                                        <input type="text" name="newTemplateID" class="text-muted small" placeholder="ProductID" />
-                                                    </td>
-                                                    <td><input type="number" name="newStock" class="form-control" placeholder="Số lượng" min="0" /></td>
-                                                    <td></td>
-                                                    <td>
-                                                        <div id="ingredients-container">
-                                                            <div class="ingredient-row d-flex align-items-center mb-2">
-                                                                <select name="typeId" class="form-select me-1" style="width:120px;">
-                                                                    <option>Type</option>
-                                                                    <c:forEach items="${TypeList}" var="t">
-                                                                        <option value="${t.typeId}">${t.typeName}</option>
-                                                                    </c:forEach>
-                                                                </select>
-
-                                                                <select name="colorId" class="form-select me-1" style="width:120px;">
-                                                                    <option>Color</option>
-                                                                    <c:forEach items="${ColorList}" var="c">
-                                                                        <option value="${c.colorId}">${c.colorName}</option>
-                                                                    </c:forEach>
-                                                                </select>
-
-                                                                <input type="number" name="quantity" class="form-control me-1" 
-                                                                       placeholder="Qty" min="1" style="width:80px;"/>
-
-                                                                <button type="button" class="btn btn-sm btn-success save-ingredient me-1">
-                                                                    <i class="fas fa-check"></i>
-                                                                </button>
-                                                                <button type="button" class="btn btn-sm btn-danger remove-ingredient">
-                                                                    <i class="fas fa-times"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <button type="button" id="add-ingredient-btn" class="btn btn-sm btn-outline-primary">+ Add ingredient</button>
-                                                    </td>
-
-                                                    <td><input type="number" name="newBasePrice" class="form-control" placeholder="Giá cơ bản" min="0" /></td>
-                                                    <td>
-                                                        <div id="ingredients-container">
-                                                            <div class="ingredient-row d-flex align-items-center mb-2">
-                                                                <select name="newCategory" class="form-select me-1" style="width:120px;">
-                                                                    <option>Category</option>
-                                                                    <c:forEach items="${categoryList}" var="t">
-                                                                        <option value="${t.categoryId}">${t.categoryName}</option>
-                                                                    </c:forEach>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <button type="button" id="add-ingredient-btn" class="btn btn-sm btn-outline-primary">+ Add Category</button>
-                                                    </td>
-                                                    <td><button type="submit" class="btn btn-primary btn-sm">Save</button></td>
-                                                </tr>
-                                            </form>
-                                        </c:when>
-                                        <c:when test="${param.action == 'view'}">
-                                            <c:forEach items="${bouquetList}" var="line1">
-                                                <tr class="table-danger">
-                                                    <td><input type="checkbox" class="form-check-input item-checkbox" value="1"></td>
-                                                    <td>
-                                                        <div>
-                                                            <div class="text-muted">${line1.templateName}</div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <strong class="text-danger">${line1.stock}</strong>
-                                                            <div class="text-muted small">units</div>
-                                                            <div class="stock-progress mt-1">
-                                                                <div class="progress-bar critical" style="width: 0%"></div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-
-                                                    </td>
-                                                    <td>
-                                                        <c:forEach items="${line1.ingredients}" var="ing">
-                                                            <div class="text-muted small">${ing.name} : ${ing.requiredQuantity}</div>
-                                                        </c:forEach>
-                                                    </td>
-                                                    <td>
-                                                        <strong class="text-muted">${line1.basePrice}</strong>
-                                                    </td>
-                                                    <td>
-                                                        <strong class="text-muted">${line1.categoryName}</strong>
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group" role="group">
-                                                            <a href="productmanagement?action=edit&mode=edit&editId=${line.templateId}" class="btn btn-sm btn-outline-primary" title="Edit">
-                                                                <i class="fas fa-edit"></i>
-                                                            </a>
-                                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(1)" title="Delete">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </c:when>
-                                    </c:choose>
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <button class="btn btn-sm btn-outline-danger"  onclick="return confirm('Bạn có chắc chắn muốn xóa lô hàng này?')" title="Xóa">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
+                            <nav aria-label="Inventory pagination" class="mt-3">
+                                <c:set var="page" value="${page1}"/>
+                                <div class="shop_toolbar t_bottom" style="border: none;">
+                                    <div class="pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <c:forEach begin="1" end="${num1}" var="i1">
+                                                <li class="page-item ${i1 == page1 ? 'active' : ''}">
+                                                    <a class="page-link"
+                                                       href="storagemanagement?action=view&page1=${i1}">
+                                                        ${i1}
+                                                    </a>
+
+                                                </li>
+                                            </c:forEach>
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </nav>
                         </div>
                     </div>
+                </div>
+
+                <div class="content-area">
                     <!-- ===== FILTER SECTION ===== -->
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-3">
-                                    <label class="form-label">Stock Level</label>
+                                    <label class="form-label">Lọc theo hạn sử dụng</label>
                                     <select class="form-select" onchange="filterByStockLevel(this.value)">
-                                        <option value="critical">Critical (3)</option>
+                                        <option value="critical"></option>
                                         <option value="low">Low Stock (12)</option>
                                         <option value="normal">Normal (198)</option>
                                         <option value="high">Overstocked (35)</option>
@@ -650,303 +564,560 @@
                                         </c:forEach>
                                     </select>
                                 </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRawFlowerModal">
+                                        <i class="fas fa-plus me-2"></i>Thêm sản phẩm
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+
+                    <!-- ===== INVENTORY TABLE ===== -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Quản lí hoa thô</h5>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="sampleTable">
+                                    <thead>
+                                        <tr>
+                                            <!--                                        <th><input type="checkbox" class="form-check-input" onchange="selectAllItems(this)"></th>-->
+                                            <th >Loại hoa</th>
+                                            <th >Màu sắc</th>
+                                            <th >Số lượng</th>
+                                            <th >Trạng thái</th>
+                                            <th >Nhà cung cấp</th>
+                                            <th >Ngày nhập</th>
+                                            <th >Ngày hết hạn</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <c:forEach items="${RawFlowerList}" var="line">
+                                            <tr >
+                                                <!--                                                    <td><input type="checkbox" class="form-check-input item-checkbox" value="1"></td>-->
+                                                <td>
+                                                    <div>
+                                                        <strong>Hoa ${line.rawFlowerName}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <strong>${line.colorName}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-center">
+                                                        <strong class="text-danger">${line.quantity}</strong>
+                                                        <div class="text-muted small">bông</div>
+                                                        <div class="stock-progress mt-1">
+                                                            <div class="progress-bar critical" style="width: 0%"></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <strong>${line.status}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>
+
+                                                    <strong>${line.supplierName}</strong>
+                                                    <div class="text-muted small">Giá: ${line.unitPrice}/bông</div>
+
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <strong>${line.importDate}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <strong>${line.expiryDate}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a href="javascript:void(0)" 
+                                                           class="btn btn-sm btn-outline-primary" title="Edit"
+                                                           onclick="openEditModal(
+                                                           ${line.rawFlowerId},
+                                                                           '${line.typeId}',
+                                                                           '${line.unitPrice}',
+                                                                           '${fn:escapeXml(line.supplierName)}',
+                                                                           '${line.colorId}',
+                                                                           '${line.quantity}',
+                                                                           '${line.importDate}',
+                                                                           '${line.expiryDate}',
+                                                                           '${fn:escapeXml(line.notes)}')">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+
+
+                                                        <a href="storagemanagement?action=deleteRawflower&id=${line.rawFlowerId}" 
+                                                           class="btn btn-sm btn-outline-danger" title="Delete"
+                                                           onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này không?')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- ===== BULK ACTIONS ===== -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+
+                                <div class="text-muted">
+                                    Showing 1 to 5 of ${fn:length(RawFlowerList)} items
+                                </div>
+                            </div>
+                            <!-- ===== PAGINATION ===== -->
+                            <!--                            <nav aria-label="Inventory pagination" class="mt-3">
+                            <c:set var="page" value="${page}"/>
+                            <div class="shop_toolbar t_bottom" style="border: none;">
+                                <div class="pagination">
+                                    <ul class="pagination justify-content-center">
+                            <c:forEach begin="1" end="${num}" var="i">
+                                <li class="page-item ${i == page ? 'active' : ''}">
+                                    <a class="page-link"
+                                       href="storagemanagement?action=view&page=${i}&page1=${param.page1}">
+                                ${i}
+                            </a>
+                        </li>
+                            </c:forEach>
+
+                        </ul>
+
                     </div>
                 </div>
-                <!-- ===== INVENTORY TABLE ===== -->
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Inventory RawFlower</h5>
-                        <div class="d-flex align-items-center gap-3">
-                            <span class="text-light">Show:</span>
-                            <select class="form-select form-select-sm" style="width: auto;">
-                                <option value="25" selected>25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                            <span class="text-light">entries</span>
+            </nav>-->
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" class="form-check-input" onchange="selectAllItems(this)"></th>
-                                        <th>Product Info</th>
-                                        <th>Current Stock</th>
-                                        <th>Status</th>
-                                        <th>Supplier Info</th>
-                                        <th>Expiration date</th>
-                                        <th>Price</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:choose>
-                                        <c:when test="${param.action == 'view' || param.action == 'add'}">
-                                            <c:forEach items="${RawFlowerList}" var="line">
-                                                <tr class="table-danger">
-                                                    <td><input type="checkbox" class="form-check-input item-checkbox" value="1"></td>
-                                                    <td>
-                                                        <div>
-                                                            <strong>Hoa ${line.rawFlowerName}</strong>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <strong class="text-danger">${line.quantity}</strong>
-                                                            <div class="text-muted small">units</div>
-                                                            <div class="stock-progress mt-1">
-                                                                <div class="progress-bar critical" style="width: 0%"></div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><span class="stock-level critical">OUT OF STOCK</span></td>
-                                                    <td>
-                                                        <div class="supplier-info">
-                                                            <strong>${line.supplierName}</strong>
-                                                            <div class="text-muted small">Date of entry: </div>
-                                                            <div class="text-muted small">Cost: ${line.unitPrice}/unit</div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div>
-                                                            <strong>$0.00</strong>
-                                                            <div class="text-muted small">Unit: $45.00</div>
-                                                            <div class="text-danger small">Lost sales risk</div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div>
-                                                            <strong>${line.unitPrice}</strong>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group-vertical" role="group">
-                                                            <button class="btn btn-sm btn-danger" onclick="urgentReorder(1)">
-                                                                <i class="fas fa-exclamation-triangle"></i> Urgent Order
-                                                            </button>
-                                                            <a href="stock-adjustment.jsp?id=1" class="btn btn-sm btn-outline-primary">
-                                                                <i class="fas fa-edit"></i> Adjust
-                                                            </a>
-                                                            <a href="inventory-history.jsp?id=1" class="btn btn-sm btn-outline-info">
-                                                                <i class="fas fa-history"></i> History
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </c:when>
-                                    </c:choose>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- ===== BULK ACTIONS ===== -->
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div>
-                                <button class="btn btn-outline-primary btn-sm" onclick="bulkAdjustment()" disabled id="bulkAdjustBtn">
-                                    <i class="fas fa-edit me-2"></i>Bulk Adjustment
-                                </button>
-                                <button class="btn btn-outline-success btn-sm" onclick="bulkReorder()" disabled id="bulkReorderBtn">
-                                    <i class="fas fa-shopping-cart me-2"></i>Bulk Reorder
-                                </button>
-                                <button class="btn btn-outline-info btn-sm" onclick="bulkTransfer()" disabled id="bulkTransferBtn">
-                                    <i class="fas fa-exchange-alt me-2"></i>Transfer Stock
-                                </button>
-                                <button class="btn btn-outline-warning btn-sm" onclick="bulkPromotion()" disabled id="bulkPromotionBtn">
-                                    <i class="fas fa-percent me-2"></i>Create Promotion
-                                </button>
-                            </div>
-                            <div class="text-muted">
-                                Showing 1 to 5 of 248 items
-                            </div>
-                        </div>
-                        <!-- ===== PAGINATION ===== -->
-                        <nav aria-label="Inventory pagination" class="mt-3">
-                            <ul class="pagination">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="inventory.jsp?page=2">2</a></li>
-                                <li class="page-item"><a class="page-link" href="inventory.jsp?page=3">3</a></li>
-                                <li class="page-item"><a class="page-link" href="inventory.jsp?page=4">4</a></li>
-                                <li class="page-item"><a class="page-link" href="inventory.jsp?page=5">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="inventory.jsp?page=2"><i class="fas fa-chevron-right"></i></a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                            <!<!-- add product -->
+                            <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModal" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addProductModal">
+                                Thêm sản phẩm theo mẫu
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="storagemanagement" method="get">
+                            <input type="hidden" name="action" value="addProduct">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Mẫu sản phẩm</label>
+                                        <select class="form-select" name="templateId" id="modal-templateId" required>
+                                            <c:forEach var="name" items="${productList}">
+                                                <option value="${name.templateId}">${name.templateName}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div >
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Số lượng</label>
+                                        <input type="number" class="form-control" name="quantity" id="modal-quantity" required>
+                                    </div>
+                                    
 
-        <script>
-                                    // ===== INVENTORY MANAGEMENT FUNCTIONALITY =====
+                            </div>
+                                 
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                                <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Add Modal -->
+            <div class="modal fade" id="addRawFlowerModal" tabindex="-1" aria-labelledby="addRawFlowerModal" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addRawFlowerModal">
+                                Thêm sản phẩm
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="storagemanagement" method="get">
+                            <input type="hidden" name="action" value="addRawflower">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Tên hoa</label>
+                                        <select class="form-select" name="typeId" id="modal-typeid" required>
+                                            <c:forEach var="name" items="${flowerNameList}">
+                                                <option value="${name.typeId}">${name.typeName}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <!-- Danh mục (Color) -->
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Màu sắc</label>
+                                        <select class="form-select" name="colorId" id="modal-colorId" required>
+                                            <c:forEach var="cat" items="${colorList}">
+                                                <option value="${cat.colorId}">${cat.colorName}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
 
-                                    // Search inventory
-                                    function searchInventory() {
-                                        const searchTerm = document.getElementById('inventorySearch').value;
-                                        console.log('Searching inventory:', searchTerm);
-                                        // Implementation would filter inventory based on search term
-                                    }
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Số lượng (bông)</label>
+                                        <input type="number" class="form-control" name="quantity" id="modal-quantity" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ghi chú</label>
+                                        <input type="text" class="form-control" name="notes" id="modal-notes">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Nhà cung cấp</label>
+                                        <input type="text" class="form-control" name="supplierName" id="modal-supplierName">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Giá từng bông</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" name="unitPrice" id="modal-unitPrice" required>
+                                            <span class="input-group-text">đ/bông</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ngày nhập</label>
+                                        <input type="date" class="form-control" name="importDate" id="modal-importDate" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ngày hết hạn</label>
+                                        <input type="date" class="form-control" name="expiryDate" id="modal-expiryDate" required>
+                                    </div>
+                                </div>
 
-                                    // Filter functions
-                                    function filterByStockLevel(level) {
-                                        console.log('Filter by stock level:', level);
-                                    }
-                                    function filterByCategory(category) {
-                                        console.log('Filter by category:', category);
-                                    }
-                                    function filterBySupplier(supplier) {
-                                        console.log('Filter by supplier:', supplier);
-                                    }
-                                    function filterByLocation(location) {
-                                        console.log('Filter by location:', location);
-                                    }
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                                <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!<!-- Edit modal -->
+            <div class="modal fade" id="rawflowerModal" tabindex="-1" aria-labelledby="rawflowerModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <form action="storagemanagement" method="get">
+                        <input type="hidden" name="action" value="updateRawflower" />
+                        <input type="hidden" name="rawflowerId" id="modal-rawFlowerId" />
+                        <input type="hidden" name="typeId" id="modal-typeid"/>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="rawflowerModalLabel">Thông tin hoa thô</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-3">
 
-                                    // Inventory actions
-                                    function urgentReorder(itemId) {
-                                        if (confirm('Create urgent purchase order for this out-of-stock item?')) {
-                                            console.log('Creating urgent reorder for item:', itemId);
-                                            window.location.href = `urgent-purchase-order.jsp?itemId=${itemId}`;
-                                        }
-                                    }
+                                    <!-- Tên hoa -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Tên hoa</label>
+                                        <select class="form-select" name="typeId" id="modal-typeid" required>
+                                            <c:forEach var="name" items="${flowerNameList}">
+                                                <option value="${name.typeId}">${name.typeName}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
 
-                                    function createReorder(itemId) {
-                                        console.log('Creating reorder for item:', itemId);
-                                        window.location.href = `create-purchase-order.jsp?itemId=${itemId}`;
-                                    }
+                                    <!-- Danh mục (Color) -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Màu sắc</label>
+                                        <select class="form-select" name="colorId" id="modal-colorId" required>
+                                            <c:forEach var="cat" items="${colorList}">
+                                                <option value="${cat.colorId}">${cat.colorName}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
 
-                                    function createPromotion(itemId) {
-                                        console.log('Creating promotion for overstocked item:', itemId);
-                                        window.location.href = `create-promotion.jsp?itemId=${itemId}`;
-                                    }
+                                    <!-- Số lượng -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Số lượng (bông)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" name="quantity" id="modal-quantity" required>
+                                            <span class="input-group-text">bông</span>
+                                        </div>
+                                    </div>
+                                    <!-- Nhà cung cấp -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nhà cung cấp</label>
+                                        <input type="text" class="form-control" name="supplierName" id="modal-supplierName">
+                                    </div>
 
-                                    function transferStock(itemId) {
-                                        console.log('Transferring stock for item:', itemId);
-                                        window.location.href = `stock-transfer.jsp?itemId=${itemId}`;
-                                    }
+                                    <!-- Giá từng bông -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Giá từng bông</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" name="unitPrice" id="modal-unitPrice" required>
+                                            <span class="input-group-text">đ/bông</span>
+                                        </div>
+                                    </div>
 
-                                    function viewDetails(itemId) {
-                                        console.log('Viewing details for item:', itemId);
-                                        window.location.href = `inventory-details.jsp?itemId=${itemId}`;
-                                    }
+                                    <!-- Ngày nhập -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Ngày nhập</label>
+                                        <input type="date" class="form-control" name="importDate" id="modal-importDate" required>
+                                    </div>
 
-                                    // Bulk actions
-                                    function selectAllItems(checkbox) {
-                                        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
-                                        itemCheckboxes.forEach(cb => cb.checked = checkbox.checked);
-                                        updateBulkActionButtons();
-                                    }
+                                    <!-- Ngày hết hạn -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Ngày hết hạn</label>
+                                        <input type="date" class="form-control" name="expiryDate" id="modal-expiryDate" required>
+                                    </div>
 
-                                    function updateBulkActionButtons() {
-                                        const selectedItems = document.querySelectorAll('.item-checkbox:checked');
-                                        const bulkButtons = ['bulkAdjustBtn', 'bulkReorderBtn', 'bulkTransferBtn', 'bulkPromotionBtn'];
+                                    <!<!-- Notes -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Ghi chú</label>
+                                        <input type="text" class="form-control" name="notes" id="modal-notes">
+                                    </div>
 
-                                        bulkButtons.forEach(btnId => {
-                                            document.getElementById(btnId).disabled = selectedItems.length === 0;
-                                        });
-                                    }
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-                                    function bulkAdjustment() {
-                                        const selected = document.querySelectorAll('.item-checkbox:checked');
-                                        const ids = Array.from(selected).map(cb => cb.value);
-                                        window.location.href = `bulk-stock-adjustment.jsp?itemIds=${ids.join(',')}`;
-                                    }
+            <!-- Bootstrap JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-                                    function bulkReorder() {
-                                        const selected = document.querySelectorAll('.item-checkbox:checked');
-                                        const ids = Array.from(selected).map(cb => cb.value);
-                                        window.location.href = `bulk-purchase-order.jsp?itemIds=${ids.join(',')}`;
-                                    }
+            <script>
+                                                               // ===== INVENTORY MANAGEMENT FUNCTIONALITY =====
 
-                                    function bulkTransfer() {
-                                        const selected = document.querySelectorAll('.item-checkbox:checked');
-                                        const ids = Array.from(selected).map(cb => cb.value);
-                                        window.location.href = `bulk-stock-transfer.jsp?itemIds=${ids.join(',')}`;
-                                    }
+                                                               // Search inventory
+                                                               function searchInventory() {
+                                                                   const searchTerm = document.getElementById('inventorySearch').value;
+                                                                   console.log('Searching inventory:', searchTerm);
+                                                                   // Implementation would filter inventory based on search term
+                                                               }
+                                                               function openEditModal(id, typeid, unitPrice, supplierName, colorId, quantity, importDate, expiryDate, notes) {
+                                                                   document.getElementById("rawflowerModalLabel").innerText = "Chỉnh sửa sản phẩm";
+                                                                   document.getElementById("modal-rawFlowerId").value = id;
+                                                                   document.getElementById("modal-typeid").value = typeid;
+                                                                   document.getElementById("modal-unitPrice").value = unitPrice;
+                                                                   document.getElementById("modal-supplierName").value = supplierName;
+                                                                   document.getElementById("modal-colorId").value = colorId;
+                                                                   document.getElementById("modal-quantity").value = quantity;
+                                                                   document.getElementById("modal-importDate").value = importDate;
+                                                                   document.getElementById("modal-expiryDate").value = expiryDate;
+                                                                   document.getElementById("modal-notes").value = notes;
+                                                                   let modal = new bootstrap.Modal(document.getElementById('rawflowerModal'));
+                                                                   modal.show();
 
-                                    function bulkPromotion() {
-                                        const selected = document.querySelectorAll('.item-checkbox:checked');
-                                        const ids = Array.from(selected).map(cb => cb.value);
-                                        window.location.href = `bulk-promotion.jsp?itemIds=${ids.join(',')}`;
-                                    }
+                                                               }
+                                                               function openAddModal() {
+                                                                   document.getElementById("productModalLabel").innerText = "Thêm sản phẩm mới";
+                                                                   document.getElementById("modal-typeId").value = "";
+                                                                   document.getElementById("modal-templateName").value = "";
+                                                                   document.getElementById("modal-unitPrice").value = "";
+                                                                   document.getElementById("modal-description").value = "";
+                                                                   document.getElementById("modal-imageUrl").value = "";
+                                                                   document.getElementById("modal-categoryId").selectedIndex = 0;
 
-                                    function generateInventoryReport() {
-                                        window.location.href = 'inventory-report.jsp?format=excel';
-                                    }
+                                                                   let modal = new bootstrap.Modal(document.getElementById('productModal'));
+                                                                   modal.show();
+                                                               }
+                                                               
+                                                               function addProductModal() {
+                                                                   document.getElementById("productModalLabe2").innerText = "Thêm mẫu mới";
+                                                                   document.getElementById("modal-templateId").value = "";
+                                                                   document.getElementById("modal-templateName").value = "";
+                                                                   document.getElementById("modal-quantity").value = "";
+                                                                  //document.getElementById("modal-Ingredients").value = "";
+//                                                                   document.getElementById("modal-imageUrl").value = "";
+//                                                                   document.getElementById("modal-categoryId").selectedIndex = 0;
 
-                                    // Initialize page
-                                    document.addEventListener('DOMContentLoaded', function () {
-                                        // Add event listeners to item checkboxes
-                                        document.querySelectorAll('.item-checkbox').forEach(checkbox => {
-                                            checkbox.addEventListener('change', updateBulkActionButtons);
-                                        });
+                                                                   let modal = new bootstrap.Modal(document.getElementById('productModal'));
+                                                                   modal.show();
+                                                               }
 
-                                        // Enable real-time search
-                                        document.getElementById('inventorySearch').addEventListener('keyup', function (e) {
-                                            if (e.key === 'Enter') {
-                                                searchInventory();
-                                            }
-                                        });
+                                                               // Filter functions
+                                                               function filterByStockLevel(level) {
+                                                                   console.log('Filter by stock level:', level);
+                                                               }
+                                                               function filterByCategory(category) {
+                                                                   console.log('Filter by category:', category);
+                                                               }
+                                                               function filterBySupplier(supplier) {
+                                                                   console.log('Filter by supplier:', supplier);
+                                                               }
+                                                               function filterByLocation(location) {
+                                                                   console.log('Filter by location:', location);
+                                                               }
 
-                                        // Auto-refresh inventory status every 10 minutes
-                                        setInterval(function () {
-                                            console.log('Auto-refreshing inventory status...');
-                                            // Implementation would refresh inventory data via AJAX
-                                        }, 600000);
+                                                               // Inventory actions
+                                                               function urgentReorder(itemId) {
+                                                                   if (confirm('Create urgent purchase order for this out-of-stock item?')) {
+                                                                       console.log('Creating urgent reorder for item:', itemId);
+                                                                       window.location.href = `urgent-purchase-order.jsp?itemId=${itemId}`;
+                                                                   }
+                                                               }
 
-                                        // Check for critical stock alerts every 5 minutes
-                                        setInterval(function () {
-                                            console.log('Checking for critical stock alerts...');
-                                            // Implementation would check for new critical stock situations
-                                        }, 300000);
-                                    });
+                                                               function createReorder(itemId) {
+                                                                   console.log('Creating reorder for item:', itemId);
+                                                                   window.location.href = `create-purchase-order.jsp?itemId=${itemId}`;
+                                                               }
 
-                                    // Tự động highlight menu item dựa trên URL hiện tại
-                                    document.addEventListener('DOMContentLoaded', function() {
-                                        // Highlight menu item based on URL path
-                                        var path = window.location.pathname.toLowerCase();
-                                        document.querySelectorAll('.sidebar-link').forEach(function(link) {
-                                            link.classList.remove('active');
-                                        });
+                                                               function createPromotion(itemId) {
+                                                                   console.log('Creating promotion for overstocked item:', itemId);
+                                                                   window.location.href = `create-promotion.jsp?itemId=${itemId}`;
+                                                               }
 
-                                        if (path.includes('/category')) {
-                                            var categoryLink = document.getElementById('menu-categoryManagement');
-                                            if (categoryLink) categoryLink.classList.add('active');
-                                        } else if (path.includes('/productmanagement')) {
-                                            var productLink = document.getElementById('menu-productManagement');
-                                            if (productLink) productLink.classList.add('active');
-                                        } else if (path.includes('/storagemanagement')) {
-                                            var storageLink = document.getElementById('menu-storageManagement');
-                                            if (storageLink) storageLink.classList.add('active');
-                                        } else if (path.includes('/ordermanagement')) {
-                                            var orderLink = document.getElementById('menu-orderManagement');
-                                            if (orderLink) orderLink.classList.add('active');
-                                        } else if (path.includes('/invoicemanagement')) {
-                                            var invoiceLink = document.getElementById('menu-invoiceManagement');
-                                            if (invoiceLink) invoiceLink.classList.add('active');
-                                        } else if (path.includes('usermanagement.jsp')) {
-                                            var userLink = document.getElementById('menu-userManagement');
-                                            if (userLink) userLink.classList.add('active');
-                                        } else if (path.includes('feedbackmanagement.jsp')) {
-                                            var feedbackLink = document.getElementById('menu-feedbackManagement');
-                                            if (feedbackLink) feedbackLink.classList.add('active');
-                                        } else if (path.includes('notificationmanagement.jsp')) {
-                                            var notificationLink = document.getElementById('menu-notificationManagement');
-                                            if (notificationLink) notificationLink.classList.add('active');
-                                        } else if (path.includes('/statistics')) {
-                                            var managementLink = document.getElementById('menu-management');
-                                            if (managementLink) managementLink.classList.add('active');
-                                        }
-                                    });
+                                                               function transferStock(itemId) {
+                                                                   console.log('Transferring stock for item:', itemId);
+                                                                   window.location.href = `stock-transfer.jsp?itemId=${itemId}`;
+                                                               }
 
-        </script>
+                                                               function viewDetails(itemId) {
+                                                                   console.log('Viewing details for item:', itemId);
+                                                                   window.location.href = `inventory-details.jsp?itemId=${itemId}`;
+                                                               }
+
+                                                               // Bulk actions
+                                                               function selectAllItems(checkbox) {
+                                                                   const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+                                                                   itemCheckboxes.forEach(cb => cb.checked = checkbox.checked);
+                                                                   updateBulkActionButtons();
+                                                               }
+
+                                                               function updateBulkActionButtons() {
+                                                                   const selectedItems = document.querySelectorAll('.item-checkbox:checked');
+                                                                   const bulkButtons = ['bulkAdjustBtn', 'bulkReorderBtn', 'bulkTransferBtn', 'bulkPromotionBtn'];
+
+                                                                   bulkButtons.forEach(btnId => {
+                                                                       document.getElementById(btnId).disabled = selectedItems.length === 0;
+                                                                   });
+                                                               }
+
+                                                               function bulkAdjustment() {
+                                                                   const selected = document.querySelectorAll('.item-checkbox:checked');
+                                                                   const ids = Array.from(selected).map(cb => cb.value);
+                                                                   window.location.href = `bulk-stock-adjustment.jsp?itemIds=${ids.join(',')}`;
+                                                               }
+
+                                                               function bulkReorder() {
+                                                                   const selected = document.querySelectorAll('.item-checkbox:checked');
+                                                                   const ids = Array.from(selected).map(cb => cb.value);
+                                                                   window.location.href = `bulk-purchase-order.jsp?itemIds=${ids.join(',')}`;
+                                                               }
+
+                                                               function bulkTransfer() {
+                                                                   const selected = document.querySelectorAll('.item-checkbox:checked');
+                                                                   const ids = Array.from(selected).map(cb => cb.value);
+                                                                   window.location.href = `bulk-stock-transfer.jsp?itemIds=${ids.join(',')}`;
+                                                               }
+
+                                                               function bulkPromotion() {
+                                                                   const selected = document.querySelectorAll('.item-checkbox:checked');
+                                                                   const ids = Array.from(selected).map(cb => cb.value);
+                                                                   window.location.href = `bulk-promotion.jsp?itemIds=${ids.join(',')}`;
+                                                               }
+
+                                                               function generateInventoryReport() {
+                                                                   window.location.href = 'inventory-report.jsp?format=excel';
+                                                               }
+
+
+                                                               // Initialize page
+                                                               document.addEventListener('DOMContentLoaded', function () {
+                                                                   // Add event listeners to item checkboxes
+                                                                   document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+                                                                       checkbox.addEventListener('change', updateBulkActionButtons);
+                                                                   });
+
+                                                                   // Enable real-time search
+                                                                   document.getElementById('inventorySearch').addEventListener('keyup', function (e) {
+                                                                       if (e.key === 'Enter') {
+                                                                           searchInventory();
+                                                                       }
+                                                                   });
+
+                                                                   // Auto-refresh inventory status every 10 minutes
+                                                                   setInterval(function () {
+                                                                       console.log('Auto-refreshing inventory status...');
+                                                                       // Implementation would refresh inventory data via AJAX
+                                                                   }, 600000);
+
+                                                                   // Check for critical stock alerts every 5 minutes
+                                                                   setInterval(function () {
+                                                                       console.log('Checking for critical stock alerts...');
+                                                                       // Implementation would check for new critical stock situations
+                                                                   }, 300000);
+                                                               });
+
+                                                               // Tự động highlight menu item dựa trên URL hiện tại
+                                                               document.addEventListener('DOMContentLoaded', function () {
+                                                                   // Highlight menu item based on URL path
+                                                                   var path = window.location.pathname.toLowerCase();
+                                                                   document.querySelectorAll('.sidebar-link').forEach(function (link) {
+                                                                       link.classList.remove('active');
+                                                                   });
+
+                                                                   if (path.includes('/category')) {
+                                                                       var categoryLink = document.getElementById('menu-categoryManagement');
+                                                                       if (categoryLink)
+                                                                           categoryLink.classList.add('active');
+                                                                   } else if (path.includes('/productmanagement')) {
+                                                                       var productLink = document.getElementById('menu-productManagement');
+                                                                       if (productLink)
+                                                                           productLink.classList.add('active');
+                                                                   } else if (path.includes('/storagemanagement')) {
+                                                                       var storageLink = document.getElementById('menu-storageManagement');
+                                                                       if (storageLink)
+                                                                           storageLink.classList.add('active');
+                                                                   } else if (path.includes('/ordermanagement')) {
+                                                                       var orderLink = document.getElementById('menu-orderManagement');
+                                                                       if (orderLink)
+                                                                           orderLink.classList.add('active');
+                                                                   } else if (path.includes('/invoicemanagement')) {
+                                                                       var invoiceLink = document.getElementById('menu-invoiceManagement');
+                                                                       if (invoiceLink)
+                                                                           invoiceLink.classList.add('active');
+                                                                   } else if (path.includes('usermanagement.jsp')) {
+                                                                       var userLink = document.getElementById('menu-userManagement');
+                                                                       if (userLink)
+                                                                           userLink.classList.add('active');
+                                                                   } else if (path.includes('feedbackmanagement.jsp')) {
+                                                                       var feedbackLink = document.getElementById('menu-feedbackManagement');
+                                                                       if (feedbackLink)
+                                                                           feedbackLink.classList.add('active');
+                                                                   } else if (path.includes('notificationmanagement.jsp')) {
+                                                                       var notificationLink = document.getElementById('menu-notificationManagement');
+                                                                       if (notificationLink)
+                                                                           notificationLink.classList.add('active');
+                                                                   } else if (path.includes('/statistics')) {
+                                                                       var managementLink = document.getElementById('menu-management');
+                                                                       if (managementLink)
+                                                                           managementLink.classList.add('active');
+                                                                   }
+                                                               });
+
+            </script>
     </body>
 </html>

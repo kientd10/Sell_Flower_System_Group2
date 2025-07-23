@@ -19,9 +19,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 /**
  *
@@ -68,104 +71,150 @@ public class StorageManagement extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        String mode = request.getParameter("mode");
         StorageDAO dao = new StorageDAO();
         BouquetDAO dao1 = new BouquetDAO();
-        if (action == null) {
-            action = "view";
+        List<FlowerColor> listColor = dao1.listColor();
+        List<FlowerType> listType = dao.getAllFlowerType();
+        List<BouquetTemplate> bouquet3 = dao1.getAllBouquets();
+            List<BouquetTemplate> bouquet4 = getCategory_Name(bouquet3);
+        request.setAttribute("productList", bouquet4);
+        request.setAttribute("flowerNameList", listType);
+        request.setAttribute("colorList", listColor);
+        if (action.equals("view")) {
+            List<RawFlower> rawFlowerList = dao.getAllRawFlower();
+            //List<RawFlower> RawFlowerList = paginate(rawFlowerList, request);
+            List<BouquetTemplate> bouquet1 = dao1.getAllBouquets();
+            List<BouquetTemplate> bouquet = getCategory_Name(bouquet1);
+            List<BouquetTemplate> bouquet2 = paginate1(bouquet, request);
+            request.setAttribute("bouquetList", bouquet2);
+            request.setAttribute("RawFlowerList", rawFlowerList);
+            request.getRequestDispatcher("storageManagement.jsp").forward(request, response);
+            return;
         }
-        switch (action) {
-            case "add":
-                List<RawFlower> RawFlowerList = dao.getAllRawFlower();
-                List<BouquetTemplate> bouquetList = dao1.getAllBouquets();
-                for (BouquetTemplate b : bouquetList) {
-                    b.setCategoryName(dao1.getCategoryNameById(b.getTemplateId()));
-                    List<TemplateIngredient> listIng = null;
-                    try {
-                        listIng = dao.getAllTemplateIngredient(b.getTemplateId());
-                    } catch (SQLException ex) {
-                        Logger.getLogger(StorageManagement.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    b.setIngredients(listIng);
-                }
-                List<FlowerType> FlowerType = dao.getAllFlowerType();
-                List<FlowerColor> FlowerColor = dao.getAllFlowerColor();
-                request.setAttribute("editMode", true);
-                request.setAttribute("action", "view");
-                request.setAttribute("bouquetList", bouquetList);
-                request.setAttribute("TypeList", FlowerType);
-                request.setAttribute("ColorList", FlowerColor);
-                request.setAttribute("RawFlowerList", RawFlowerList);
-                request.setAttribute("categoryList", dao1.getAllCategory());
-                request.getRequestDispatcher("storageManagement.jsp")
-                        .forward(request, response);
-                break;
-            case "addProduct":
-                int id = Integer.parseInt(request.getParameter("newTemplateID"));
-                String name = request.getParameter("newTemplateName");
-                double price = Double.parseDouble(request.getParameter("newBasePrice"));
-                int stock = Integer.parseInt(request.getParameter("newStock"));
-                String[] category = request.getParameterValues("newCategory");
-                if (category != null) {
-                    for (int i = 0; i < category.length; i++) {
-                        try {
-                            int categoryId = Integer.parseInt(category[i]);
-                            dao.AddTemplateByProduct(id, name, price, stock,categoryId);
-                        } catch (Exception ex) {
-                            Logger.getLogger(StorageManagement.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-                String[] typeIds = request.getParameterValues("typeId");
-                String[] colorIds = request.getParameterValues("colorId");
-                String[] quantities = request.getParameterValues("quantity");
-
-                if (typeIds != null) {
-                    for (int i = 0; i < typeIds.length; i++) {
-                        try {
-                            int typeId = Integer.parseInt(typeIds[i]);
-                            int colorId = Integer.parseInt(colorIds[i]);
-                            int qty = Integer.parseInt(quantities[i]);
-                            dao.AddIngredientByProduct(id, typeId, colorId, qty);
-                        } catch (Exception ex) {
-                            Logger.getLogger(StorageManagement.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-                response.sendRedirect("storagemanagement?action=view");
-                break;
-            case "edit":
-                int editId = Integer.parseInt(request.getParameter("editId"));
-
-                break;
-            case "update":
-                response.sendRedirect("productmanagement?action=view");
-                break;
-
-            case "delete":
-
-            case "view":
-            default:
-                request.setAttribute("editMode", false);
-                List<RawFlower> all = dao.getAllRawFlower();
-                List<BouquetTemplate> bouquet = dao1.getAllBouquets();
-                for (BouquetTemplate b : bouquet) {
-                    b.setCategoryName(dao1.getCategoryNameById(b.getTemplateId()));
-                    List<TemplateIngredient> listIng = null;
-                    try {
-                        listIng = dao.getAllTemplateIngredient(b.getTemplateId());
-                    } catch (SQLException ex) {
-                        Logger.getLogger(StorageManagement.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    b.setIngredients(listIng);
-                }
-                request.setAttribute("bouquetList", bouquet);
-                request.setAttribute("RawFlowerList", all);
-                request.setAttribute("categoryList", dao1.getAllCategory());
-                request.getRequestDispatcher("storageManagement.jsp")
-                        .forward(request, response);
-                break;
+        
+        if(action.equals("updateRawflower")){
+            String FlowerID = request.getParameter("rawflowerId");
+            String typeID = request.getParameter("typeId");
+            String colorID = request.getParameter("colorId");
+            String quantity = request.getParameter("quantity");
+            String supplierName = request.getParameter("supplierName");
+            String unitPrice = request.getParameter("unitPrice");
+            String importDate = request.getParameter("importDate");
+            String expiryDate = request.getParameter("expiryDate");
+            String notes = request.getParameter("notes");
+            RawFlower rf = new RawFlower();
+            rf.setRawFlowerId(Integer.parseInt(FlowerID));
+            rf.setColorId(Integer.parseInt(colorID));
+            rf.setQuantity(Integer.parseInt(quantity));
+            rf.setSupplierName(supplierName);
+            rf.setUnitPrice(Double.parseDouble(unitPrice));
+            rf.setImportDate(java.sql.Date.valueOf(importDate));
+            rf.setExpiryDate(java.sql.Date.valueOf(expiryDate));
+            rf.setTypeId(Integer.parseInt(typeID));
+            rf.setNotes(notes);
+            dao.UpdateRawFlower(rf);
+            response.sendRedirect("storagemanagement?action=view");
+            return;
         }
+        
+        if(action.equals("deleteRawflower")){
+            String id = request.getParameter("id");
+            int ID = Integer.parseInt(id);
+            dao.deleteRawflower(ID);
+            response.sendRedirect("storagemanagement?action=view");
+            return;
+        }
+        
+        if(action.equals("addRawflower")){
+            String typeID = request.getParameter("typeId");
+            String colorID = request.getParameter("colorId");
+            String quantity = request.getParameter("quantity");
+            String supplierName = request.getParameter("supplierName");
+            String unitPrice = request.getParameter("unitPrice");
+            String importDate = request.getParameter("importDate");
+            String expiryDate = request.getParameter("expiryDate");
+            String notes = request.getParameter("notes");
+            RawFlower rf = new RawFlower();
+            rf.setColorId(Integer.parseInt(colorID));
+            rf.setQuantity(Integer.parseInt(quantity));
+            rf.setSupplierName(supplierName);
+            rf.setUnitPrice(Double.parseDouble(unitPrice));
+            rf.setImportDate(java.sql.Date.valueOf(importDate));
+            rf.setExpiryDate(java.sql.Date.valueOf(expiryDate));
+            rf.setTypeId(Integer.parseInt(typeID));
+            rf.setNotes(notes);
+            dao.addRawflower(rf);
+            response.sendRedirect("storagemanagement?action=view");
+            return;
+        }
+        if(action.equals("addProduct")){
+            String templateID = request.getParameter("templateId");
+            String quantity = request.getParameter("quantity");
+            BouquetTemplate bq = new BouquetTemplate();
+            bq.setTemplateId(Integer.parseInt(templateID));
+            bq.setStock(Integer.parseInt(quantity));
+            dao.updateBouquet(bq);
+            List<TemplateIngredient> listIng= dao.getIngredientsByTemplateId(Integer.parseInt(templateID));
+            response.sendRedirect("storagemanagement?action=view");
+            return;
+        }
+
+    }
+    
+    
+    private List<BouquetTemplate> getCategory_Name(List<BouquetTemplate> list){
+        StorageDAO dao = new StorageDAO();
+        BouquetDAO dao1 = new BouquetDAO();
+        for (BouquetTemplate b : list) {
+                b.setCategoryName(dao1.getCategoryNameById(b.getTemplateId()));
+                List<TemplateIngredient> listIng = null;
+                try {
+                    listIng = dao.getAllTemplateIngredient(b.getTemplateId());
+                } catch (SQLException ex) {
+                    Logger.getLogger(StorageManagement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                b.setIngredients(listIng);
+            }
+        return list;
+    }
+
+    private List<RawFlower> paginate(List<RawFlower> rawflower, HttpServletRequest request) {
+        int pageSize = 5;
+        int size = rawflower.size();
+        int numPages = (size % pageSize == 0) ? (size / pageSize) : (size / pageSize) + 1;
+        String xpage = request.getParameter("page");
+        int page = 1;
+        if (xpage != null) {
+            page = Integer.parseInt(xpage);
+        } 
+
+        int start = (page - 1) * pageSize;
+        int end = Math.min(page * pageSize, size);
+        request.setAttribute("page", page);
+        request.setAttribute("num", numPages);
+
+        return rawflower.subList(start, end);
+    }
+
+    private List<BouquetTemplate> paginate1(List<BouquetTemplate> bouquet, HttpServletRequest request) {
+        int pageSize = 5;
+        int size = bouquet.size();
+        int numPages = (size % pageSize == 0) ? (size / pageSize) : (size / pageSize) + 1;
+        String xpage = request.getParameter("page1");
+        int page = 1;
+        if (xpage != null) {
+            page = Integer.parseInt(xpage);
+        }
+        
+        
+
+
+        int start = (page - 1) * pageSize;
+        int end = Math.min(page * pageSize, size);
+        request.setAttribute("page1", page);
+        request.setAttribute("num1", numPages);
+
+        return bouquet.subList(start, end);
     }
 
     /**
@@ -179,7 +228,7 @@ public class StorageManagement extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
     }
 
     /**

@@ -10,12 +10,15 @@ public class RawFlower {
     private int rawFlowerId;
     private int typeId;
     private int colorId;
+    private String colorName;
     private String rawFlowerName; 
     private int quantity;
     private double unitPrice;
     private Date importDate;
     private Date expiryDate;
     private String supplierName;
+    private String status;
+    private long dayleft;
     private boolean isExpired;
     private String notes;
     private Timestamp createdAt;
@@ -25,23 +28,52 @@ public class RawFlower {
     public RawFlower() {}
 
     // Full-args constructor
-    public RawFlower(int rawFlowerId, int typeId, int colorId, String rawFlowerName,
+    public RawFlower(int rawFlowerId, int typeId, int colorId,String colorname, String rawFlowerName,
                      int quantity, double unitPrice, Date importDate, Date expiryDate,
-                     String supplierName, boolean isExpired, String notes,
+                     String supplierName,String status,long dayleft, boolean isExpired, String notes,
                      Timestamp createdAt, Timestamp updatedAt) {
         this.rawFlowerId = rawFlowerId;
         this.typeId = typeId;
         this.colorId = colorId;
+        this.colorName=colorname;
         this.rawFlowerName = rawFlowerName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.importDate = importDate;
         this.expiryDate = expiryDate;
         this.supplierName = supplierName;
+        this.status=status;
+        this.dayleft=dayleft;
         this.isExpired = isExpired;
         this.notes = notes;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public long getDayleft() {
+        return dayleft;
+    }
+
+    public void setDayleft(long dayleft) {
+        this.dayleft = dayleft;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    
+    
+    public String getColorName() {
+        return colorName;
+    }
+
+    public void setColorName(String colorName) {
+        this.colorName = colorName;
     }
 
     // Getters and Setters

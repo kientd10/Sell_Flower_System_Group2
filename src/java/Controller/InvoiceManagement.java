@@ -140,7 +140,7 @@ public class InvoiceManagement extends HttpServlet {
 
     }
 
-    //in ra excel file
+    
     private List<Invoice> paginate(List<Invoice> invoices, HttpServletRequest request) {
         int pageSize = 5;
         int size = invoices.size();

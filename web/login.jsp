@@ -61,6 +61,19 @@
                                 <a href="${pageContext.request.contextPath}/home?pageNum=1" ><img src="https://i.ibb.co/CsMwqtJx/logo-2.png" alt="" width="120px" height="70px" /></a>
                             </div>
                         </div>
+
+
+                        <div class="col-sm-8">
+                            <div class="shop-menu pull-right">
+                                <ul class="nav navbar-nav">
+                                        <li><a href="orders"><i class="fa fa-truck"></i> Đơn hàng</a></li>
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>    
+                                        <li><a href="login.jsp"><b>Đăng nhập</b></a></li> 
+                                        
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div><!--/header-middle-->

@@ -53,7 +53,7 @@ public class Customer extends HttpServlet {
             HttpSession session = request.getSession();
             session.removeAttribute("user");
             session.invalidate();
-            response.sendRedirect("home");
+            response.sendRedirect("login.jsp");
         }
 
         //Sign up
