@@ -115,6 +115,8 @@ public class UserManagementServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String roleIdParam = request.getParameter("roleId");
+        String area = request.getParameter("area");
+
         String isActiveParam = request.getParameter("isActive");
 
         // === VALIDATION CHUNG ===
@@ -168,7 +170,8 @@ public class UserManagementServlet extends HttpServlet {
                 user.setFullName(fullName.trim());
                 user.setPhone(phone != null ? phone.trim() : null);
                 user.setAddress(address != null ? address.trim() : null);
-                user.setRoleId(Integer.parseInt(roleIdParam));
+                user.setArea(area != null ? area.trim() : null);
+                user.setRoleId(Integer.parseInt(roleIdParam));              
                 user.setIsActive(Boolean.parseBoolean(isActiveParam));
 
                 u.addUser(user);
@@ -188,6 +191,7 @@ public class UserManagementServlet extends HttpServlet {
                 user.setRoleId(oldUser.getRoleId());
                 user.setPhone(phone != null ? phone.trim() : null);
                 user.setAddress(address != null ? address.trim() : null);
+                user.setArea(area != null ? area.trim() : null);
                 user.setIsActive(Boolean.parseBoolean(isActiveParam));
 
                 // Giữ lại tên cũ nếu người dùng không nhập gì
