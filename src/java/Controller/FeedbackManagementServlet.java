@@ -63,49 +63,57 @@ public class FeedbackManagementServlet extends HttpServlet {
  
 protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-    ProductFeedbackDAO dao = new ProductFeedbackDAO();
-    try {
-        String ratingParam = request.getParameter("rating");
-        String timeParam = request.getParameter("time");
-        System.out.println("Rating param: " + ratingParam);
-System.out.println("Time param: " + timeParam);
 
-        List<ProductFeedback> feedbacks = dao.getAllFeedbacksWithCustomerName();
+        ProductFeedbackDAO dao = new ProductFeedbackDAO();
 
-        // Lọc theo đánh giá
-        if (ratingParam != null && !ratingParam.isEmpty()) {
-            int rating = Integer.parseInt(ratingParam);
-            feedbacks.removeIf(f -> f.getRating() != rating);
-        }
+        try {
+            String action = request.getParameter("action");
 
-        // Lọc theo thời gian
-        if (timeParam != null && !timeParam.isEmpty()) {
-            java.time.LocalDateTime now = java.time.LocalDateTime.now();
-            java.time.LocalDateTime fromTime = switch (timeParam) {
-                case "today" -> now.toLocalDate().atStartOfDay();
-                case "yesterday" -> now.minusDays(1).toLocalDate().atStartOfDay();
-                case "week" -> now.with(java.time.DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
-                case "month" -> now.withDayOfMonth(1).toLocalDate().atStartOfDay();
-                case "quarter" -> now.withMonth(((now.getMonthValue() - 1) / 3) * 3 + 1).withDayOfMonth(1).toLocalDate().atStartOfDay();
-                default -> null;
-            };
-
-            if (fromTime != null) {
-                feedbacks.removeIf(f -> f.getCreatedAt().toLocalDateTime().isBefore(fromTime));
+            // ===== XÓA PHẢN HỒI =====
+            if ("delete".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                dao.deleteFeedbackById(id);
+                response.sendRedirect("feedbacks");
+                return;
             }
+
+            // ===== LỌC PHẢN HỒI =====
+            String ratingParam = request.getParameter("rating");
+            String timeParam = request.getParameter("time");
+
+            List<ProductFeedback> feedbacks = dao.getAllFeedbacksWithCustomerName();
+
+            // Lọc theo đánh giá
+            if (ratingParam != null && !ratingParam.isEmpty()) {
+                int rating = Integer.parseInt(ratingParam);
+                feedbacks.removeIf(f -> f.getRating() != rating);
+            }
+
+            // Lọc theo thời gian
+            if (timeParam != null && !timeParam.isEmpty()) {
+                java.time.LocalDateTime now = java.time.LocalDateTime.now();
+                java.time.LocalDateTime fromTime = switch (timeParam) {
+                    case "today" -> now.toLocalDate().atStartOfDay();
+                    case "yesterday" -> now.minusDays(1).toLocalDate().atStartOfDay();
+                    case "week" -> now.with(java.time.DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
+                    case "month" -> now.withDayOfMonth(1).toLocalDate().atStartOfDay();
+                    case "quarter" -> now.withMonth(((now.getMonthValue() - 1) / 3) * 3 + 1).withDayOfMonth(1).toLocalDate().atStartOfDay();
+                    default -> null;
+                };
+
+                if (fromTime != null) {
+                    feedbacks.removeIf(f -> f.getCreatedAt().toLocalDateTime().isBefore(fromTime));
+                }
+            }
+
+            request.setAttribute("feedbacks", feedbacks);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("error", "Không thể tải danh sách phản hồi.");
         }
 
-        // Debug
-        System.out.println("Tổng feedbacks sau lọc = " + feedbacks.size());
-
-        request.setAttribute("feedbacks", feedbacks);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        request.setAttribute("error", "Không thể tải danh sách phản hồi.");
+        request.getRequestDispatcher("/feedbackManagement.jsp").forward(request, response);
     }
-
-    request.getRequestDispatcher("/feedbackManagement.jsp").forward(request, response);
-}
 
     /** 
      * Handles the HTTP <code>POST</code> method.

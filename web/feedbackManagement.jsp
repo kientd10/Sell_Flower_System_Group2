@@ -423,16 +423,11 @@
                 <!-- Top Navigation Bar -->
                 <div class="top-navbar">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="input-group" style="width: 300px;">
-                            <input type="text" class="form-control" placeholder="Tìm kiếm phản hồi..." id="feedbackSearch">
-                            <button class="btn btn-outline-secondary" onclick="searchFeedback()"><i class="fas fa-search"></i></button>
-                        </div>
+                        
 
                         <div class="d-flex align-items-center gap-3">
 
-                            <button class="btn btn-outline-secondary" onclick="refreshFeedback()">
-                                <i class="fas fa-sync-alt me-2"></i>Làm Mới
-                            </button>
+                            
                         </div>
                     </div>
                 </div>
@@ -444,9 +439,6 @@
                         <div>
                             <h2 class="page-title">Quản Lý Phản Hồi Khách Hàng</h2>
                             <p class="text-muted">Quản lý và phản hồi tất cả ý kiến từ khách hàng</p>
-                        </div>
-                        <div class="text-muted">
-                            Tổng số phản hồi: <strong>248</strong> | Hôm nay: <strong>18</strong>
                         </div>
                     </div>
 
@@ -491,13 +483,8 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Danh Sách Phản Hồi</h5>
                             <div class="d-flex align-items-center gap-3">
-                                <span class="text-light">Hiển thị:</span>
-                                <select class="form-select form-select-sm" style="width: auto;">
-                                    <option value="25" selected>25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span class="text-light">mục</span>
+                                
+                              
                             </div>
                         </div>
                         <div class="card-body">
@@ -512,7 +499,7 @@
                                             <th>Đánh Giá</th>
                                             <th>Trạng Thái</th>
                                             <th>Ngày Tạo</th>
-                                            <th>Ưu Tiên</th>
+                                            <th>Xóa Phản Hồi</th>
                                 
                                         </tr>
                                     </thead>
@@ -566,20 +553,15 @@
                     
                 <td>
     <div class="feedback-actions d-flex gap-1">
-        <!-- Nút Xem Chi Tiết -->
-        <a href="feedback-details?id=${f.feedbackId}" class="btn btn-sm btn-outline-primary" title="Xem Chi Tiết">
-    <i class="fas fa-eye"></i>
-</a>
 
-        <!-- Nút Phản hồi bình luận -->
-        <button class="btn btn-sm btn-outline-success" onclick="replyFeedback(${f.feedbackId})" title="Phản Hồi Bình Luận">
-            <i class="fas fa-reply"></i>
-        </button>
 
-        <!-- Nút Xóa bình luận -->
-        <button class="btn btn-sm btn-outline-danger" onclick="deleteFeedback(${f.feedbackId})" title="Xóa Bình Luận">
-            <i class="fas fa-trash"></i>
-        </button>
+    <!-- Nút xoá -->
+    <a href="feedbacks?action=delete&id=${f.feedbackId}" 
+       class="btn btn-sm btn-danger" 
+       onclick="return confirm('Bạn chắc chắn muốn xoá phản hồi này?')">
+        <i class="ri-delete-bin-6-line"></i>
+    </a>
+
     </div>
 </td>
                                             </tr>
@@ -850,6 +832,34 @@
         window.location.href = url;
     }
 </script>
-        </script>
+        <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Chi tiết phản hồi</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Ngày tạo:</strong> <span id="modalCreatedAt"></span></p>
+        <p><strong>Đánh giá:</strong> <span id="modalRating"></span> / 5 sao</p>
+        <p><strong>Nội dung:</strong></p>
+        <p id="modalComment"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script>
+  function openFeedbackModal(id, comment, rating, createdAt) {
+    document.getElementById('modalCreatedAt').innerText = createdAt;
+    document.getElementById('modalRating').innerText = rating;
+    document.getElementById('modalComment').innerText = comment;
+    $('#feedbackModal').modal('show');
+  };
+</script>
     </body>
 </html>
