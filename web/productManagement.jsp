@@ -2,6 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -216,6 +217,35 @@
                 border-color: var(--primary-red);
             }
 
+            .image-wrapper {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 8px;
+                border: 2px solid #e9ecef;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .image-wrapper:hover {
+                transform: scale(1.05);
+                border-color: var(--primary-red);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+
+            /* Adjust table cell padding for better image display */
+            .table td {
+                vertical-align: middle;
+                padding: 1rem 0.75rem;
+            }
+
+            /* Make sure the image column has consistent width */
+            .table th:nth-child(2),
+            .table td:nth-child(2) {
+                width: 100px;
+                text-align: center;
+            }
+
             .stock-badge {
                 padding: 0.4rem 0.8rem;
                 border-radius: 15px;
@@ -283,6 +313,51 @@
                 .content-area {
                     padding: 1rem;
                 }
+            }
+            .dropzone {
+                border: 2.5px dashed #ce426c;
+                border-radius: 12px;
+                background: #fff;
+                padding: 18px 0;
+                text-align: center;
+                color: #ce426c;
+                font-size: 1.1rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: border 0.2s, background 0.2s;
+                margin-bottom: 10px;
+                position: relative;
+                overflow: hidden;
+            }
+            .dropzone input[type="file"] {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                opacity: 0;
+                cursor: pointer;
+                z-index: 2;
+            }
+            .dropzone.dragover {
+                border: 2.5px solid #d44071;
+                background: #fff0f6;
+            }
+            .preview-img {
+                max-width: 100%;
+                max-height: 180px;
+                margin-bottom: 10px;
+                border-radius: 8px;
+                box-shadow: 0 1px 6px rgba(206,66,108,0.08);
+            }
+            .price-display {
+                font-weight: 600;
+                color: #2c3e50;
+                font-size: 1rem;
+                white-space: nowrap;
+            }
+            
+            .price-display .currency {
+                color: #666;
+                font-size: 0.9rem;
+                margin-left: 4px;
             }
         </style>
     </head>
@@ -454,7 +529,7 @@
                                                         <td><input type="checkbox" class="form-check-input product-checkbox" value="1" /></td>
                                                         <td>
                                                             <img class="image-wrapper"
-                                                                 src="${pageContext.request.contextPath}/images/cart/${line.imageUrl}"
+                                                                 src="${pageContext.request.contextPath}/${line.imageUrl}"
                                                                  alt="${line.templateName}" />
                                                         </td>
                                                         <td>
@@ -520,7 +595,7 @@
                                                         <td>
                                                             <img
                                                                 class="image-wrapper"
-                                                                src="${pageContext.request.contextPath}/images/cart/${line.imageUrl}"
+                                                                src="${pageContext.request.contextPath}/${line.imageUrl}"
                                                                 alt="${line.templateName}" />
                                                         </td>
                                                         <td>
@@ -533,12 +608,7 @@
                                                         </td>
                                                         <td><span class="badge bg-info">${line.categoryName}</span></td>
                                                         <td>
-                                                            
-
-                                                            <div class="text-muted small"><strong>${line.basePrice}</strong></div>
-
-                                                            <div class="text-muted small"><strong>${line.basePrice} VNĐ</strong></div>
-
+                                                            <span class="text-muted small"><strong>${line.basePrice} VNĐ</strong></span>
                                                         </td>
                                                         <td>
                                                             <strong>${line.stock}</strong>
@@ -592,7 +662,7 @@
                             <!-- Modal Form Add/Edit Product -->
                             <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
-                                    <form action="productmanagement" method="post">
+                                    <form action="productmanagement" method="post" enctype="multipart/form-data">
                                         <input type="hidden" name="action" value="save" />
                                         <input type="hidden" name="templateId" id="modal-templateId" />
                                         <div class="modal-content">
@@ -618,14 +688,17 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label>URL Hình ảnh</label>
-                                                    <input type="text" class="form-control" name="imageUrl" id="modal-imageUrl">
+                                                    <label>Ảnh sản phẩm <span style="color:red">*</span></label>
+                                                    <div id="product-dropzone" class="dropzone">
+                                                        <span>Kéo thả ảnh vào đây hoặc bấm để chọn ảnh</span>
+                                                    </div>
+                                                    <input type="file" id="productImage" name="productImage" accept="image/*" required>
+                                                    <img id="productPreviewImg" class="preview-img" style="display:none; max-width:100%; margin-top:8px;" alt="Preview" />
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label>Số lượng tồn kho</label>
                                                     <input type="number" class="form-control" name="stock" id="modal-stock" min="0" value="0" />
                                                 </div>
-
                                                 <div class="col-12">
                                                     <label>Mô tả</label>
                                                     <textarea class="form-control" name="description" id="modal-description" rows="3"></textarea>
@@ -719,28 +792,78 @@
                                                                            // Create modal to view larger image
                                                                            alert('View larger image: ' + imageSrc);
                                                                        }
+                                                                       // Xử lý kéo thả ảnh và preview cho modal sản phẩm
+                                                                       function setupProductDropzone() {
+                                                                           const dropzone = document.getElementById('product-dropzone');
+                                                                           const fileInput = document.getElementById('productImage');
+                                                                           const preview = document.getElementById('productPreviewImg');
+                                                                           dropzone.addEventListener('click', () => fileInput.click());
+                                                                           dropzone.addEventListener('dragover', (e) => {
+                                                                               e.preventDefault();
+                                                                               dropzone.classList.add('dragover');
+                                                                           });
+                                                                           dropzone.addEventListener('dragleave', (e) => {
+                                                                               e.preventDefault();
+                                                                               dropzone.classList.remove('dragover');
+                                                                           });
+                                                                           dropzone.addEventListener('drop', (e) => {
+                                                                               e.preventDefault();
+                                                                               dropzone.classList.remove('dragover');
+                                                                               if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                                                                                   fileInput.files = e.dataTransfer.files;
+                                                                                   showPreview(fileInput.files[0]);
+                                                                               }
+                                                                           });
+                                                                           fileInput.addEventListener('change', function() {
+                                                                               if (this.files && this.files[0]) {
+                                                                                   showPreview(this.files[0]);
+                                                                               }
+                                                                           });
+                                                                           function showPreview(file) {
+                                                                               const reader = new FileReader();
+                                                                               reader.onload = function(e) {
+                                                                                   preview.src = e.target.result;
+                                                                                   preview.style.display = 'block';
+                                                                               };
+                                                                               reader.readAsDataURL(file);
+                                                                           }
+                                                                       }
+                                                                       // Hiển thị preview ảnh cũ khi edit
+                                                                       function setProductImagePreview(imageUrl) {
+                                                                           const preview = document.getElementById('productPreviewImg');
+                                                                           if (imageUrl && imageUrl.trim() !== '') {
+                                                                               preview.src = imageUrl;
+                                                                               preview.style.display = 'block';
+                                                                           } else {
+                                                                               preview.src = '';
+                                                                               preview.style.display = 'none';
+                                                                           }
+                                                                       }
+                                                                       // Gọi khi mở modal add
                                                                        function openAddModal() {
                                                                            document.getElementById("productModalLabel").innerText = "Thêm sản phẩm mới";
                                                                            document.getElementById("modal-templateId").value = "";
                                                                            document.getElementById("modal-templateName").value = "";
                                                                            document.getElementById("modal-basePrice").value = "";
                                                                            document.getElementById("modal-description").value = "";
-                                                                           document.getElementById("modal-imageUrl").value = "";
                                                                            document.getElementById("modal-categoryId").selectedIndex = 0;
-
+                                                                           document.getElementById("modal-stock").value = 0;
+                                                                           document.getElementById("productImage").value = "";
+                                                                           setProductImagePreview("");
                                                                            let modal = new bootstrap.Modal(document.getElementById('productModal'));
                                                                            modal.show();
                                                                        }
 
+                                                                       // Gọi khi mở modal edit
                                                                        function openEditModal(id, name, price, desc, imageUrl, categoryId, stock) {
                                                                            document.getElementById("modal-templateId").value = id;
                                                                            document.getElementById("modal-templateName").value = name;
                                                                            document.getElementById("modal-basePrice").value = price;
                                                                            document.getElementById("modal-description").value = desc;
-                                                                           document.getElementById("modal-imageUrl").value = imageUrl;
                                                                            document.getElementById("modal-categoryId").value = categoryId;
                                                                            document.getElementById("modal-stock").value = stock;
-
+                                                                           document.getElementById("productImage").value = "";
+                                                                           setProductImagePreview(imageUrl);
                                                                            let modal = new bootstrap.Modal(document.getElementById('productModal'));
                                                                            modal.show();
                                                                        }
@@ -772,6 +895,7 @@
 
                                                                        // Initialize page
                                                                        document.addEventListener('DOMContentLoaded', function () {
+                                                                           setupProductDropzone();
                                                                            // Add event listeners to product checkboxes
                                                                            document.querySelectorAll('.product-checkbox').forEach(checkbox => {
                                                                                checkbox.addEventListener('change', updateBulkActionButtons);

@@ -102,40 +102,81 @@ public class OrderServlet extends HttpServlet {
             List<Order> completedOrders = new ArrayList<>();
             List<Order> cancelledOrders = new ArrayList<>();
 
-            // Bổ sung: Xử lý đơn hoa theo yêu cầu (requestId != null)
+            // Xử lý đơn hoa theo yêu cầu (requestId != null)
             dal.FlowerRequestDAO flowerRequestDAO = null;
-            try { flowerRequestDAO = new dal.FlowerRequestDAO(); } catch (Exception ignore) {}
+            try {
+                flowerRequestDAO = new dal.FlowerRequestDAO();
+            } catch (Exception e) {
+                // Log error nếu cần
+                e.printStackTrace();
+            }
+
             for (Order order : allOrders) {
-                Integer reqId = order.getRequestId();
-                if (reqId != null && flowerRequestDAO != null) {
+                // Xử lý đơn hàng theo yêu cầu
+                if (order != null && order.getRequestId() != null && flowerRequestDAO != null) {
                     try {
-                        Model.FlowerRequest fr = flowerRequestDAO.getRequestById(reqId);
+                        Model.FlowerRequest fr = flowerRequestDAO.getRequestById(order.getRequestId());
                         if (fr != null) {
                             Model.OrderItem customItem = new Model.OrderItem();
                             customItem.setProductName("Hoa yêu cầu");
-                            int qty = (fr.getQuantity() > 0) ? fr.getQuantity() : 1;
-                            double price = (fr.getSuggestedPrice() != null && fr.getSuggestedPrice().doubleValue() > 0) ? fr.getSuggestedPrice().doubleValue() : 1;
+                            
+                            // Xử lý số lượng
+                            int qty = 1;
+                            if (fr.getQuantity() > 0) {
+                                qty = fr.getQuantity();
+                            }
                             customItem.setQuantity(qty);
+                            
+                            // Xử lý giá
+                            double price = 0.0;
+                            if (fr.getSuggestedPrice() != null && fr.getSuggestedPrice().doubleValue() > 0) {
+                                price = fr.getSuggestedPrice().doubleValue();
+                            }
                             customItem.setUnitPrice(price);
-                            // Ưu tiên sampleImageUrl nếu có, không thì lấy imageUrl
-                            String img = (fr.getSampleImageUrl() != null && !fr.getSampleImageUrl().isEmpty()) ? fr.getSampleImageUrl() : fr.getImageUrl();
-                            customItem.setImageUrl(img != null ? img : "");
-                            customItem.setTemplateId(-1); // Để link không bị lỗi
+                            
+                            // Xử lý hình ảnh
+                            String imageUrl = "";
+                            if (fr.getSampleImageUrl() != null && !fr.getSampleImageUrl().trim().isEmpty()) {
+                                imageUrl = fr.getSampleImageUrl();
+                            } else if (fr.getImageUrl() != null && !fr.getImageUrl().trim().isEmpty()) {
+                                imageUrl = fr.getImageUrl();
+                            }
+                            customItem.setImageUrl(imageUrl);
+                            
+                            customItem.setTemplateId(-1); // ID mặc định cho hoa theo yêu cầu
+                            
                             List<Model.OrderItem> customList = new ArrayList<>();
                             customList.add(customItem);
                             order.setItems(customList);
                         }
-                    } catch (Exception ignore) { /* log nếu cần */ }
+                    } catch (Exception e) {
+                        // Log error nếu cần
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            for (Order order : allOrders) {
-                switch (order.getStatus()) {
-                    case "Chờ xác nhận" -> pendingOrders.add(order);
-                    case "Đang chuẩn bị" -> preparingOrders.add(order);
-                    case "Chờ giao hàng" -> shippingOrders.add(order);
-                    case "Đã mua" -> completedOrders.add(order);
-                    case "Đã hủy" -> cancelledOrders.add(order);
+                // Phân loại đơn hàng theo trạng thái
+                if (order != null && order.getStatus() != null) {
+                    switch (order.getStatus()) {
+                        case "Chờ xác nhận":
+                            pendingOrders.add(order);
+                            break;
+                        case "Đang chuẩn bị":
+                            preparingOrders.add(order);
+                            break;
+                        case "Chờ giao hàng":
+                            shippingOrders.add(order);
+                            break;
+                        case "Đã mua":
+                            completedOrders.add(order);
+                            break;
+                        case "Đã hủy":
+                            cancelledOrders.add(order);
+                            break;
+                        default:
+                            // Log trạng thái không xác định nếu cần
+                            break;
+                    }
                 }
             }
 
