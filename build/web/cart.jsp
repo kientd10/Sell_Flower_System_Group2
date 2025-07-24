@@ -152,12 +152,12 @@
             margin-top: 40px;
         }
         .cart-section-container {
-            max-width: 950px;
+            max-width: 1100px;
             margin: 48px auto 60px auto;
             background: #fff;
             border-radius: 18px;
             box-shadow: 0 4px 32px rgba(206,66,108,0.10);
-            padding: 48px 36px 40px 36px;
+            padding: 48px 48px 40px 48px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -265,7 +265,7 @@
             margin-top: 18px;
         }
         /* Responsive tweaks */
-        @media (max-width: 1100px) {
+        @media (max-width: 1200px) {
             .cart-section-container {
                 max-width: 99vw;
                 padding: 18px 2vw 18px 2vw;
@@ -296,56 +296,63 @@
             }
         }
         .cart-table th, .cart-table td {
-            padding: 16px 14px;
+            padding: 16px 10px;
             text-align: center;
+            vertical-align: middle;
         }
         .cart-table th {
-            min-width: 80px;
+            min-width: 70px;
         }
-        .cart-table th:first-child,
         .cart-table td.cart_product {
             min-width: 130px;
             width: 130px;
+            max-width: 150px;
+            background: none !important;
+            box-shadow: none !important;
+            padding: 0 8px;
+            text-align: center !important;
+            vertical-align: middle !important;
+            display: table-cell !important;
+            position: relative;
         }
         .cart_product img {
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(206,66,108,0.10);
-            max-width: 130px;
-            max-height: 130px;
-            min-width: 90px;
-            object-fit: cover;
             display: block;
             margin: 0 auto;
-        }
-        .cart-table td.cart_product {
-            min-width: 90px;
+            border-radius: 10px;
+            max-width: 100px;
+            max-height: 100px;
+            min-width: 80px;
+            min-height: 80px;
+            object-fit: cover;
+            box-shadow: none;
+            background: #fff;
+            vertical-align: middle;
         }
         .cart-table td:nth-child(2) {
-            min-width: 160px;
+            min-width: 90px;
+            font-size: 0.95rem;
             text-align: left;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .cart-table th, .cart-table td {
+            padding: 8px 6px;
         }
         .cart-table td:nth-child(3),
-        .cart-table td:nth-child(5) {
-            min-width: 100px;
-        }
-        .cart-table td:nth-child(4) {
-            min-width: 120px;
-        }
+        .cart-table td:nth-child(4),
+        .cart-table td:nth-child(5),
         .cart-table td:nth-child(6),
         .cart-table td:nth-child(7) {
-            min-width: 60px;
-        }
-        .cart-table td {
-            white-space: nowrap;
+            min-width: 55px;
         }
         @media (max-width: 900px) {
             .cart-table th, .cart-table td {
-                padding: 10px 4px;
+                padding: 8px 3px;
             }
         }
         @media (max-width: 600px) {
             .cart-table th, .cart-table td {
-                padding: 6px 2px;
+                padding: 4px 1px;
             }
         }
     </style>
@@ -378,7 +385,7 @@
                                     <c:forEach items="${cart}" var="line">
                                         <tr>
                                             <td class="cart_product">
-                                                <img src="${pageContext.request.contextPath}/images/cart/${line.bouquetTemplate.imageUrl}" alt="${line.bouquetTemplate.templateName}" />
+                                                <img src="${pageContext.request.contextPath}/${line.bouquetTemplate.imageUrl}" alt="${line.bouquetTemplate.templateName}" />
                                             </td>
                                             <td>
                                                 <h4>${line.bouquetTemplate.templateName}</h4>
@@ -515,7 +522,7 @@
                 right: 20px;
             }
         </style>
-    </c:if>>
+    </c:if>
     <script>
         function increaseQty(id) {
             const qtyInput = document.getElementById('qty_' + id);

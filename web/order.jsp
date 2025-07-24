@@ -72,7 +72,7 @@
                 box-shadow: 0 1.5px 7px rgba(0,0,0,0.07);
                 margin-bottom: 18px;
                 overflow: hidden;
-                transition: all 0.3s ease;
+transition: all 0.3s ease;
             }
 
             .order-card:hover {
@@ -183,7 +183,7 @@
 
             .order-info-item {
                 display: flex;
-                align-items: center;
+align-items: center;
                 margin-bottom: 7px;
                 font-size: 13px;
             }
@@ -290,7 +290,7 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <div class="social-icons pull-right">
+<div class="social-icons pull-right">
                                 <ul class="nav navbar-nav">
                                     <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2"><i class="fa fa-brands fa-github"></i></a></li>
                                     <li><a href="https://www.facebook.com/share/16ohs8HR5g/?mibextid=wwXIfr"><i class="fa fa-facebook"></i></a></li>                                   
@@ -340,7 +340,7 @@
                                     <span class="sr-only">Toggle navigation</span>
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
+<span class="icon-bar"></span>
                                 </button>
                             </div>
                             <div class="mainmenu pull-left">
@@ -392,7 +392,7 @@
                                 </a>
                             </li>
                             <li role="presentation">
-                                <a href="#preparing" aria-controls="preparing" role="tab" data-toggle="tab">
+<a href="#preparing" aria-controls="preparing" role="tab" data-toggle="tab">
                                     <i class="fa fa-cog"></i> Đang chuẩn bị
                                 </a>
                             </li>
@@ -436,7 +436,7 @@
                                                         <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
                                                     </p>
                                                 </div>
-                                                <div class="col-md-6 text-right">
+<div class="col-md-6 text-right">
                                                     <span class="order-status status-pending status-badge">
                                                         <i class="fa fa-clock-o"></i> ${order.status}
                                                     </span>
@@ -447,7 +447,7 @@
                                             <c:forEach var="item" items="${order.items}">
                                                 <div class="product-row">
                                                     <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
-                                                        <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                        <img src="${pageContext.request.contextPath}/${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x80?text=No+Image';" />
                                                     </a>
                                                     <div style="flex: 1;">
                                                         <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
@@ -470,7 +470,7 @@
                                                     <div class="order-info-item">
                                                         <i class="fa fa-phone"></i>
                                                         <strong>Số điện thoại:</strong>
-                                                        <span>${order.deliveryPhone}</span>
+<span>${order.deliveryPhone}</span>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -503,7 +503,7 @@
                                         </div>
                                     </div>
                                 </c:forEach>
-                            </div>
+</div>
 
                             <!-- Preparing Orders Tab -->
                             <div role="tabpanel" class="tab-pane" id="preparing">
@@ -538,10 +538,10 @@
                                             <c:forEach var="item" items="${order.items}">
                                                 <div class="product-row">
                                                     <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
-                                                        <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                        <img src="${pageContext.request.contextPath}/${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x80?text=No+Image';" />
                                                     </a>
                                                     <div style="flex: 1;">
-                                                        <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
+<h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
                                                         <p style="margin: 5px 0 0 0; color: #666;">Số lượng: ${item.quantity}</p>
                                                     </div>
                                                     <div class="text-right">
@@ -574,7 +574,7 @@
                                                         </p>
                                                         <div style="margin-top: 10px;">
                                                             <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
-                                                                <i class="fa fa-eye"></i> Chi tiết
+<i class="fa fa-eye"></i> Chi tiết
                                                             </a>
                                                             <a href="https://www.facebook.com/tran.uc.kien.588942" class="btn btn-warning btn-custom">
                                                                 <i class="fa fa-phone"></i> Liên hệ
@@ -615,7 +615,7 @@
                                                         <i class="fa fa-truck"></i> ${order.status}
                                                     </span>
                                                     <p style="margin: 5px 0 0 0; color: #666; font-size: 13px;">
-                                                        Dự kiến giao: <fmt:parseDate value="${order.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
+Dự kiến giao: <fmt:parseDate value="${order.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
                                                         <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
                                                     </p>
                                                 </div>
@@ -625,7 +625,7 @@
                                             <c:forEach var="item" items="${order.items}">
                                                 <div class="product-row">
                                                     <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
-                                                        <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                        <img src="${pageContext.request.contextPath}/${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x80?text=No+Image';" />
                                                     </a>
                                                     <div style="flex: 1;">
                                                         <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
@@ -648,7 +648,7 @@
                                                     <div class="order-info-item">
                                                         <i class="fa fa-phone"></i>
                                                         <strong>Số điện thoại:</strong>
-                                                        <span>${order.deliveryPhone}</span>
+<span>${order.deliveryPhone}</span>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -687,7 +687,7 @@
                                 <c:forEach var="order" items="${completedOrders}">
                                     <div class="order-card">
                                         <div class="order-header">
-                                            <div class="row">
+<div class="row">
                                                 <div class="col-md-6">
                                                     <h4 style="margin: 0; color: #333;">
                                                         <i class="fa fa-file-text-o"></i> Đơn hàng #${order.orderCode}
@@ -708,7 +708,7 @@
                                             <c:forEach var="item" items="${order.items}">
                                                 <div class="product-row">
                                                     <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
-                                                        <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                        <img src="${pageContext.request.contextPath}/${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x80?text=No+Image';" />
                                                     </a>
                                                     <div style="flex: 1;">
                                                         <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
@@ -720,7 +720,7 @@
                                                         </strong>
                                                     </div>
                                                 </div>
-                                            </c:forEach>
+</c:forEach>
                                             <div style="margin-top:5px; padding-top: 5px;">
                                                 <div class="order-info-section">
                                                     <div class="order-info-item">
@@ -751,7 +751,7 @@
                                                             <a href="orderDetails?orderId=${order.orderId}" class="btn btn-info btn-custom" style="margin-right: 10px;">
                                                                 <i class="fa fa-eye"></i> Chi tiết
                                                             </a>
-                                                            <a href="reorder?orderId=${order.orderId}" class="btn btn-success btn-custom">
+<a href="reorder?orderId=${order.orderId}" class="btn btn-success btn-custom">
                                                                 <i class="fa fa-refresh"></i> Mua lại
                                                             </a>
                                                         </div>
@@ -793,10 +793,10 @@
                                             </div>
                                         </div>
                                         <div class="order-content">
-                                            <c:forEach var="item" items="${order.items}">
+<c:forEach var="item" items="${order.items}">
                                                 <div class="product-row">
                                                     <a href="bouquet-detail?templateId=${item.templateId}" style="text-decoration: none;" title="Click để xem chi tiết sản phẩm">
-                                                        <img src="${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/70x70'" style="cursor: pointer;">
+                                                        <img src="${pageContext.request.contextPath}/${item.imageUrl}" alt="${item.productName}" class="product-image" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x80?text=No+Image';" />
                                                     </a>
                                                     <div style="flex: 1;">
                                                         <h5 style="margin: 0; font-weight: bold;">${item.productName}</h5>
@@ -825,7 +825,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12 text-right">
                                                         <h6 style="color: #333; font-weight: 600; margin-bottom: 10px; display: inline-block; margin-right: 0px; font-size: 14px;">
-                                                            <i class="fa fa-money"></i> Tổng tiền  :
+<i class="fa fa-money"></i> Tổng tiền  :
                                                         </h6>
                                                         <p class="order-total" style="margin: 10px 10px; display: inline-block;">
                                                             <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫"/>
@@ -870,7 +870,7 @@
                                 <h2>Liên hệ </h2>
                                 <ul class="nav nav-pills nav-stacked">
                                     <li><a href="https://www.facebook.com/tran.uc.kien.588942">Facebook</a></li>
-                                    <li><a href="https://github.com/kientd10/Sell_Flower_System_Group2">Github</a></li>
+<li><a href="https://github.com/kientd10/Sell_Flower_System_Group2">Github</a></li>
                                     <li><a href="https://accounts.google.com/v3/signin/identifier?ifkv=AdBytiMmsOAuql232UmLNKelOUNWSkE5R7zTjDiG1c2Eh9s_g4WpAUxqvRqKj9gMYsdypUFg84Mr&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S1730468177%3A1750350775108616">kientdhe186194@fpt.edu.vn</a></li>
                                 </ul>
                             </div>
@@ -922,7 +922,7 @@
             <script>
                                                                     $(document).ready(function () {
                                                                         $('.toast').toast({
-                                                                            delay: 3500
+delay: 3500
                                                                         });
                                                                         $('.toast').toast('show');
                                                                     });

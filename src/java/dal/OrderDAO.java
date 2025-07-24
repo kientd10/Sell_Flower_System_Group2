@@ -431,49 +431,85 @@ public class OrderDAO {
     public List<OrderItem> getItemsByOrderId(int orderId, Connection conn) throws Exception {
         List<OrderItem> items = new ArrayList<>();
 
-        String sql = """
-            SELECT od.quantity, od.unit_price, bt.template_name, bt.image_url, bt.template_id
-            FROM order_details od
-            JOIN bouquet_templates bt ON od.template_id = bt.template_id
-            WHERE od.order_id = ?
-            """;
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        boolean shouldCloseConnection = false;
-
-        try {
-            if (conn == null) {
-                conn = DBcontext.getJDBCConnection();
-                shouldCloseConnection = true;
-            }
-            
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, orderId);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                OrderItem item = new OrderItem();
-                item.setProductName(rs.getString("template_name"));
-                item.setImageUrl(rs.getString("image_url"));
-                item.setQuantity(rs.getInt("quantity"));
-                item.setUnitPrice(rs.getDouble("unit_price"));
-                item.setTemplateId(rs.getInt("template_id"));
-                items.add(item);
-            }
-
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (ps != null) {
-                ps.close();
-            }
-            if (shouldCloseConnection && conn != null) {
-                conn.close();
+        // Lấy request_id của order này
+        Integer requestId = null;
+        String reqSql = "SELECT request_id FROM orders WHERE order_id = ?";
+        try (PreparedStatement reqPs = (conn != null ? conn : DBcontext.getJDBCConnection()).prepareStatement(reqSql)) {
+            reqPs.setInt(1, orderId);
+            try (ResultSet reqRs = reqPs.executeQuery()) {
+                if (reqRs.next()) {
+                    Object reqObj = reqRs.getObject("request_id");
+                    if (reqObj != null) requestId = reqRs.getInt("request_id");
+                }
             }
         }
 
+        if (requestId != null) {
+            // Nếu là hoa yêu cầu, lấy ảnh từ flower_requests theo requestId của order
+            String sql = "SELECT od.quantity, od.unit_price, fr.image_url, fr.description, od.template_id " +
+                    "FROM order_details od " +
+                    "JOIN flower_requests fr ON fr.request_id = ? " +
+                    "WHERE od.order_id = ?";
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            boolean shouldCloseConnection = false;
+            try {
+                if (conn == null) {
+                    conn = DBcontext.getJDBCConnection();
+                    shouldCloseConnection = true;
+                }
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, requestId);
+                ps.setInt(2, orderId);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    OrderItem item = new OrderItem();
+                    item.setProductName(rs.getString("description")); // hoặc tên khác nếu có
+                    item.setImageUrl(rs.getString("image_url"));
+                    item.setQuantity(rs.getInt("quantity"));
+                    item.setUnitPrice(rs.getDouble("unit_price"));
+                    item.setTemplateId(rs.getInt("template_id"));
+                    items.add(item);
+                }
+            } finally {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (shouldCloseConnection && conn != null) conn.close();
+            }
+        } else {
+            // Hoa thường, lấy như cũ
+            String sql = """
+                SELECT od.quantity, od.unit_price, bt.template_name, bt.image_url, bt.template_id
+                FROM order_details od
+                JOIN bouquet_templates bt ON od.template_id = bt.template_id
+                WHERE od.order_id = ?
+                """;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            boolean shouldCloseConnection = false;
+            try {
+                if (conn == null) {
+                    conn = DBcontext.getJDBCConnection();
+                    shouldCloseConnection = true;
+                }
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, orderId);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    OrderItem item = new OrderItem();
+                    item.setProductName(rs.getString("template_name"));
+                    item.setImageUrl(rs.getString("image_url"));
+                    item.setQuantity(rs.getInt("quantity"));
+                    item.setUnitPrice(rs.getDouble("unit_price"));
+                    item.setTemplateId(rs.getInt("template_id"));
+                    items.add(item);
+                }
+            } finally {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (shouldCloseConnection && conn != null) conn.close();
+            }
+        }
         return items;
     }
 

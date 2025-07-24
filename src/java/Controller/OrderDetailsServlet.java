@@ -16,6 +16,9 @@ import jakarta.servlet.http.HttpSession;
 import Model.Order;
 import Model.OrderItem;
 import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.io.File;
 
 /**
  *
@@ -89,6 +92,27 @@ public class OrderDetailsServlet extends HttpServlet {
                         customItem.setQuantity(qty);
                         customItem.setUnitPrice(price);
                         String img = (fr.getSampleImageUrl() != null && !fr.getSampleImageUrl().isEmpty()) ? fr.getSampleImageUrl() : fr.getImageUrl();
+                        // Copy ảnh sang images/orders nếu có
+                        if (img != null && !img.isEmpty()) {
+                            String realPath = getServletContext().getRealPath("");
+                            // Nếu đường dẫn gốc là images/product thì đổi thành images/products
+                            if (img.startsWith("images/product/")) {
+                                img = img.replaceFirst("images/product/", "images/products/");
+                            }
+                            String srcPath = realPath + img;
+                            String ext = img.lastIndexOf('.') > 0 ? img.substring(img.lastIndexOf('.')) : "";
+                            String destFileName = "images/orders/" + System.currentTimeMillis() + ext;
+                            String destPath = realPath + destFileName;
+                            File destDir = new File(realPath + "images/orders");
+                            if (!destDir.exists()) destDir.mkdirs();
+                            try {
+                                Files.copy(new File(srcPath).toPath(), new File(destPath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                img = destFileName;
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                // Nếu lỗi thì giữ nguyên đường dẫn cũ
+                            }
+                        }
                         customItem.setImageUrl(img != null ? img : "");
                         customItem.setTemplateId(-1);
                         List<Model.OrderItem> customList = new ArrayList<>();
