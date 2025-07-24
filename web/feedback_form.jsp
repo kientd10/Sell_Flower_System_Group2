@@ -194,8 +194,8 @@
             </p>
             <p>
                 <label>Viết nhận xét:</label><br>
-                <textarea name="comment" rows="4" required><%= (feedback != null ? feedback.getComment() : "") %></textarea>
-            </p>
+            </p><textarea name="comment" id="comment" rows="4" maxlength="100" required oninput="updateCharCount()"><%= (feedback != null ? feedback.getComment() : "") %></textarea>
+<small id="charCount" class="text-muted">0/100 ký tự</small>
             <div style="text-align:center;">
                 <button type="submit">Gửi đánh giá</button>
             </div>
@@ -254,5 +254,18 @@
     <script src="js/price-range.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+    <script>
+    function updateCharCount() {
+        var comment = document.getElementById("comment");
+        var count = document.getElementById("charCount");
+        count.textContent = comment.value.length + "/100 ký tự";
+    }
+
+    // Gọi hàm khi trang load (nếu đã có dữ liệu cũ)
+    window.onload = function() {
+        updateCharCount();
+    };
+</script>
+
 </body>
 </html>

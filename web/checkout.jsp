@@ -115,7 +115,7 @@
                     <h2 class="heading">Thông tin người nhận hàng</h2>
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3">
-                            <form action="placeOrder" method="post" onsubmit="return validatePhoneNumber();">
+<form action="placeOrder" method="post" onsubmit="return validateForm();">
                                 <div class="form-group">
                                     <label for="receiverName">Họ tên người nhận:</label>
                                     <input type="text" class="form-control" id="receiverName" name="receiverName" required>
@@ -362,6 +362,29 @@
             }
         }
     });
+</script>
+<script>
+    function validateForm() {
+        // Kiểm tra số điện thoại
+        const phone = document.getElementById("receiverPhone").value.trim();
+        const phoneRegex = /^0\d{9}$/;
+        if (!phoneRegex.test(phone)) {
+            alert("Số điện thoại không hợp lệ.");
+            return false;
+        }
+
+        // Kiểm tra thời gian giao hàng là tương lai
+        const deliveryInput = document.getElementById("deliveryTime");
+        const deliveryTime = new Date(deliveryInput.value);
+        const now = new Date();
+
+        if (deliveryTime <= now) {
+            alert("Thời gian giao hàng phải nằm trong tương lai.");
+            return false;
+        }
+
+        return true; // Hợp lệ thì mới cho submit
+    }
 </script>
 
     </body>
