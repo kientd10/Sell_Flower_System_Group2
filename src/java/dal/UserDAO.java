@@ -237,39 +237,53 @@ public class UserDAO {
     }
 
     // Thêm người dùng mới
-    public boolean addUser(User user) throws SQLException {
-        String sql = "INSERT INTO users (username, email, password, full_name, phone, address, role_id, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPassword()); // Assuming password_hash is stored as plain text for now; use hashing in production
-            stmt.setString(4, user.getFullName());
-            stmt.setString(5, user.getPhone());
-            stmt.setString(6, user.getAddress());
-            stmt.setInt(7, user.getRoleId());
-            stmt.setBoolean(8, user.isIsActive());
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-        }
+    // Thêm người dùng mới
+public boolean addUser(User user) throws SQLException {
+    String sql = "INSERT INTO users (username, email, password, full_name, phone, address, role_id, is_active, area) " +
+                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    try (Connection conn = dbContext.getConnection(); 
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, user.getEmail());
+        stmt.setString(3, user.getPassword()); // Lưu mật khẩu plain text – nên dùng hash ở production
+        stmt.setString(4, user.getFullName());
+        stmt.setString(5, user.getPhone());
+        stmt.setString(6, user.getAddress());
+        stmt.setInt(7, user.getRoleId());
+        stmt.setBoolean(8, user.isIsActive());
+        stmt.setString(9, user.getArea());
+
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
     }
+}
+
 
     // Cập nhật thông tin người dùng
-    public boolean updateUser(User user) throws SQLException {
-        String sql = "UPDATE users SET username = ?, email = ?, password = ?, full_name = ?, phone = ?, address = ?, role_id = ?, is_active = ?, updated_at = NOW() WHERE user_id = ?";
-        try (Connection conn = dbContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPassword()); // Use hashed password in production
-            stmt.setString(4, user.getFullName());
-            stmt.setString(5, user.getPhone());
-            stmt.setString(6, user.getAddress());
-            stmt.setInt(7, user.getRoleId());
-            stmt.setBoolean(8, user.isIsActive());
-            stmt.setInt(9, user.getUserId());
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-        }
+public boolean updateUser(User user) throws SQLException {
+    String sql = "UPDATE users SET username = ?, email = ?, password = ?, full_name = ?, phone = ?, " +
+                 "address = ?, role_id = ?, is_active = ?, area = ?, updated_at = NOW() " +
+                 "WHERE user_id = ?";
+    try (Connection conn = dbContext.getConnection(); 
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, user.getEmail());
+        stmt.setString(3, user.getPassword()); // Nếu có hash, dùng hash tại đây
+        stmt.setString(4, user.getFullName());
+        stmt.setString(5, user.getPhone());
+        stmt.setString(6, user.getAddress());
+        stmt.setInt(7, user.getRoleId());
+        stmt.setBoolean(8, user.isIsActive());
+        stmt.setString(9, user.getArea());
+        stmt.setInt(10, user.getUserId());
+
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
     }
+}
+
 
     // Xóa người dùng
     public boolean deleteUser(int userId) throws SQLException {

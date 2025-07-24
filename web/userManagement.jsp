@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Quản Lý Nhân Sự | Flower Shop</title>
+        <title>Quản Lý Account | Flower Shop</title>
         <!-- External CSS -->
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -396,10 +396,10 @@
                     <!-- Page Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
-                            <h2 class="page-title">Quản Lý Nhân Sự</h2>
+                            <h2 class="page-title">Quản Lý Account</h2>
 
 
-                            <p class="text-muted">Quản lý nhân viên và shipper trong hệ thống</p>
+                            <p class="text-muted">Quản lý account trong hệ thống</p>
 
                         </div>
                         <div class="text-muted">
@@ -515,6 +515,7 @@
                                             <th>Số điện thoại</th>
                                             <th>Vai trò</th>
                                             <th>Trạng thái</th>
+                                            <th>Khu vực</th>
                                             <th>Hành động</th>
                                         </tr>
                                     </thead>
@@ -544,11 +545,14 @@
                                                           </span>
 
                                                     </td>
+                                                    
+
                                                     <td>
                                                         <span class="status-badge ${u.isActive ? 'status-active' : 'status-inactive'}">
                                                             ${u.isActive ? 'Active' : 'Inactive'}
                                                         </span>
                                                     </td>
+                                                    <td>${u.area != null ? u.area : '---'}</td>
                                                     <td>
                                                         <div class="btn-group" role="group">
                                                             <a href="UserManagementServlet?action=edit&id=${u.userId}" class="btn btn-sm btn-outline-primary" title="Sửa">
@@ -649,6 +653,11 @@
                                         <label class="form-label">Địa chỉ</label>
                                         <input type="text" name="address" class="form-control">
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Khu vực</label>
+                                        <input type="text" name="area" class="form-control" maxlength="100">
+                                    </div>
+
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="isActive" value="true" checked id="isActiveAdd">
                                         <label class="form-check-label" for="isActiveAdd">
@@ -711,6 +720,11 @@
                                         <label class="form-label">Địa chỉ</label>
                                         <input type="text" name="address" class="form-control" value="<%= userToEdit != null ? userToEdit.getAddress() : "" %>">
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Khu vực</label>
+                                        <input type="text" name="area" class="form-control" value="<%= userToEdit != null ? userToEdit.getArea() : "" %>" maxlength="100">
+                                    </div>
+
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="isActive" value="true" <%= userToEdit != null && userToEdit.isIsActive() ? "checked" : "" %> id="isActiveEdit">
                                         <label class="form-check-label" for="isActiveEdit">
