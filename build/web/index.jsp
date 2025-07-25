@@ -2,7 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html lang="en">
 
@@ -96,7 +96,8 @@
                                             </ul>
                                         </li>
                                         <li><a href="orders"><i class="fa fa-truck"></i> Đơn mua</a></li>
-                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
+                                        <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+                                        <li><a href="Customer?action=logout"><b>Đăng xuất</b></a></li> 
                                         </c:if> 
                                         <c:if test="${sessionScope.user == null}">
                                         <li><a href="cart"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
@@ -218,9 +219,18 @@
 
                             <!-- Nút Hoa mẫu theo yêu cầu đặt ngay dưới phần danh mục, trên phần lọc giá -->
                             <div style="margin: 16px 0; text-align: center; max-width: 250px; margin-left: auto; margin-right: auto;">
-                                <a href="flowerRequestForm.jsp" class="btn btn-custom-request" style="background: #ce426c; color: #fff; font-weight: bold; padding: 12px 0; border-radius: 8px; font-size: 1.08rem; box-shadow: 0 2px 8px rgba(233,30,99,0.15); transition: background 0.2s; width: 100%; display: inline-block; letter-spacing: 0.5px;">
-                                    <i class="fa fa-magic"></i> Hoa mẫu theo yêu cầu
-                                </a>
+                                <c:choose>
+                                    <c:when test="${sessionScope.user == null}">
+                                        <a href="login.jsp" class="btn btn-custom-request" style="background: #ce426c; color: #fff; font-weight: bold; padding: 12px 0; border-radius: 8px; font-size: 1.08rem; box-shadow: 0 2px 8px rgba(233,30,99,0.15); transition: background 0.2s; width: 100%; display: inline-block; letter-spacing: 0.5px;">
+                                            <i class="fa fa-magic"></i> Hoa mẫu theo yêu cầu
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="flowerRequestForm.jsp" class="btn btn-custom-request" style="background: #ce426c; color: #fff; font-weight: bold; padding: 12px 0; border-radius: 8px; font-size: 1.08rem; box-shadow: 0 2px 8px rgba(233,30,99,0.15); transition: background 0.2s; width: 100%; display: inline-block; letter-spacing: 0.5px;">
+                                            <i class="fa fa-magic"></i> Hoa mẫu theo yêu cầu
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                             <style>
                                 .btn-custom-request {
@@ -328,7 +338,7 @@
                                                         <a href="${pageContext.request.contextPath}/bouquet-detail?templateId=${bou.templateId}">
                                                             <img src="${bou.imageUrl}" alt="${bou.templateName}" style="height:200px;" />
                                                         </a>
-                                                        <h2>${bou.basePrice} đ</h2>
+                                                        <h2><fmt:formatNumber value="${bou.basePrice}" type="currency" currencySymbol="₫"/></h2>
                                                         <p>${bou.templateName}</p>
                                                         <c:choose>
                                                             <c:when test="${bou.avgRating > 0}">

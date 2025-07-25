@@ -68,9 +68,9 @@ public class OrderManagementServlet extends HttpServlet {
         try {
             dal.FlowerRequestDAO flowerRequestDAO = new dal.FlowerRequestDAO();
             if (roleId == 2) { // Staff
-                orders = orderDAO.getOrdersByStatus("Đang chuẩn bị");
+                orders = orderDAO.getOrdersForStaff(userId);
             } else if (roleId == 4) { // Shipper
-                orders = orderDAO.getOrdersByStatus("Chờ giao hàng");
+                orders = orderDAO.getOrdersForShipper(userId);
             } else {
                 orders = orderDAO.getOrdersForManagement(roleId, status, category, priceRange, province, search, dateFilter, sortPrice, page, pageSize);
             }

@@ -3,6 +3,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 
     <head>
@@ -394,7 +395,7 @@
                                                 <div id="notice_${line.bouquetTemplate.templateId}" style="margin-top: 5px; color: #ce426c; font-size: 0.95rem;"></div>
                                             </td>
                                             <td>
-                                                ${line.bouquetTemplate.basePrice} VNĐ
+                                                <fmt:formatNumber value="${line.bouquetTemplate.basePrice}" type="currency" currencySymbol="₫"/>
                                             </td>
                                             <td class="cart_quantity">
                                                 <button type="button" onclick="decreaseQty('${line.bouquetTemplate.templateId}')" id="btnMinus_${line.bouquetTemplate.templateId}" class="btn btn-xs btn-default">-</button>
@@ -403,7 +404,7 @@
                                                 <input type="hidden" name="templateId[]" value="${line.bouquetTemplate.templateId}"/>
                                             </td>
                                             <td>
-                                                <span id="lineTotal_${line.bouquetTemplate.templateId}">${line.bouquetTemplate.basePrice * line.quantity}</span> VNĐ
+                                                <fmt:formatNumber value="${line.bouquetTemplate.basePrice * line.quantity}" type="currency" currencySymbol="₫"/>
                                             </td>
                                             <td>
                                                 <input type="hidden" name="cartId[]" value="${line.cartId}" />

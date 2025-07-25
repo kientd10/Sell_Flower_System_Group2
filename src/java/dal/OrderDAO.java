@@ -936,4 +936,80 @@ public class OrderDAO {
         }
         return null;
     }
+
+    // Lấy đơn hàng cho staff theo staff_id
+    public List<Order> getOrdersForStaff(int staffId) throws Exception {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_name, o.delivery_phone, os.status_name, o.created_At, u.full_name as customer_name, u.phone, u.email, s.full_name as staff_name, sh.full_name as shipper_name, o.request_id " +
+                "FROM orders o " +
+                "JOIN order_status os ON o.status_id = os.status_id " +
+                "JOIN users u ON o.customer_id = u.user_id " +
+                "LEFT JOIN users s ON o.staff_id = s.user_id " +
+                "LEFT JOIN users sh ON o.shipper_id = sh.user_id " +
+                "WHERE os.status_name = 'Đang chuẩn bị' AND o.staff_id = ? " +
+                "ORDER BY o.created_at DESC";
+        try (Connection conn = DBcontext.getJDBCConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setOrderCode(rs.getString("order_code"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setDeliveryAddress(rs.getString("delivery_address"));
+                order.setDeliveryName(rs.getString("delivery_name"));
+                order.setDeliveryPhone(rs.getString("delivery_phone"));
+                order.setStatus(rs.getString("status_name"));
+                order.setCreatedAt(rs.getString("created_at"));
+                order.setCustomerName(rs.getString("customer_name"));
+                order.setPhone(rs.getString("phone"));
+                order.setEmail(rs.getString("email"));
+                order.setStaffName(rs.getString("staff_name"));
+                order.setShipperName(rs.getString("shipper_name"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
+                order.setItems(getItemsByOrderId(order.getOrderId(), conn));
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
+
+    // Lấy đơn hàng cho shipper theo shipper_id
+    public List<Order> getOrdersForShipper(int shipperId) throws Exception {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT o.order_id, o.order_code, o.total_amount, o.delivery_address, o.delivery_name, o.delivery_phone, os.status_name, o.created_At, u.full_name as customer_name, u.phone, u.email, s.full_name as staff_name, sh.full_name as shipper_name, o.request_id " +
+                "FROM orders o " +
+                "JOIN order_status os ON o.status_id = os.status_id " +
+                "JOIN users u ON o.customer_id = u.user_id " +
+                "LEFT JOIN users s ON o.staff_id = s.user_id " +
+                "LEFT JOIN users sh ON o.shipper_id = sh.user_id " +
+                "WHERE os.status_name = 'Chờ giao hàng' AND o.shipper_id = ? " +
+                "ORDER BY o.created_at DESC";
+        try (Connection conn = DBcontext.getJDBCConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, shipperId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setOrderCode(rs.getString("order_code"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setDeliveryAddress(rs.getString("delivery_address"));
+                order.setDeliveryName(rs.getString("delivery_name"));
+                order.setDeliveryPhone(rs.getString("delivery_phone"));
+                order.setStatus(rs.getString("status_name"));
+                order.setCreatedAt(rs.getString("created_at"));
+                order.setCustomerName(rs.getString("customer_name"));
+                order.setPhone(rs.getString("phone"));
+                order.setEmail(rs.getString("email"));
+                order.setStaffName(rs.getString("staff_name"));
+                order.setShipperName(rs.getString("shipper_name"));
+                order.setRequestId(rs.getObject("request_id") != null ? rs.getInt("request_id") : null);
+                order.setItems(getItemsByOrderId(order.getOrderId(), conn));
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
 }

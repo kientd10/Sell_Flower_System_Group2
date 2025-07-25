@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -207,7 +208,7 @@
                                     <p><b>Mô tả :</b> ${bouquet.description}</p>
                                     <img src="images/product-details/rating.png" alt="" />
                                     <span>
-                                        <span style="margin-top:12px;" >${bouquet.basePrice} đ</span>
+                                        <span style="margin-top:12px;" ><fmt:formatNumber value="${bouquet.basePrice}" type="currency" currencySymbol="₫"/></span>
                                         <label style="margin-left:18px;" >Số lượng:</label>
                                         <input type="text" value="1" name="quantity" />
                                         <form action="add" method="get" style="display:inline;" >
@@ -269,7 +270,7 @@
                                                     <div class="single-products">
                                                         <div class="productinfo text-center">
                                                             <img src="${template.imageUrl}" alt="${template.templateName}" />
-                                                            <h2>${template.basePrice} VND</h2>
+                                                            <h2><fmt:formatNumber value="${template.basePrice}" type="currency" currencySymbol="₫"/></h2>
                                                             <p>${template.templateName}</p>
                                                             <button type="button" class="btn btn-default add-to-cart" style="border-radius: 4px;">
                                                                 <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng

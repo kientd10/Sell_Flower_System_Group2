@@ -164,15 +164,15 @@
                                                         <c:set var="itemTotal" value="${line.bouquetTemplate.basePrice * line.quantity}" />
                                                         <tr>
                                                             <td>${line.bouquetTemplate.templateName}</td>
-                                                            <td>${line.bouquetTemplate.basePrice} VNĐ</td>
+                                                            <td><fmt:formatNumber value="${line.bouquetTemplate.basePrice}" type="currency" currencySymbol="₫"/></td>
                                                             <td>${line.quantity}</td>
-                                                            <td>${itemTotal} VNĐ</td>
+                                                            <td><fmt:formatNumber value="${itemTotal}" type="currency" currencySymbol="₫"/></td>
                                                         </tr>
                                                         <c:set var="total" value="${total + itemTotal}" />
                                                     </c:forEach>
                                                     <tr>
                                                         <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
-                                                        <td><strong>${total} VNĐ</strong></td>
+                                                        <td><strong><fmt:formatNumber value="${total}" type="currency" currencySymbol="₫"/></strong></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

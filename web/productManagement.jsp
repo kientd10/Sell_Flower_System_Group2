@@ -389,7 +389,7 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <a href="login.jsp" class="logout-link">
+                    <a href="Customer?action=logout" class="logout-link">
                         <i class="fas fa-sign-out-alt"></i>Đăng xuất
                     </a>
                 </div>
@@ -402,6 +402,11 @@
                         <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
                         <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
                         <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                                                <li>
+                            <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
+                                <i class="fas fa-comments"></i> Quản Lý Phản Hồi
+                            </a>
+                        </li>  
                         </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Manager -->
@@ -413,8 +418,7 @@
                         <li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                         <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
                         <li class="sidebar-header">Hệ Thống</li>
-                        <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-
+                        <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Nhân Sự</a></li>
                         <li>
                             <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
                                 <i class="fas fa-comments"></i> Quản Lý Phản Hồi
@@ -429,28 +433,8 @@
                         </c:if>                   
                 </ul>
             </nav>
-
-            <!-- ===== MAIN CONTENT AREA ===== -->
-            <div class="main-content">
-                <!-- Top Navigation Bar -->
-                <div class="top-navbar">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <form class="input-group" style="width: 300px;" method="get" action="productmanagement">
-                            <input type="hidden" name="action" value="view" />
-                            <input type="text" class="form-control" name="search" placeholder="Tìm kiếm sản phẩm..."
-                                   value="${search != null ? search : ''}" />
-                            <button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
-                        </form>
-
-
-                        <div class="d-flex align-items-center gap-3">
-                            <button class="btn btn-primary" onclick="openAddModal()">Thêm sản phẩm</button>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Main Content -->
-                <div class="content-area">
+                <div class="main-content">
                     <!-- Page Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
@@ -512,13 +496,13 @@
                                             <th>
                                                 <input type="checkbox" class="form-check-input" onchange="selectAllProducts(this)">
                                             </th>
-                                            <th>Image</th>
-                                            <th>Product Info</th>
-                                            <th>Category</th>
-                                            <th>Price</th>
-                                            <th>Stock</th>
+                                            <th>Ảnh</th>
+                                            <th>Thông tin</th>
+                                            <th>Danh mục</th>
+                                            <th>Giá</th>
+                                            <th>Tồn kho</th>
 
-                                            <th>Actions</th>
+                                            <th>Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -577,11 +561,9 @@
                                                                                '${line.basePrice}',
                                                                                '${fn:escapeXml(line.description)}',
                                                                                '${line.imageUrl}',
-                                                               ${line.categoryId},
-                                                               ${line.stock}
-                                                                       )"
-
-                                                               <i class="fas fa-edit"></i>
+                                                                               ${line.categoryId},
+                                                                               ${line.stock})">
+                                                                    <i class="fas fa-edit"></i>
                                                             </a>
 
                                                         </td>
@@ -608,11 +590,10 @@
                                                         </td>
                                                         <td><span class="badge bg-info">${line.categoryName}</span></td>
                                                         <td>
-                                                            <span class="text-muted small"><strong>${line.basePrice} VNĐ</strong></span>
+                                                            <fmt:formatNumber value="${line.basePrice}" type="currency" currencySymbol="₫"/>
                                                         </td>
                                                         <td>
-                                                            <strong>${line.stock}</strong>
-                                                            <div class="text-muted small">Min: ${line.stock}</div>
+                                                            <strong>SL:${line.stock}</strong>
                                                         </td>
 
                                                         <td>
@@ -625,8 +606,8 @@
                                                                                    '${line.basePrice}',
                                                                                    '${fn:escapeXml(line.description)}',
                                                                                    '${line.imageUrl}',
-                                                                   ${line.categoryId}
-                                                                           )">
+                                                                   ${line.categoryId},
+                                                                   ${line.stock})">
                                                                     <i class="fas fa-edit"></i>
                                                                 </a>
 
