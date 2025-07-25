@@ -261,7 +261,7 @@
 </head>
 
 <body>
-	<div class="wrapper">
+        <div class="wrapper">
             <!-- ===== SIDEBAR NAVIGATION ===== -->
             <nav class="sidebar">
                 <a href="home" class="sidebar-brand">
@@ -287,7 +287,7 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <a href="login.jsp" class="logout-link">
+                    <a href="Customer?action=logout" class="logout-link">
                         <i class="fas fa-sign-out-alt"></i>Đăng xuất
                     </a>
                 </div>
@@ -300,6 +300,11 @@
                         <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
                         <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
                         <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                                                <li>
+                            <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
+                                <i class="fas fa-comments"></i> Quản Lý Phản Hồi
+                            </a>
+                        </li>  
                         </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Manager -->
@@ -311,8 +316,7 @@
                         <li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                         <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
                         <li class="sidebar-header">Hệ Thống</li>
-                        <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-
+                        <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Nhân Sự</a></li>
                         <li>
                             <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
                                 <i class="fas fa-comments"></i> Quản Lý Phản Hồi

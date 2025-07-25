@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -215,7 +216,7 @@
     <body>
         <div class="wrapper">
             <!-- ===== SIDEBAR NAVIGATION ===== -->
-                    <nav class="sidebar">
+            <nav class="sidebar">
                 <a href="home" class="sidebar-brand">
                     <i style="color: #2c3e50;"></i>Menu Quản Lý
                 </a>
@@ -239,7 +240,7 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <a href="login.jsp" class="logout-link">
+                    <a href="Customer?action=logout" class="logout-link">
                         <i class="fas fa-sign-out-alt"></i>Đăng xuất
                     </a>
                 </div>
@@ -252,6 +253,11 @@
                         <li><a href="category?action=management" class="sidebar-link" id="menu-categoryManagement"><i class="fas fa-boxes"></i>Quản Lí Danh Mục Sản Phẩm</a></li>
                         <li><a href="storagemanagement?action=view" class="sidebar-link" id="menu-storageManagement"><i class="fas fa-warehouse"></i>Quản Lí Kho Hàng</a></li>
                         <li><a href="orderManagement" class="sidebar-link"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
+                                                <li>
+                            <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
+                                <i class="fas fa-comments"></i> Quản Lý Phản Hồi
+                            </a>
+                        </li>  
                         </c:if> 
 
                     <!-- Chỉ hiển thị nếu là Manager -->
@@ -263,8 +269,7 @@
                         <li><a href="orderManagement" class="sidebar-link" id="menu-orderManagement"><i class="fas fa-shopping-cart"></i>Quản Lí Đơn Hàng</a></li>
                         <li><a href="InvoiceManagement?action=displayAll" class="sidebar-link" id="menu-invoiceManagement"><i class="fas fa-file-invoice"></i>Quản Lý Hóa Đơn</a></li>
                         <li class="sidebar-header">Hệ Thống</li>
-                        <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Người Dùng</a></li>
-
+                        <li><a href="UserManagementServlet?action=search" class="sidebar-link" id="menu-userManagement"><i class="fas fa-user-shield"></i>Quản Lí Nhân Sự</a></li>
                         <li>
                             <a href="feedbacks?action=view" class="sidebar-link" id="menu-feedback">
                                 <i class="fas fa-comments"></i> Quản Lý Phản Hồi
@@ -280,33 +285,8 @@
                 </ul>
             </nav>
 
-            <!-- ===== MAIN CONTENT AREA ===== -->
-            <div class="main-content">
-                <!-- Top Navigation Bar -->
-                <div class="top-navbar">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="input-group" style="width: 300px;">
-                            <input type="text" class="form-control" placeholder="Tìm kiếm quản lý..." id="searchManagement">
-                            <button class="btn btn-outline-secondary" onclick="searchManagement()"><i class="fas fa-search"></i></button>
-                        </div>
-                        <div class="input-group">
-                            <form method="get" action="statistics" class="d-flex gap-2">
-                                <select class="form-select" name="viewType" id="viewType" onchange="changeView()">
-                                    <option value="daily" ${viewType == 'daily' ? 'selected' : ''}>Theo ngày</option>
-                                    <option value="monthly" ${viewType == 'monthly' ? 'selected' : ''}>Theo tháng</option>
-                                    <option value="yearly" ${viewType == 'yearly' ? 'selected' : ''}>Theo năm</option>
-                                </select>
-                                <input type="number" class="form-control" name="day" id="dayInput" placeholder="Ngày" value="${day}" style="display: ${viewType == 'daily' ? 'block' : 'none'};" min="1" max="31">
-                                <input type="number" class="form-control" name="month" id="monthInput" placeholder="Tháng" value="${month}" min="1" max="12">
-                                <input type="number" class="form-control" name="year" id="yearInput" placeholder="Năm" value="${year}" min="2000" max="2100">
-                                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Main Content -->
-                <div class="content-area">
+                <div class="main-content">
                     <!-- Page Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
@@ -334,7 +314,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="summary-card">
-                                        <div class="summary-number">${stats.monthlyRevenue} VND</div>
+                                        <div class="summary-number"><fmt:formatNumber value="${stats.monthlyRevenue}" type="currency" currencySymbol="₫"/></div>
                                         <div class="summary-label">Doanh Thu</div>
                                     </div>
                                 </div>

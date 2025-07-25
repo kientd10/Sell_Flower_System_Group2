@@ -134,7 +134,7 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect("statistics");
                     break;
                 case 4: // Người giao hàng (Shipper)
-                    response.sendRedirect("orderManagement.jsp");
+                    response.sendRedirect("orderManagement");
                     break;
                 default:
                     request.setAttribute("error", "Vai trò không hợp lệ!");
