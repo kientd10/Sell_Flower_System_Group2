@@ -209,11 +209,9 @@
                                     <img src="images/product-details/rating.png" alt="" />
                                     <span>
                                         <span style="margin-top:12px;" ><fmt:formatNumber value="${bouquet.basePrice}" type="currency" currencySymbol="₫"/></span>
-                                        <label style="margin-left:18px;" >Số lượng:</label>
-                                        <input type="text" value="1" name="quantity" />
                                         <form action="add" method="get" style="display:inline;" >
                                             <input type="hidden" name="templateId" value="${bouquet.templateId}" />
-                                            <button type="submit" class="btn btn-fefault cart" style="border-radius: 4px;margin-left: 23px;">
+                                            <button type="submit" class="btn btn-fefault cart" style="border-radius: 4px;margin-left: 23px;margin-top:15px">
                                                 <i class="fa fa-shopping-cart"></i>
                                                 Thêm vào giỏ hàng
                                             </button>

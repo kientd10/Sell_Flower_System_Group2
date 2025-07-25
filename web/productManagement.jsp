@@ -436,6 +436,22 @@
                 <!-- Main Content -->
                 <div class="main-content">
                     <!-- Page Header -->
+                    
+                <div class="top-navbar">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <form class="input-group" style="width: 300px;" method="get" action="productmanagement">
+                            <input type="hidden" name="action" value="view" />
+                            <input type="text" class="form-control" name="search" placeholder="Tìm kiếm sản phẩm..."
+                                   value="${search != null ? search : ''}" />
+                            <button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+                        </form>
+
+
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-primary" onclick="openAddModal()">Thêm sản phẩm</button>
+                        </div>
+                    </div>
+                </div>
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
                             <h2 class="page-title">Quản lí sản phẩm</h2>

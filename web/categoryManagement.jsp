@@ -364,11 +364,18 @@
 				</div>
 
 				<!-- Hiển thị thông báo lỗi nếu có -->
-				<c:if test="${not empty error}">
-					<div class="alert alert-danger" role="alert">
-						${error}
-					</div>
-				</c:if>
+				<c:choose>
+    <c:when test="${error eq 'Category is used in bouquet templates!'}">
+        <div class="alert alert-danger" role="alert">
+            Danh mục đang có sản phẩm hoat động !
+        </div>
+    </c:when>
+    <c:when test="${not empty error && error ne 'Category is used in bouquet templates!'}">
+        <div class="alert alert-danger" role="alert">
+            ${error}
+        </div>
+    </c:when>
+</c:choose>
 
 				<!-- ===== FILTER & CATEGORY SECTION ===== -->
 				<div class="category-filter">

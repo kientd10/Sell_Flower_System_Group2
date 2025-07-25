@@ -684,8 +684,6 @@
 
                                     <i class="fas fa-user-edit me-2"></i>Cập nhật thông tin
 
-                                    <i class="fas fa-user-edit me-2"></i>Sửa Thông Tin
-
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
