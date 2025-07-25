@@ -20,7 +20,9 @@ public class StatisticsDAO {
         String sql = "SELECT COALESCE(SUM(p.amount), 0) as total_revenue " +
                      "FROM payments p " +
                      "JOIN orders o ON p.order_id = o.order_id " +
-                     "WHERE MONTH(o.created_at) = ? AND YEAR(o.created_at) = ? AND p.payment_status = 'Success'";
+                     "JOIN order_status s ON o.status_id = s.status_id " +
+                     "WHERE MONTH(o.created_at) = ? AND YEAR(o.created_at) = ? " +
+                     "AND p.payment_status = 'Success' AND s.status_name = 'Đã mua'";
         double revenue = 0;
         
         try (Connection conn = dbContext.getConnection();
@@ -37,8 +39,9 @@ public class StatisticsDAO {
 
     public int getMonthlyOrderCount(int month, int year) throws SQLException {
         String sql = "SELECT COUNT(*) as order_count " +
-                     "FROM orders " +
-                     "WHERE MONTH(created_at) = ? AND YEAR(created_at) = ? AND status_id IN (1,2)"; // 6 = Delivered
+                     "FROM orders o " +
+                     "JOIN order_status s ON o.status_id = s.status_id " +
+                     "WHERE MONTH(o.created_at) = ? AND YEAR(o.created_at) = ? AND s.status_name = 'Đã mua'";
         int orderCount = 0;
         
         try (Connection conn = dbContext.getConnection();
@@ -59,7 +62,9 @@ public class StatisticsDAO {
         String sql = "SELECT COALESCE(SUM(p.amount), 0) as total_revenue " +
                      "FROM payments p " +
                      "JOIN orders o ON p.order_id = o.order_id " +
-                     "WHERE DAY(o.created_at) = ? AND MONTH(o.created_at) = ? AND YEAR(o.created_at) = ? AND p.payment_status = 'Success'";
+                     "JOIN order_status s ON o.status_id = s.status_id " +
+                     "WHERE DAY(o.created_at) = ? AND MONTH(o.created_at) = ? AND YEAR(o.created_at) = ? " +
+                     "AND p.payment_status = 'Success' AND s.status_name = 'Đã mua'";
         double revenue = 0;
         
         try (Connection conn = dbContext.getConnection();
@@ -80,8 +85,9 @@ public class StatisticsDAO {
      */
     public int getDailyOrderCount(int day, int month, int year) throws SQLException {
         String sql = "SELECT COUNT(*) as order_count " +
-                     "FROM orders " +
-                     "WHERE DAY(created_at) = ? AND MONTH(created_at) = ? AND YEAR(created_at) = ? AND status_id IN (1,2,3,4,5,6)";
+                     "FROM orders o " +
+                     "JOIN order_status s ON o.status_id = s.status_id " +
+                     "WHERE DAY(o.created_at) = ? AND MONTH(o.created_at) = ? AND YEAR(o.created_at) = ? AND s.status_name = 'Đã mua'";
         int orderCount = 0;
         
         try (Connection conn = dbContext.getConnection();
@@ -104,7 +110,8 @@ public class StatisticsDAO {
         String sql = "SELECT COALESCE(SUM(p.amount), 0) as total_revenue " +
                      "FROM payments p " +
                      "JOIN orders o ON p.order_id = o.order_id " +
-                     "WHERE YEAR(o.created_at) = ? AND p.payment_status = 'Success'";
+                     "JOIN order_status s ON o.status_id = s.status_id " +
+                     "WHERE YEAR(o.created_at) = ? AND p.payment_status = 'Success' AND s.status_name = 'Đã mua'";
         double revenue = 0;
         
         try (Connection conn = dbContext.getConnection();
@@ -123,8 +130,9 @@ public class StatisticsDAO {
      */
     public int getYearlyOrderCount(int year) throws SQLException {
         String sql = "SELECT COUNT(*) as order_count " +
-                     "FROM orders " +
-                     "WHERE YEAR(created_at) = ? AND status_id IN (1,2,3,4,5,6)";
+                     "FROM orders o " +
+                     "JOIN order_status s ON o.status_id = s.status_id " +
+                     "WHERE YEAR(o.created_at) = ? AND s.status_name = 'Đã mua'";
         int orderCount = 0;
         
         try (Connection conn = dbContext.getConnection();
@@ -145,7 +153,8 @@ public class StatisticsDAO {
         String sql = "SELECT MONTH(o.created_at) as month, COALESCE(SUM(p.amount), 0) as total_revenue " +
                      "FROM payments p " +
                      "JOIN orders o ON p.order_id = o.order_id " +
-                     "WHERE YEAR(o.created_at) = ? AND p.payment_status = 'Success' " +
+                     "JOIN order_status s ON o.status_id = s.status_id " +
+                     "WHERE YEAR(o.created_at) = ? AND p.payment_status = 'Success' AND s.status_name = 'Đã mua' " +
                      "GROUP BY MONTH(o.created_at) " +
                      "ORDER BY MONTH(o.created_at)";
         List<Double> revenues = new ArrayList<>();

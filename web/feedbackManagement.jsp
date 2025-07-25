@@ -548,9 +548,9 @@
 
     <!-- Nút xoá -->
     <a href="feedbacks?action=delete&id=${f.feedbackId}" 
-       class="btn btn-sm btn-danger" 
+       class="btn btn-sm btn-outline-danger" 
        onclick="return confirm('Bạn chắc chắn muốn xoá phản hồi này?')">
-        <i class="ri-delete-bin-6-line"></i>
+        <i class="fas fa-trash"></i>
     </a>
 
     </div>
@@ -563,241 +563,243 @@
                                 </table>
                             </div>
 
-                            <nav aria-label="Feedback pagination" class="mt-3">
-                                <ul class="pagination">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="feedbackManagement.jsp?page=2">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="feedbackManagement.jsp?page=3">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="feedbackManagement.jsp?page=4">4</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="feedbackManagement.jsp?page=2"><i class="fas fa-chevron-right"></i></a>
-                                    </li>
-                                </ul>
-                            </nav>
                         </div>
                     </div>
-                </div>
+               </div>
             </div>
         </div>
 
         <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script>
-                                        // ===== FEEDBACK MANAGEMENT FUNCTIONALITY =====
+                   <script>
+                           // ===== FEEDBACK MANAGEMENT FUNCTIONALITY =====
 
-                                        // Search feedback
-                                        function searchFeedback() {
-                                            const searchTerm = document.getElementById('feedbackSearch').value;
-                                            console.log('Tìm kiếm phản hồi:', searchTerm);
-                                            // Implementation would filter feedback based on search term
-                                        }
+           // Search feedback
+                                   function searchFeedback() {
+                                   const s ea rchTer m   =  document.getElementById('feedbackSearch').value;
+                                   console.log('Tìm kiếm phản  hồi:',  searchTerm);
+                                   // Implementation would filter feedback based on search term
+                           }
 
-                                        // Filter functions
-                                        function filterByStatus(status) {
-                                            console.log('Lọc theo trạng thái:', status);
-                                        }
-                                        function filterByType(type) {
-                                            console.log('Lọc theo loại:', type);
-                                        }
-                                        function filterByRating(rating) {
-                                            console.log('Lọc theo đánh giá:', rating);
-                                        }
-                                        function filterByTime(time) {
-                                            console.log('Lọc theo thời gian:', time);
-                                        }
+                           // Filter functions
+                           function filterByStatus(status) {
+                           console.log('Lọc theo trạng thái:',   status);
+                           }
+                           function filterByType(type) {
+                           console.log('Lọc theo loại:' ,  type);
+                           }
+                           function filterByRating(rating) {
+           console.log('Lọc theo đánh giá:',   rating);
+                           }
+                           function filterByTime(time) {
+                           console.log('Lọc theo thời gian:',   time);
+                           }
 
-                                        // Feedback actions
-                                       <!-- Xem chi tiết -->
-        <button class="btn btn-sm btn-outline-primary" onclick="viewFeedback(${f.feedbackId})" title="Xem Chi Tiết">
-            <i class="fas fa-eye"></i>
-        </button>
-
-        <!-- Phản hồi bình luận -->
-        <a href="feedbacks?action=reply&id=${f.feedbackId}" class="btn btn-sm btn-outline-success" title="Phản hồi bình luận">
-            <i class="fas fa-reply"></i>
-        </a>
-
-        <!-- Xóa bình luận -->
-        <a href="feedbacks?action=delete&id=${f.feedbackId}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc muốn xóa phản hồi này?')" title="Xóa bình luận">
+                           // Feedback actions
+                           <!-- Xem chi tiết -->
+            <button class="btn btn-sm btn-outline-primary" onclick="viewFeedback(${f.feedbackId})" title="Xem Chi Tiết">
+                <i class="fas fa-eye"></i>
+                </button>
+                
+                <!-- Phản hồi bình luận -->
+                <a href="feedbacks?action=reply&id=${f.feedbackId}" class="btn btn-sm btn-outline-success" title="Phản hồi bình luận">
+                <i class="fas fa-reply"></i>
+                </a>
+                
+                <!-- Xóa bình luận -->
+                <a href="feedbacks?action=delete&id=${f.feedbackId}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc muốn xóa phản hồi này?')" title="Xóa bình luận">
             <i class="fas fa-trash"></i>
-        </a>
+                </a>
+                
+                function markAsRead(feedbackId) 
+                {
+                                   if (confirm('Đánh dấu phản hồi này là đã đọc?')) {
+                           console.log('Đánh dấu đã đọc:', feedbackId);
+                           alert('Phản hồi đã được đánh dấu là đã đọc!');
+                           location.reload();
+                           }
+                }
+                
+                
+                function escalateFeedback(feedbackId) {
+                                   if (confirm('Báo cáo phản hồi này lên cấp trên?')) {
+                           console.log('Báo cáo cấp trên:', feedbackId);
+                           alert('Phản hồi đã được báo cáo lên cấp trên!');
+                           }
+                }
+                
+            
+            function forwardToTeam(feedbackId) {
+                                   console.log('Chuyển tiếp cho team:', feedbackId);
+                           const team = prompt('Chuyển tiếp cho team nào? (sales/support/dev)');
+                           if (team) {
+                           alert(`Phản hồi đã được chuyển tiếp cho team ${team}!`);
+                           }
+                }
+                
+                
+                function addToIdeas(feedbackId) {
+                                   if (confirm('Thêm góp ý này vào danh sách ý tưởng phát triển?')) {
+                           console.log('Thêm vào ý tưởng:', feedbackId);
+                           alert('Góp ý đã được thêm vào danh sách ý tưởng!');
+                           }
+                }
+                
+                
+                function viewReply(feedbackId) {
+                                   console.log('Xem phản hồi đã gửi:', feedbackId);
+                           window.open(`view-reply.jsp?id=${feedbackId}`, '_blank');
+            }
+            
+            
+            function shareTestimonial(feedbackId) {
+                                   if (confirm('Chia sẻ phản hồi tích cực này làm chứng thực?')) {
+                           console.log('Chia sẻ chứng thực:', feedbackId);
+                           alert('Phản hồi đã được chia sẻ làm chứng thực!');
+                           }
+            }
+            
+                
+                function thankCustomer(feedbackId) {
+                                   if (confirm('Gửi email cảm ơn đặc biệt cho khách hàng?')) {
+                           console.log('Gửi lời cảm ơn:', feedbackId);
+                           alert('Email cảm ơn đã được gửi!');
+                           }
+            }
+            
+            
+                function addToFAQ(feedbackId) {
+                                   if (confirm('Thêm câu hỏi này vào danh sách FAQ?')) {
+                           console.log('Thêm vào FAQ:', feedbackId);
+                           alert('Câu hỏi đã được thêm vào FAQ!');
+                           }
+                }
+                
+                
+                function assignToExpert(feedbackId) {
+                                   console.log('Giao cho chuyên gia:', feedbackId);
+                           const expert = prompt('Giao cho chuyên gia nào?');
+                           if (expert) {
+                           alert(`Phản hồi đã được giao cho ${expert}!`);
+                           }
+                }
+                
+            
+            function reportToDev(feedbackId) {
+                                   if (confirm('Báo cáo lỗi này cho team phát triển?')) {
+                           console.log('Báo cáo dev team:', feedbackId);
+                           alert('Lỗi đã được báo cáo cho team phát triển!');
+                           }
+            }
+            
+                
+                function urgentResponse(feedbackId) {
+                                   console.log('Phản hồi khẩn cấp:', feedbackId);
+                           window.location.href = `urgent-reply.jsp?id=${feedbackId}`;
+                }
+                
+                
+                function createTicket(feedbackId) {
+                                   if (confirm('Tạo ticket hỗ trợ cho vấn đề này?')) {
+                           console.log('Tạo ticket:', feedbackId);
+                           alert('Ticket hỗ trợ đã được tạo!');
+                           }
+            }
+            
+            
+            // Bulk actions
+                function selectAllFeedback(checkbox) {
+                                   const feedbackCheckboxes = document.querySelectorAll('.feedback-checkbox');
+                           feedbackCheckboxes.forEach(cb => cb.checked = checkbox.checked);
+                           updateBulkActionButtons();
+                }
+                
+                
+                function updateBulkActionButtons() {
+                                   const selectedFeedback = document.querySelectorAll('.feedback-checkbox:checked');
+                           const bulkButtons = ['bulkReadBtn', 'bulkReplyBtn', 'bulkExportBtn', 'bulkDeleteBtn'];
+                           bulkButtons.forEach(btnId => {
+                           document.getElementById(btnId).disabled = selectedFeedback.length === 0;
+                           });
+                }
+                
+            
+            function bulkMarkAsRead() {
+                                   const selected = document.querySelectorAll('.feedback-checkbox:checked');
+                           const ids = Array.from(selected).map(cb => cb.value);
+                           if (confirm(`Đánh dấu ${ids.length} phản hồi đã chọn là đã đọc?`)) {
+                           console.log('Bulk đánh dấu đã đọc:', ids);
+                           alert('Các phản hồi đã được đánh dấu là đã đọc!');
+                           location.reload();
+                           }
+                }
+                
+                
+                function bulkReply() {
+                                   const selected = document.querySelectorAll('.feedback-checkbox:checked');
+                           const ids = Array.from(selected).map(cb => cb.value);
+                           console.log('Bulk phản hồi:', ids);
+                           window.location.href = `bulk-reply.jsp?ids=${ids.join(',')}`;
+                }
+                
+                
+                    function bulkExport() {
+                                   const selected = document.querySelectorAll('.feedback-checkbox:checked');
+                           const ids = Array.from(selected).map(cb => cb.value);
+                           console.log('Bulk xuất:', ids);
+                           window.location.href = `export-feedback.jsp?ids=${ids.join(',')}&format=excel`;
+                }
+                
+                
+                function bulkDelete() {
+                                   const selected = document.querySelectorAll('.feedback-checkbox:checked');
+                           const ids = Array.from(selected).map(cb => cb.value);
+                           if (confirm(`Xóa ${ids.length} phản hồi đã chọn? Hành động này không thể hoàn tác.`)) {
+                           console.log('Bulk xóa phản hồi:', ids);
+                           alert('Các phản hồi đã được xóa!');
+                           location.reload();
+                           }
+            }
 
-                                        function markAsRead(feedbackId) {
-                                            if (confirm('Đánh dấu phản hồi này là đã đọc?')) {
-                                                console.log('Đánh dấu đã đọc:', feedbackId);
-                                                alert('Phản hồi đã được đánh dấu là đã đọc!');
-                                                location.reload();
-                                            }
-                                        }
 
-                                        function escalateFeedback(feedbackId) {
-                                            if (confirm('Báo cáo phản hồi này lên cấp trên?')) {
-                                                console.log('Báo cáo cấp trên:', feedbackId);
-                                                alert('Phản hồi đã được báo cáo lên cấp trên!');
-                                            }
-                                        }
+            // Export and utility functions
+                function exportFeedback() {
+                                   console.log('Xuất danh sách phản hồi...');
+                           window.location.href = 'export-feedback.jsp?format=excel';
+                }
 
-                                        function forwardToTeam(feedbackId) {
-                                            console.log('Chuyển tiếp cho team:', feedbackId);
-                                            const team = prompt('Chuyển tiếp cho team nào? (sales/support/dev)');
-                                            if (team) {
-                                                alert(`Phản hồi đã được chuyển tiếp cho team ${team}!`);
-                                            }
-                                        }
 
-                                        function addToIdeas(feedbackId) {
-                                            if (confirm('Thêm góp ý này vào danh sách ý tưởng phát triển?')) {
-                                                console.log('Thêm vào ý tưởng:', feedbackId);
-                                                alert('Góp ý đã được thêm vào danh sách ý tưởng!');
-                                            }
-                                        }
+            function refreshFeedback() {
+                                   console.log('Làm mới danh sách phản hồi...');
+                           location.reload();
+        }
 
-                                        function viewReply(feedbackId) {
-                                            console.log('Xem phản hồi đã gửi:', feedbackId);
-                                            window.open(`view-reply.jsp?id=${feedbackId}`, '_blank');
-                                        }
 
-                                        function shareTestimonial(feedbackId) {
-                                            if (confirm('Chia sẻ phản hồi tích cực này làm chứng thực?')) {
-                                                console.log('Chia sẻ chứng thực:', feedbackId);
-                                                alert('Phản hồi đã được chia sẻ làm chứng thực!');
-                                            }
-                                        }
+        function generateFeedbackReport() {
+                                   console.log('Tạo báo cáo phản hồi...');
+                           window.open('feedback-report.jsp', '_blank');
+                    }
 
-                                        function thankCustomer(feedbackId) {
-                                            if (confirm('Gửi email cảm ơn đặc biệt cho khách hàng?')) {
-                                                console.log('Gửi lời cảm ơn:', feedbackId);
-                                                alert('Email cảm ơn đã được gửi!');
-                                            }
-                                        }
 
-                                        function addToFAQ(feedbackId) {
-                                            if (confirm('Thêm câu hỏi này vào danh sách FAQ?')) {
-                                                console.log('Thêm vào FAQ:', feedbackId);
-                                                alert('Câu hỏi đã được thêm vào FAQ!');
-                                            }
-                                        }
+                // Initialize page
+                document.addEventListener('DOMContentLoaded', function () {
+                                   // Add event listeners to feedback checkboxes
+                                   document.querySelectorAll('.feedback-checkbox').forEach(checkbox => {
+                           checkbox.addEventListener('change', updateBulkActionButtons);
+                           });
+                           // Enable real-time search
+                           document.getElementById('feedbackSearch').addEventListener('keyup', function (e) {
+                           if (e.key === 'Enter') {
+                           searchFeedback(); }
+                           });
+                           // Set active menu
+                           document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                           document.getElementById('menu-feedbackManagement').classList.add('active');
+                           console.log('Trang quản lý phản hồi đã được khởi tạo');           });
 
-                                        function assignToExpert(feedbackId) {
-                                            console.log('Giao cho chuyên gia:', feedbackId);
-                                            const expert = prompt('Giao cho chuyên gia nào?');
-                                            if (expert) {
-                                                alert(`Phản hồi đã được giao cho ${expert}!`);
-                                            }
-                                        }
-
-                                        function reportToDev(feedbackId) {
-                                            if (confirm('Báo cáo lỗi này cho team phát triển?')) {
-                                                console.log('Báo cáo dev team:', feedbackId);
-                                                alert('Lỗi đã được báo cáo cho team phát triển!');
-                                            }
-                                        }
-
-                                        function urgentResponse(feedbackId) {
-                                            console.log('Phản hồi khẩn cấp:', feedbackId);
-                                            window.location.href = `urgent-reply.jsp?id=${feedbackId}`;
-                                        }
-
-                                        function createTicket(feedbackId) {
-                                            if (confirm('Tạo ticket hỗ trợ cho vấn đề này?')) {
-                                                console.log('Tạo ticket:', feedbackId);
-                                                alert('Ticket hỗ trợ đã được tạo!');
-                                            }
-                                        }
-
-                                        // Bulk actions
-                                        function selectAllFeedback(checkbox) {
-                                            const feedbackCheckboxes = document.querySelectorAll('.feedback-checkbox');
-                                            feedbackCheckboxes.forEach(cb => cb.checked = checkbox.checked);
-                                            updateBulkActionButtons();
-                                        }
-
-                                        function updateBulkActionButtons() {
-                                            const selectedFeedback = document.querySelectorAll('.feedback-checkbox:checked');
-                                            const bulkButtons = ['bulkReadBtn', 'bulkReplyBtn', 'bulkExportBtn', 'bulkDeleteBtn'];
-
-                                            bulkButtons.forEach(btnId => {
-                                                document.getElementById(btnId).disabled = selectedFeedback.length === 0;
-                                            });
-                                        }
-
-                                        function bulkMarkAsRead() {
-                                            const selected = document.querySelectorAll('.feedback-checkbox:checked');
-                                            const ids = Array.from(selected).map(cb => cb.value);
-                                            if (confirm(`Đánh dấu ${ids.length} phản hồi đã chọn là đã đọc?`)) {
-                                                console.log('Bulk đánh dấu đã đọc:', ids);
-                                                alert('Các phản hồi đã được đánh dấu là đã đọc!');
-                                                location.reload();
-                                            }
-                                        }
-
-                                        function bulkReply() {
-                                            const selected = document.querySelectorAll('.feedback-checkbox:checked');
-                                            const ids = Array.from(selected).map(cb => cb.value);
-                                            console.log('Bulk phản hồi:', ids);
-                                            window.location.href = `bulk-reply.jsp?ids=${ids.join(',')}`;
-                                        }
-
-                                        function bulkExport() {
-                                            const selected = document.querySelectorAll('.feedback-checkbox:checked');
-                                            const ids = Array.from(selected).map(cb => cb.value);
-                                            console.log('Bulk xuất:', ids);
-                                            window.location.href = `export-feedback.jsp?ids=${ids.join(',')}&format=excel`;
-                                        }
-
-                                        function bulkDelete() {
-                                            const selected = document.querySelectorAll('.feedback-checkbox:checked');
-                                            const ids = Array.from(selected).map(cb => cb.value);
-                                            if (confirm(`Xóa ${ids.length} phản hồi đã chọn? Hành động này không thể hoàn tác.`)) {
-                                                console.log('Bulk xóa phản hồi:', ids);
-                                                alert('Các phản hồi đã được xóa!');
-                                                location.reload();
-                                            }
-                                        }
-
-                                        // Export and utility functions
-                                        function exportFeedback() {
-                                            console.log('Xuất danh sách phản hồi...');
-                                            window.location.href = 'export-feedback.jsp?format=excel';
-                                        }
-
-                                        function refreshFeedback() {
-                                            console.log('Làm mới danh sách phản hồi...');
-                                            location.reload();
-                                        }
-
-                                        function generateFeedbackReport() {
-                                            console.log('Tạo báo cáo phản hồi...');
-                                            window.open('feedback-report.jsp', '_blank');
-                                        }
-
-                                        // Initialize page
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            // Add event listeners to feedback checkboxes
-                                            document.querySelectorAll('.feedback-checkbox').forEach(checkbox => {
-                                                checkbox.addEventListener('change', updateBulkActionButtons);
-                                            });
-
-                                            // Enable real-time search
-                                            document.getElementById('feedbackSearch').addEventListener('keyup', function (e) {
-                                                if (e.key === 'Enter') {
-                                                    searchFeedback();
-                                                }
-                                            });
-
-                                            // Set active menu
-                                            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-                                            document.getElementById('menu-feedbackManagement').classList.add('active');
-
-                                            console.log('Trang quản lý phản hồi đã được khởi tạo');
-                                        });
-
-                                        // Highlight current menu
-                                        document.addEventListener('DOMContentLoaded', function () {
+                    // Highlight current menu
+                    document.addEventListener('DOMContentLoaded', function () {
                                             var currentUrl = window.location.href;
                                             document.querySelectorAll('.sidebar-link').forEach(function (link) {
                                                 link.classList.remove('active');
@@ -809,10 +811,10 @@
                                                     feedbackLink.classList.add('active');
                                                 }
                                             }
-                                        });
-                                       
-                                     
-    function applyFilters() {
+                    });
+
+
+                    function applyFilters() {
         const rating = document.getElementById("ratingFilter").value;
         const time = document.getElementById("timeFilter").value;
         let url = "feedbacks?";
@@ -821,7 +823,7 @@
         if (time) url += "time=" + time;
 
         window.location.href = url;
-    }
+                    }
 </script>
         <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -845,12 +847,12 @@
   </div>
 </div>
     <script>
-  function openFeedbackModal(id, comment, rating, createdAt) {
-    document.getElementById('modalCreatedAt').innerText = createdAt;
-    document.getElementById('modalRating').innerText = rating;
-    document.getElementById('modalComment').innerText = comment;
-    $('#feedbackModal').modal('show');
-  };
+                           function openFeedbackModal(id, comment, rating, createdAt) {
+                           document.getElementById('modalCreatedAt').innerText = createdAt;
+                           document.getElementById('modalRating').innerText = rating;
+                           document.getElementById('modalComment').innerText = comment;
+                           $('#feedbackModal').modal('show');
+                           };
 </script>
     </body>
 </html>

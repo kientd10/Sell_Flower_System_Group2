@@ -403,7 +403,7 @@
                                                 <button type="button" id="btnPlus_${line.bouquetTemplate.templateId}" onclick="increaseQty('${line.bouquetTemplate.templateId}')" class="btn btn-xs btn-default">+</button>
                                                 <input type="hidden" name="templateId[]" value="${line.bouquetTemplate.templateId}"/>
                                             </td>
-                                            <td>
+                                            <td id="lineTotal_${line.bouquetTemplate.templateId}">
                                                 <fmt:formatNumber value="${line.bouquetTemplate.basePrice * line.quantity}" type="currency" currencySymbol="₫"/>
                                             </td>
                                             <td>
@@ -537,6 +537,7 @@
             // Còn hàng mới tăng qty và cập nhật tổng tiền
             qtyInput.value = current + 1;
             updateLineTotal(id);
+            // Không submit form tự động nữa
         }
 
         function decreaseQty(id) {
@@ -550,6 +551,7 @@
 
                 // Trả hàng về kho, stockQty sẽ enable lại nút +
                 stockQty(id, -1);
+                // Không submit form tự động nữa
             }
         }
 

@@ -288,15 +288,23 @@
                 <!-- Main Content -->
                 <div class="main-content">
                     <!-- Page Header -->
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <h2 class="page-title">Quản Lý</h2>
-                            <p class="text-muted">Tổng quan và thống kê cửa hàng</p>
-                        </div>
-                        <div class="text-muted">
-                            Ngày cập nhật: <%= new java.text.SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new java.util.Date()) %>
+                <div class="top-navbar">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="input-group">
+                            <form method="get" action="statistics" class="d-flex gap-2">
+                                <select class="form-select" name="viewType" id="viewType" onchange="changeView()">
+                                    <option value="daily" ${viewType == 'daily' ? 'selected' : ''}>Theo ngày</option>
+                                    <option value="monthly" ${viewType == 'monthly' ? 'selected' : ''}>Theo tháng</option>
+                                    <option value="yearly" ${viewType == 'yearly' ? 'selected' : ''}>Theo năm</option>
+                                </select>
+                                <input type="number" class="form-control" name="day" id="dayInput" placeholder="Ngày" value="${day}" style="display: ${viewType == 'daily' ? 'block' : 'none'};" min="1" max="31">
+                                <input type="number" class="form-control" name="month" id="monthInput" placeholder="Tháng" value="${month}" min="1" max="12">
+                                <input type="number" class="form-control" name="year" id="yearInput" placeholder="Năm" value="${year}" min="2000" max="2100">
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </form>
                         </div>
                     </div>
+                </div>
 
                     <!-- ===== STATISTICS SUMMARY ===== -->
                     <div class="card">
