@@ -408,13 +408,19 @@
                                             </td>
                                             <td>
                                                 <input type="hidden" name="cartId[]" value="${line.cartId}" />
-                                                <input type="checkbox" name="isChecked[]" value="${line.cartId}" <c:if test="${fn:contains(selectedCartIds, line.cartId.toString())}">checked</c:if> />
+                                                <input type="checkbox" name="isChecked[]" class="item-checkbox" value="${line.cartId}" onclick="updateGrandTotal()" <c:if test="${fn:contains(selectedCartIds, line.cartId.toString())}">checked</c:if> />
                                             </td>
                                             <td>
                                                 <a href="remove?templateId=${line.bouquetTemplate.templateId}"><i class="fa fa-times"></i></a>
                                             </td>
                                         </tr>
                                     </c:forEach>
+                                        <tr>
+    <td colspan="4" style="text-align: right; font-weight: bold;">Tổng cộng:</td>
+    <td colspan="3" id="grandTotal" class="grand-total-cell">
+        <fmt:formatNumber value="${grandTotal}" type="currency" currencySymbol="₫"/>
+    </td>
+</tr>
                                 </tbody>
                             </table>
                         </div>
@@ -517,6 +523,17 @@
 
         </script>
         <style>
+            .grand-total-cell {
+    font-weight: bold !important;
+    font-size: 1.3rem !important;
+    color: #ce4242 !important;
+    text-align: left !important;
+}
+            .grand-total-cell {
+    font-weight: bold;
+    font-size: 1.3rem;
+    color: #ce4242;
+}
             .toast {
                 position: fixed;
                 bottom: 20px;
@@ -592,7 +609,8 @@
             const lineTotal = document.getElementById('lineTotal_' + id);
 
             lineTotal.textContent = (basePrice * qty).toLocaleString('vi-VN') + ' ₫';
-        }
+            updateGrandTotal();    
+    }
 
         // Khởi tạo: đảm bảo nút + đang đúng trạng thái lúc load
         document.addEventListener('DOMContentLoaded', () => {
@@ -600,6 +618,8 @@
                 const id = stkInput.id.replace('stk_', '');
                 stockQty(id, 0);
             });
+            
+    updateGrandTotal();
         });
     </script>
             <style>
@@ -679,6 +699,25 @@ document.addEventListener('click', function(event) {
         bell.classList.remove('open');
     }
 });
+</script>
+<script>
+function updateGrandTotal() {
+    let total = 0;
+
+    // Duyệt qua từng checkbox được chọn
+    document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
+        const row = checkbox.closest('tr');
+        const qtyInput = row.querySelector('input[name="quantity[]"]');
+        const qty = parseInt(qtyInput.value, 10);
+        const price = parseFloat(qtyInput.getAttribute('data-base-price'));
+        total += qty * price;
+    });
+
+    const grandTotalCell = document.getElementById('grandTotal');
+    if (grandTotalCell) {
+        grandTotalCell.textContent = total.toLocaleString('vi-VN') + ' ₫';
+    }
+}
 </script>
 </body>
 </html>

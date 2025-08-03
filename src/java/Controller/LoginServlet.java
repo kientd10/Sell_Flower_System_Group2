@@ -92,6 +92,8 @@ public class LoginServlet extends HttpServlet {
         User user = userDAO.loginUser(email, hasspass);
         if (user != null && user.isIsActive()) {
             HttpSession session = request.getSession();
+            session.setMaxInactiveInterval(60 * 60);
+ 
             session.setAttribute("user", user);
             session.setAttribute("roleId", user.getRoleId());
             session.setAttribute("userId", user.getUserId());

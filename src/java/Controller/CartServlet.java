@@ -114,7 +114,11 @@ public class CartServlet extends HttpServlet {
         List<BouquetTemplate> purchasedProducts = orderDAO.getPurchasedProductsByUser(user_id);
         request.setAttribute("purchasedProducts", purchasedProducts);
     }
-
+double grandTotal = 0;
+for (ShoppingCart item : cartList) {
+    grandTotal += item.getBouquetTemplate().getBasePrice() * item.getQuantity();
+}
+request.setAttribute("grandTotal", grandTotal);
     // ✅ luôn set cart và forward sau cùng
     request.setAttribute("cart", cartList);
     request.getRequestDispatcher("cart.jsp").forward(request, response);

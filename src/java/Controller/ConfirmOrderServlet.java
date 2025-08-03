@@ -35,7 +35,7 @@ public class ConfirmOrderServlet extends HttpServlet {
             request.getSession().setAttribute("customFlowerRequestId", requestId);
             request.getSession().setAttribute("customFlowerQuantity", fr.getQuantity());
             request.getSession().setAttribute("customFlowerPrice", fr.getSuggestedPrice());
-            // Xóa giỏ hàng khỏi session để tránh hiển thị sản phẩm thường ở checkout
+            // Xóa giỏ hàng khỏi session để tránh hiển thị sản phẩm 
             request.getSession().removeAttribute("cart");
             request.getSession().removeAttribute("selectedCartIds");
             // Chuyển sang trang checkout

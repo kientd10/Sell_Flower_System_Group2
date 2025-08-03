@@ -79,7 +79,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         }
 
     } catch (Exception e) {
-        e.printStackTrace(); // ✅ Log ra console
+        e.printStackTrace(); // Log ra console
         request.setAttribute("error", "Lỗi xử lý phản hồi: " + e.getMessage());
     }
 

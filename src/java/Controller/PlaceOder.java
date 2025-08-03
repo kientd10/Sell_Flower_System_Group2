@@ -121,7 +121,7 @@ public class PlaceOder extends HttpServlet {
         // Lưu vào session nếu cần dùng ở trang tiếp theo
         session.setAttribute("receiverName", receiverName);
         session.setAttribute("receiverPhone", receiverPhone);
-        session.setAttribute("receiverAddress", fullDeliveryAddress);  // ✅ địa chỉ đầy đủ
+        session.setAttribute("receiverAddress", fullDeliveryAddress);  
         session.setAttribute("deliveryTime", deliveryTime);
         session.setAttribute("fullname", receiverName);
 
